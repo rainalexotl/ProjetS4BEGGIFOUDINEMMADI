@@ -9,18 +9,50 @@ extern "C" {
 #endif
 /*
  * Class:     InterfaceAvecC
- * Method:    isEmpty
- * Signature: (LCoordinates;)Z
+ * Method:    nativeInitPiece
+ * Signature: (C)LPiece;
  */
-JNIEXPORT jboolean JNICALL Java_InterfaceAvecC_isEmpty
-  (JNIEnv *, jclass, jobject);
+JNIEXPORT jobject JNICALL Java_InterfaceAvecC_nativeInitPiece
+  (JNIEnv *, jclass, jchar);
 
 /*
  * Class:     InterfaceAvecC
- * Method:    position
+ * Method:    nativeInitHex
+ * Signature: (IIC)LHex;
+ */
+JNIEXPORT jobject JNICALL Java_InterfaceAvecC_nativeInitHex
+  (JNIEnv *, jclass, jint, jint, jchar);
+
+/*
+ * Class:     InterfaceAvecC
+ * Method:    nativeInitBoard
+ * Signature: (I)LBoard;
+ */
+JNIEXPORT jobject JNICALL Java_InterfaceAvecC_nativeInitBoard
+  (JNIEnv *, jclass, jint);
+
+/*
+ * Class:     InterfaceAvecC
+ * Method:    nativeCalcXCoord
+ * Signature: (II)I
+ */
+JNIEXPORT jint JNICALL Java_InterfaceAvecC_nativeCalcXCoord
+  (JNIEnv *, jclass, jint, jint);
+
+/*
+ * Class:     InterfaceAvecC
+ * Method:    nativeCalcYCoord
+ * Signature: (II)I
+ */
+JNIEXPORT jint JNICALL Java_InterfaceAvecC_nativeCalcYCoord
+  (JNIEnv *, jclass, jint, jint);
+
+/*
+ * Class:     InterfaceAvecC
+ * Method:    nativeCalcPosition
  * Signature: (III)I
  */
-JNIEXPORT jint JNICALL Java_InterfaceAvecC_position
+JNIEXPORT jint JNICALL Java_InterfaceAvecC_nativeCalcPosition
   (JNIEnv *, jclass, jint, jint, jint);
 
 #ifdef __cplusplus

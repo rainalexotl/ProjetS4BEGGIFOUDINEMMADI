@@ -2,14 +2,14 @@ import java.util.Scanner;
 
 public class Player {
 
-	private Piece.PieceColor color;
+	private char color;
 	private String lastName;
 	private String firstName;
 	private String email;
 	private Board board; //the board the player is playing on
 	private Scanner input;
 
-	public Player(Piece.PieceColor color, String lastName, String firstName,
+	public Player(char color, String lastName, String firstName,
 				  String email, Board board){
 		this.color = color;
 		this.lastName = lastName;
@@ -19,12 +19,12 @@ public class Player {
 		this.input = new Scanner(System.in);
 	}
 
-	public Piece.PieceColor getColor(){
+	public char getColor(){
 		return color;
 	}
 
 	public String getColorName(){
-		if (color == Piece.PieceColor.BLACK)
+		if (color == Piece.BLACK)
 			return "(*) BLACK ";
 		else
 			return "(o) WHITE ";
@@ -66,7 +66,7 @@ public class Player {
 			System.out.print("y = ");
 			y = input.nextInt();
 		}
-		
+
 		coord = new Coordinates(x, y);
 		return coord;
 	}
@@ -85,26 +85,26 @@ public class Player {
 			board.getHex(pos).getPiece().setColor(color);
 		}
 	}
-	
-	public static Piece.PieceColor quiJoue(boolean joueur){
-		return joueur ? Piece.PieceColor.BLACK : Piece.PieceColor.WHITE;
+
+	public static char quiJoue(boolean joueur){
+		return joueur ? Piece.BLACK : Piece.WHITE;
 	}
 
 	public static void main(String[] args) {
 		boolean joueur = true;
 		// Board board = new Board(5);
 		Board board = InterfaceAvecC.nativeInitBoard(5);
-		Player b = new Player(Piece.PieceColor.BLACK, "turner", "guy", "guy@truc.com", board);
-		Player w = new Player(Piece.PieceColor.WHITE, "miller", "pam", "pam@thing.fr", board);
+		Player b = new Player(Piece.BLACK, "turner", "guy", "guy@truc.com", board);
+		Player w = new Player(Piece.WHITE, "miller", "pam", "pam@thing.fr", board);
 
 		board.printBoard();
 
 		Player p;
 		int i = 0;
 		while(i < board.getNbHexes()){
-			Piece.PieceColor color = quiJoue(joueur);
+			char color = quiJoue(joueur);
 
-			if (color == Piece.PieceColor.BLACK)
+			if (color == Piece.BLACK)
 				p = b;
 			else
 				p = w;
@@ -113,5 +113,5 @@ public class Player {
 			p.board.printBoard();
 			joueur = !joueur;
 		}
-	}	
+	}
 }

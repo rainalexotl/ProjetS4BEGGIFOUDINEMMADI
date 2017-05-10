@@ -12,14 +12,14 @@ public class Board {
 		// this.nbHexes = boardSize * boardSize;
 		this.hex = new Hex[getNbHexes()];
 		for (int i = 0; i < getNbHexes(); i++){
-			// int x = Coordinates.calcXCoord(i, boardSize);
-			// int y = Coordinates.calcYCoord(i, boardSize);
+			 int x = Coordinates.calcXCoord(i, boardSize);
+			 int y = Coordinates.calcYCoord(i, boardSize);
 			// this.hex[i] = new Hex(x, y, Piece.PieceColor.EMPTY);
-			this.hex[i] = InterfaceAvecC.nativeInitHex(Piece.PieceColor.EMPTY);
+			this.hex[i] = InterfaceAvecC.nativeInitHex(x, y,Piece.EMPTY);
 		}
 	}
-	
-	public void printBoard(){
+
+	public void  printBoard(){
 		int i, j;
 
 		System.out.print("W");
@@ -34,7 +34,7 @@ public class Board {
 				}
 				System.out.print("B");
 			}
-			System.out.print(" " + hex[i].getPiece().pieceSymbol());
+			System.out.print(" " + hex[i].getPiece().getColor());
 
 			if(i%boardSize == boardSize - 1)
 				System.out.println(" B");
