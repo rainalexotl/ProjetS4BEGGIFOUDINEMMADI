@@ -326,8 +326,43 @@ void destroyGraph(Graph g) {
 /* -*************************************************************************- */
 
 /*-------------------------IMPLEMENTATION InterfaceAvecC-----------------------*/
+JNIEXPORT jobject JNICALL
+Java_InterfaceAvecC_nativeInitPiece (JNIEnv * env, jclass cl, jchar color) {
+    jclass piece = (*env)->FindClass(env, "Piece");
+    jmethodID mid = (*env)->GetMethodID(env, piece, "<init>", "(C)V");
+    jobject object = (*env)->NewObject(env, piece, mid, color);
+    return object;
+}
+
+
+JNIEXPORT jobject JNICALL
+Java_InterfaceAvecC_nativeInitHex (JNIEnv * env, jclass cl, jint x, jint y, jchar color) {
+    jclass hex = (*env)->FindClass(env, "Hex");
+    jmethodID mid = (*env)->GetMethodID(env, hex, "<init>", "(IIC)V");
+    jobject object = (*env)->NewObject(env, hex, mid, x, y, color);
+    return object;
+}
+
+JNIEXPORT jobject JNICALL
+Java_InterfaceAvecC_nativeInitBoard (JNIEnv * env, jclass cl, jint sizeBoard) {
+    jclass board = (*env)->FindClass(env, "Board");
+    jmethodID mid = (*env)->GetMethodID(env, board, "<init>", "(I)V");
+    jobject object = (*env)->NewObject(env, board, mid, sizeBoard);
+    return object;
+}
+
 JNIEXPORT jint JNICALL
-Java_InterfaceAvecC_position (JNIEnv * evt, jclass cl, jint x, jint y , jint sizeBoard) {
+Java_InterfaceAvecC_nativeCalcXCoord (JNIEnv * env, jclass cl, jint i, jint sizeBoard) {
+    return calculateCoordinates(i, sizeBoard).x;
+}
+
+JNIEXPORT jint JNICALL
+Java_InterfaceAvecC_nativeCalcYCoord (JNIEnv * env, jclass cl, jint i, jint sizeBoard) {
+    return calculateCoordinates(i, sizeBoard).y;
+}
+
+JNIEXPORT jint JNICALL
+Java_InterfaceAvecC_nativeCalcPosition (JNIEnv * env, jclass cl, jint x, jint y, jint sizeBoard) {
     return calculateSquareCoordinates(x, y, sizeBoard);
 }
 

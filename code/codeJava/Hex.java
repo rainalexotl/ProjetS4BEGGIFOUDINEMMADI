@@ -5,7 +5,7 @@ public class Hex {
 	private boolean pleine;
 	private Piece piece;
 
-	public Hex(int x, int y, Piece.PieceColor piece){
+	public Hex(int x, int y, char piece){
 		this.coord = new Coordinates(x, y);
 		// this.piece = new Piece(Piece.PieceColor.EMPTY);
 		// this.piece = new Piece(piece);
@@ -18,7 +18,7 @@ public class Hex {
 	}
 
 	public boolean isFull(){
-		if (piece.getColor() != Piece.PieceColor.EMPTY)
+		if (piece.getColor() != Piece.EMPTY)
 			pleine = true;
 		else
 			pleine = false;
