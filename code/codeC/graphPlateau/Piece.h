@@ -12,10 +12,6 @@
 #include <stdio.h>
 #include "Coordinates.h"
 
-#define BLACK '*'
-#define WHITE 'o'
-#define EMPTY '.'
-
 typedef struct sPiece {
     Coordinates coord;
     char color;

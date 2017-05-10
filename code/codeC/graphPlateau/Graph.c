@@ -11,6 +11,9 @@
 #include <mm_malloc.h>
 #include <assert.h>
 #define MAXVOISIN 6
+#define BLACK '*'
+#define WHITE 'o'
+#define EMPTY '.'
 
 typedef struct sVertex {
     char colar; //colar du noeud reprenté par un caractere
@@ -23,10 +26,11 @@ struct sGraph {
     Vertex **s;
 };
 
+//pritotype
 void postUpAdjacentsVertex(const Vertex *s);
 int getNbVertexGraph(const Graph g);
 int getsizeGraph(const Graph g);
-Vertex *insertVertexGraph(Graph g, int i);
+Vertex *insertVertexGraph(Graph g, int i, char color);
 
 Graph CreateGraph(int sizeGraph) {
     Graph g = malloc(sizeof(struct sGraph));
@@ -34,28 +38,32 @@ Graph CreateGraph(int sizeGraph) {
 
     g->s = (Vertex**)malloc(sizeof(Vertex*)*(getNbVertexGraph(g)+4));
 
-    for (int i = 0; i < getNbVertexGraph(g)+4; i++) {
-        g->s[i] = insertVertexGraph(g, i);
-
+    //initialisation des 4 sommets
+    for (int i = getNbVertexGraph(g); i < getNbVertexGraph(g)+4; i++) {
+        if (i >= getNbVertexGraph(g) && i < getNbVertexGraph(g)+2) {
+            g->s[i] = insertVertexGraph(g, i ,WHITE);
+        }else {
+            g->s[i] = insertVertexGraph(g, i ,BLACK);
+        }
     }
-
-    calculateNbAdjacentsGraph(g);
     return g;
 }
 
-Vertex *insertVertexGraph(Graph g, int i) {
+Vertex *insertVertexGraph(Graph g, int i, char color) {
     Vertex *s = malloc(sizeof(Vertex));
-
-    if (i >= getNbVertexGraph(g) && i < getNbVertexGraph(g)+2) {
-        s->colar = WHITE;
-    }else if (i >= getNbVertexGraph(g)+2 && i < getNbVertexGraph(g)+4) {
-        s->colar = BLACK;
-    }else {
-        s->colar = EMPTY;
-    }
+    s->colar = color;
     s->coord = calculateCoordinates(i, getsizeGraph(g));
     return s;
 }
+
+//creation du plateuau de jeu grâce à un tableau de char String en java
+Graph CreateBoardGraph (Graph g, char *colorTab) {
+    for (size_t i = 0; i < getsizeGraph; i++) {
+        insertVertexGraph(g, i, colorTab[i]);
+    }
+    return g;
+}
+
 
 /*-------------------------------------------------------------------------------------------------*/
 //accesseur
