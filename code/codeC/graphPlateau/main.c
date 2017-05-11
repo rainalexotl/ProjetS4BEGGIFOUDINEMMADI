@@ -11,11 +11,12 @@
 
 int main(int argc, const char * argv[]) {
 
-    int dim(char*fich);
-    char colors[36] = {0};
-    for (size_t i = 0; i < 6*6; i++) {
-        colors[i] = '*';
-    }
+    // int dim(char*fich);
+    // char colors[36] = {0};
+    // for (size_t i = 0; i < 6*6; i++) {
+    //     colors[i] = '*';
+    // }
+    char * colors = transformGraphToBoardOfChar(6);
 
     Graph g = CreateGraph(6);
     //replaceVertexGraph(g);
