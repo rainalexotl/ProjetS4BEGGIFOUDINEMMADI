@@ -7,8 +7,9 @@ public class Hex {
 
 	public Hex(int x, int y, char piece){
 		this.coord = new Coordinates(x, y);
-		// this.piece = new Piece(Piece.PieceColor.EMPTY);
 		// this.piece = new Piece(piece);
+
+		
 		this.piece = InterfaceAvecC.nativeInitPiece(piece);
 		this.pleine = false;
 	}

@@ -20,16 +20,19 @@ public class Coordinates {
 
 	public static int calcXCoord(int i, int boardSize){
 		// return i/boardSize;
+
 		return InterfaceAvecC.nativeCalcXCoord(i, boardSize);
 	}
 
 	public static int calcYCoord(int i, int boardSize){
 		// return i%boardSize;
+
 		return InterfaceAvecC.nativeCalcYCoord(i, boardSize);
 	}
 
 	public int calcPosition(int x, int y, int boardSize){
 		// return boardSize * x + y;
+		
 		return InterfaceAvecC.nativeCalcPosition(x, y, boardSize);
 	}
 }
