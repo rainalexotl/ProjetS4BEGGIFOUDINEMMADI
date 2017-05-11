@@ -3,17 +3,17 @@ import java.util.Scanner;
 public class Player {
 
 	private char color;
-	private String lastName;
-	private String firstName;
+	private String alias;
+	private String dateOfBirth;
 	private String email;
 	private Board board; //the board the player is playing on
 	private Scanner input;
 
-	public Player(char color, String lastName, String firstName,
+	public Player(char color, String alias, String dateOfBirth,
 				  String email, Board board){
 		this.color = color;
-		this.lastName = lastName;
-		this.firstName = firstName;
+		this.alias = alias;
+		this.dateOfBirth = dateOfBirth;
 		this.email = email;
 		this.board = board;
 		this.input = new Scanner(System.in);
@@ -30,12 +30,12 @@ public class Player {
 			return "(o) WHITE ";
 	}
 
-	public String getLastName(){
-		return lastName;
+	public String getAlias(){
+		return alias;
 	}
 
-	public String getFirstName(){
-		return firstName;
+	public String getDOB(){
+		return dateOfBirth;
 	}
 
 	public String getEmail(){
@@ -93,6 +93,8 @@ public class Player {
 	public static void main(String[] args) {
 		boolean joueur = true;
 		// Board board = new Board(5);
+
+
 		Board board = InterfaceAvecC.nativeInitBoard(5);
 		Player b = new Player(Piece.BLACK, "turner", "guy", "guy@truc.com", board);
 		Player w = new Player(Piece.WHITE, "miller", "pam", "pam@thing.fr", board);
