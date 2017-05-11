@@ -58,8 +58,8 @@ Vertex *insertVertexGraph(Graph g, int i, char color) {
 
 //creation du plateuau de jeu grâce à un tableau de char String en java
 Graph CreateBoardGraph (Graph g, char *colorTab) {
-    for (size_t i = 0; i < getsizeGraph; i++) {
-        insertVertexGraph(g, i, colorTab[i]);
+    for (int i = 0; i < getNbVertexGraph(g); i++) {
+        g->s[i] = insertVertexGraph(g, i, colorTab[i]);
     }
     return g;
 }

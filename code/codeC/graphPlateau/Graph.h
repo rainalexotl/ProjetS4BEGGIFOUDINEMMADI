@@ -18,6 +18,7 @@ enum {UP = 0, RIGHT = 1, DOWN = 2, LEFT = 3, UP_RIGHT = 4, DOWN_LEFT = 5};
 
 Graph CreateGraph(int sizeGraph);
 
+Graph CreateBoardGraph (Graph g, char *colorTab);
 
 void calculateNbAdjacentsGraph(Graph g);
 
