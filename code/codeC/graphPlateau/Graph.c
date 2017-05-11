@@ -10,6 +10,7 @@
 #include <stdbool.h>
 #include <mm_malloc.h>
 #include <assert.h>
+#include <string.h>
 #define MAXVOISIN 6
 #define BLACK '*'
 #define WHITE 'o'
@@ -276,6 +277,42 @@ void postUpSideAdjacentGraph(const Graph g) {
     }
 }
 
+//transformation du graphe en un tableau de caratctère
+char * transformGraphToBoardOfChar(int size){
+ 	FILE *file = NULL;
+ 	char n[3];
+ 	char buff[20];
+ 	char *tab = malloc(sizeof(char)*(size*size));
+ 	char car = 0;
+ 	char fileName[200]="../../../config/size";
+ 	sprintf(n,"%d",size);
+ 	strcat(fileName,n);
+	strcat(fileName,".txt");
+    
+    int ok = 1;
+	file=fopen(fileName,"r");
+	if(file){
+		int i,j;
+		i = 0;
+        j = 0;
+		do {
+		    fscanf(file,"%s",buff);
+		    if (strcmp(buff,"\\board") == 0) {
+                fscanf(file, "%c",&car);
+			    while(j < size*size) {
+                    fscanf(file,"%c\n", &tab[j++]);
+                }
+               ok = 0;
+		    }
+        } while (ok);
+
+	}else {
+	  printf("%s n'existe pas dans ce repertoire",fileName);
+      exit(-1);
+	}
+	fclose(file);
+    return tab;
+ }
 /*-------------------------------------------------------------------------------------------------*/
 
 void destroyGraph(Graph g) {

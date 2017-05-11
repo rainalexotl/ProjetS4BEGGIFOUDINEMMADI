@@ -20,6 +20,8 @@ Graph CreateGraph(int sizeGraph);
 
 Graph CreateBoardGraph (Graph g, char *colorTab);
 
+char* transformGraphToBoardOfChar(int size);
+
 void calculateNbAdjacentsGraph(Graph g);
 
 void calculateSideAdjacentsGraph(int board, Graph g);
