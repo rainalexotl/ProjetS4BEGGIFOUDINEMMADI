@@ -1,7 +1,7 @@
 // package interfaceC;
 
 public class Board {
-	private static final int defaultSize = 11;
+	public static final int defaultSize = 11;
 	private int boardSize; //board dimension
 	// private int nbHexes;
 	private Hex[] hex; //table of hexagons
@@ -14,7 +14,9 @@ public class Board {
 		for (int i = 0; i < getNbHexes(); i++){
 			 int x = Coordinates.calcXCoord(i, boardSize);
 			 int y = Coordinates.calcYCoord(i, boardSize);
-			// this.hex[i] = new Hex(x, y, Piece.PieceColor.EMPTY);
+			// this.hex[i] = new Hex(x, y, Piece.EMPTY);
+
+
 			this.hex[i] = InterfaceAvecC.nativeInitHex(x, y,Piece.EMPTY);
 		}
 	}
