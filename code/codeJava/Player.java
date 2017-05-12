@@ -90,30 +90,30 @@ public class Player {
 		return joueur ? Piece.BLACK : Piece.WHITE;
 	}
 
-	public static void main(String[] args) {
-		boolean joueur = true;
-		// Board board = new Board(5);
-
-
-		Board board = InterfaceAvecC.nativeInitBoard(5);
-		Player b = new Player(Piece.BLACK, "turner", "guy", "guy@truc.com", board);
-		Player w = new Player(Piece.WHITE, "miller", "pam", "pam@thing.fr", board);
-
-		board.printBoard();
-
-		Player p;
-		int i = 0;
-		while(i < board.getNbHexes()){
-			char color = quiJoue(joueur);
-
-			if (color == Piece.BLACK)
-				p = b;
-			else
-				p = w;
-
-			p.placePiece();
-			p.board.printBoard();
-			joueur = !joueur;
-		}
-	}
+	// public static void main(String[] args) {
+	// 	boolean joueur = true;
+	// 	// Board board = new Board(5);
+	//
+	//
+	// 	Board board = InterfaceAvecC.nativeInitBoard(5);
+	// 	Player b = new Player(Piece.BLACK, "turner", "guy", "guy@truc.com", board);
+	// 	Player w = new Player(Piece.WHITE, "miller", "pam", "pam@thing.fr", board);
+	//
+	// 	board.printBoard();
+	//
+	// 	Player p;
+	// 	int i = 0;
+	// 	while(i < board.getNbHexes()){
+	// 		char color = quiJoue(joueur);
+	//
+	// 		if (color == Piece.BLACK)
+	// 			p = b;
+	// 		else
+	// 			p = w;
+	//
+	// 		p.placePiece();
+	// 		p.board.printBoard();
+	// 		joueur = !joueur;
+	// 	}
+	// }
 }

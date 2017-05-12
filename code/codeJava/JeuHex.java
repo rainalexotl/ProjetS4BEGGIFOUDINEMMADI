@@ -22,9 +22,9 @@ public class JeuHex {
 		do {
     		System.out.println("New game? -> please type N\nLoad game? -> please type L");
     		answer = input.nextLine();
-    	} while (answer.toUpperCase().charAt(0) != 'N' 
+    	} while (answer.toUpperCase().charAt(0) != 'N'
     		&& answer.toUpperCase().charAt(0) != 'L');
-    	
+
     	if (answer.toUpperCase().charAt(0) == 'N'){
     		size = setBoardSize();
     		board = initBoard(size);
@@ -35,7 +35,7 @@ public class JeuHex {
     			w = addPlayer();
     		}else{
     			w = addPlayer();
-    			b = addPlayer();    			    			
+    			b = addPlayer();
     		}
     	}/*else{
     		String savedFileName;
@@ -47,7 +47,7 @@ public class JeuHex {
     	do {
     		System.out.println("Would you like to choose the board's size (default = 11)\nY/N?");
     		answer = input.nextLine();
-    	} while (answer.toUpperCase().charAt(0) != 'Y' 
+    	} while (answer.toUpperCase().charAt(0) != 'Y'
     		&& answer.toUpperCase().charAt(0) != 'N');
 
     	if (answer.charAt(0) == 'Y' || answer.charAt(0) == 'y'){

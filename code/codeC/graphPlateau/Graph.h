@@ -26,7 +26,7 @@ void calculateNbAdjacentsGraph(Graph g);
 
 void calculateSideAdjacentsGraph(int board, Graph g);
 
-void replaceVertexGraph(Graph g);
+void replaceVertexGraph(Graph g, int pos, char color);
 
 void destroyGraph(Graph g);
 

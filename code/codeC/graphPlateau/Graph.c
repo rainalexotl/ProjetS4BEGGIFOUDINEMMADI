@@ -229,9 +229,8 @@ void calculateSideAdjacentsGraph(int bord, Graph g) {
 
 /*-------------------------------------------------------------------------------------------------*/
 //modificateur
-void replaceVertexGraph(Graph g) {
-    Piece p = createPiece();
-    g->s[calculateSquareCoordinates(p.coord.x, p.coord.y, getsizeGraph(g))]->colar = p.color;
+void replaceVertexGraph(Graph g, int pos, char color) {
+    g->s[pos]->colar = color;
 }
 
 
@@ -277,18 +276,17 @@ void postUpSideAdjacentGraph(const Graph g) {
     }
 }
 
-//transformation du graphe en un tableau de caratctère
 char * transformGraphToBoardOfChar(int size){
  	FILE *file = NULL;
  	char n[3];
  	char buff[20];
- 	char *tab = malloc(sizeof(char)*(size*size));
+ 	char *tab = malloc(sizeof(char)*(size*size+1));
  	char car = 0;
- 	char fileName[200]="../../../config/size";
+ 	char fileName[200]="../../config/size";
  	sprintf(n,"%d",size);
  	strcat(fileName,n);
 	strcat(fileName,".txt");
-    
+
     int ok = 1;
 	file=fopen(fileName,"r");
 	if(file){
@@ -298,9 +296,11 @@ char * transformGraphToBoardOfChar(int size){
 		do {
 		    fscanf(file,"%s",buff);
 		    if (strcmp(buff,"\\board") == 0) {
-                fscanf(file, "%c",&car);
 			    while(j < size*size) {
-                    fscanf(file,"%c\n", &tab[j++]);
+                    fscanf(file, "%c",&car);
+                    if (car == '.' || car == '*' || car == 'o') {
+                        tab[j++] = car;
+                    }
                 }
                ok = 0;
 		    }
