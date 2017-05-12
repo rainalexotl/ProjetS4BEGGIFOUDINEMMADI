@@ -16,9 +16,9 @@ int main(int argc, const char * argv[]) {
     // for (size_t i = 0; i < 6*6; i++) {
     //     colors[i] = '*';
     // }
-    char * colors = transformGraphToBoardOfChar(6);
+    char * colors = transformGraphToBoardOfChar("../../../config/size12.txt");
 
-    Graph g = CreateGraph(6);
+    Graph g = CreateGraph(12);
     //replaceVertexGraph(g);
     g = CreateBoardGraph(g, colors);
     postUpBoard(g);

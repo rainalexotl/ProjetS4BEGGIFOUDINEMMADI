@@ -26,10 +26,18 @@ JNIEXPORT jobject JNICALL Java_InterfaceAvecC_nativeInitHex
 /*
  * Class:     InterfaceAvecC
  * Method:    nativeInitBoard
- * Signature: (I)LBoard;
+ * Signature: (ILjava/lang/String;)LBoard;
  */
 JNIEXPORT jobject JNICALL Java_InterfaceAvecC_nativeInitBoard
-  (JNIEnv *, jclass, jint);
+  (JNIEnv *, jclass, jint, jstring);
+
+/*
+ * Class:     InterfaceAvecC
+ * Method:    nativeInitGame
+ * Signature: (Ljava/lang/String;LJeuHex;)I
+ */
+JNIEXPORT jint JNICALL Java_InterfaceAvecC_nativeInitGame
+  (JNIEnv *, jclass, jstring, jobject);
 
 /*
  * Class:     InterfaceAvecC
@@ -54,6 +62,22 @@ JNIEXPORT jint JNICALL Java_InterfaceAvecC_nativeCalcYCoord
  */
 JNIEXPORT jint JNICALL Java_InterfaceAvecC_nativeCalcPosition
   (JNIEnv *, jclass, jint, jint, jint);
+
+/*
+ * Class:     InterfaceAvecC
+ * Method:    nativePlacePiece
+ * Signature: (IC)V
+ */
+JNIEXPORT void JNICALL Java_InterfaceAvecC_nativePlacePiece
+  (JNIEnv *, jclass, jint, jchar);
+
+/*
+ * Class:     InterfaceAvecC
+ * Method:    nativeGetSpots
+ * Signature: (Ljava/lang/String;)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_InterfaceAvecC_nativeGetSpots
+  (JNIEnv *, jclass, jstring);
 
 #ifdef __cplusplus
 }

@@ -8,6 +8,20 @@ public class JeuHex {
     private boolean joueur; //true = black, false = white
     private Scanner input = new Scanner(System.in);
     private Player b, w;
+    private int size; //size entered by the players
+    private String spots;
+
+    public int getSize(){
+        return size;
+    }
+
+    public Board getBoard(){
+        return board;
+    }
+
+    public String getSpots(){
+        return spots;
+    }
 
     //makes the save file directory if it does not already exist
     public void makeSaveDirectory(){
@@ -18,28 +32,45 @@ public class JeuHex {
     }
 
     public void gameSetup(){
-    	int size; //size entered by the players
+        char letterAnswer;
 		do {
     		System.out.println("New game? -> please type N\nLoad game? -> please type L");
     		answer = input.nextLine();
-    	} while (answer.toUpperCase().charAt(0) != 'N' 
-    		&& answer.toUpperCase().charAt(0) != 'L');
-    	
-    	if (answer.toUpperCase().charAt(0) == 'N'){
+            letterAnswer = answer.toUpperCase().charAt(0);
+    	} while (letterAnswer != 'N' && letterAnswer != 'L');
+
+    	if (letterAnswer == 'N'){
     		size = setBoardSize();
-    		board = initBoard(size);
-    		board.printBoard();
-    		joueur = whoPlaysFirst();
-    		if (joueur){
-    			b = addPlayer();
-    			w = addPlayer();
+            //setBoardSize(this.size);
+            System.out.println(size);
+            spots = InterfaceAvecC.nativeGetSpots(createFileName(letterAnswer,
+             Integer.toString(size)));
+            System.out.println(spots);
+    		board = initBoard(size, spots);
+
+    	    board.printBoard();
+    	    joueur = whoPlaysFirst();
+
+    	    if (joueur){
+    			b = addPlayer(size);
+                w = addPlayer(size);
     		}else{
-    			w = addPlayer();
-    			b = addPlayer();    			    			
+    			w = addPlayer(size);
+                b = addPlayer(size);
     		}
     	}/*else{
     		String savedFileName;
     	}*/
+    }
+
+    public String createFileName(char c, String input){
+        String fileName;
+        if (c == 'N' || c == 'n'){
+            fileName = "../../config/size" + input + ".txt";
+        }else {
+            fileName = "../../SaveFiles/" + input;
+        }
+        return fileName;
     }
 
     public int setBoardSize(){
@@ -47,7 +78,7 @@ public class JeuHex {
     	do {
     		System.out.println("Would you like to choose the board's size (default = 11)\nY/N?");
     		answer = input.nextLine();
-    	} while (answer.toUpperCase().charAt(0) != 'Y' 
+    	} while (answer.toUpperCase().charAt(0) != 'Y'
     		&& answer.toUpperCase().charAt(0) != 'N');
 
     	if (answer.charAt(0) == 'Y' || answer.charAt(0) == 'y'){
@@ -65,8 +96,8 @@ public class JeuHex {
 	   	return size;
     }
 
-    public Board initBoard(int size){
-    	board = InterfaceAvecC.nativeInitBoard(size);
+    public Board initBoard(int size, String spots){
+    	board = InterfaceAvecC.nativeInitBoard(size, spots);
     	// board = new Board(size);
     	return board;
     }
@@ -90,7 +121,7 @@ public class JeuHex {
     	return joueur;
     }
 
-    public Player addPlayer(){
+    public Player addPlayer(int size){
     	Player p;
     	String alias = "";
 		String dateOfBirth = "";
@@ -107,8 +138,10 @@ public class JeuHex {
 
     	System.out.print("Alias? ");
     	alias = input.nextLine();
+        input.nextLine(); // on vide le cash avant le prochain nextLine
     	System.out.print("Date of birth (YY/MM/DD)? ");
     	dateOfBirth = input.nextLine();
+        input.nextLine();
     	System.out.print("Email? ");
     	email = input.nextLine();
 
@@ -117,15 +150,36 @@ public class JeuHex {
     	return p;
     }
 
-    // public void jouer(){
-    // 	while(int i = 0 < board.getNbHexes()){
+    public int play(){
+        System.out.println("je passe la en java");
+        // board = initBoard(size, spots);
+        board.printBoard();
+        //InterfaceAvecC.nativePlacePiece(4, '*');
+        //board.printBoard();
+        //boucle de jeux
+        Player p;
+    	int i = 0;
+    	while(i < board.getNbHexes()){
+    		char color = Player.quiJoue(joueur);
 
-    // 	}
-    // }
+    		if (color == Piece.BLACK)
+    			p = b;
+    		else
+    			p = w;
+
+    		p.placePiece();
+    		board.printBoard();
+    		joueur = !joueur;
+    	}
+        return 0;
+    }
 
     public static void main (String[] args){
     	JeuHex jeu = new JeuHex();
     	jeu.makeSaveDirectory();
-    	jeu.gameSetup();
+        jeu.gameSetup();
+        System.out.println("je passe la en java");
+        InterfaceAvecC.nativeInitGame(jeu.getSpots(), jeu);
+        //jeu.getBoard().printBoard();
     }
 }
