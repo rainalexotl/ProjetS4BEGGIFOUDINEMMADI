@@ -58,7 +58,7 @@ Vertex *insertVertexGraph(Graph g, int i, char color) {
 }
 
 //creation du plateuau de jeu grâce à un tableau de char String en java
-Graph CreateBoardGraph (Graph g, char *colorTab) {
+Graph CreateBoardGraph (Graph g, const char *colorTab) {
     for (int i = 0; i < getNbVertexGraph(g); i++) {
         g->s[i] = insertVertexGraph(g, i, colorTab[i]);
     }
@@ -276,34 +276,45 @@ void postUpSideAdjacentGraph(const Graph g) {
     }
 }
 
-char * transformGraphToBoardOfChar(int size){
+char * transformGraphToBoardOfChar(const char * fileName){
  	FILE *file = NULL;
- 	char n[3];
+    //const char *c;
+    int size = 0;
+  	//char n[3];
  	char buff[20];
  	char *tab = malloc(sizeof(char)*(size*size+1));
  	char car = 0;
- 	char fileName[200]="../../config/size";
- 	sprintf(n,"%d",size);
- 	strcat(fileName,n);
-	strcat(fileName,".txt");
+ // 	char fileName[200]="../../config/size";
+ // 	sprintf(n,"%d",size);
+ // 	strcat(fileName,n);
+	// strcat(fileName,".txt");
+
+
 
     int ok = 1;
-	file=fopen(fileName,"r");
-	if(file){
+	file = fopen(fileName, "r");
+	if (file) {
 		int i,j;
 		i = 0;
         j = 0;
+        ok = 1;
 		do {
-		    fscanf(file,"%s",buff);
-		    if (strcmp(buff,"\\board") == 0) {
-			    while(j < size*size) {
+		    fscanf(file,"%s", buff);
+            if (strcmp(buff,"\\dim") == 0) {
+                fscanf(file,"%s", buff);
+                printf("%s\n", buff);
+                size = atoi(buff);
+                printf("%d\n", size);
+            }
+            if (strcmp(buff,"\\board") == 0 && size != 0) {
+                while(j < size*size) {
                     fscanf(file, "%c",&car);
                     if (car == '.' || car == '*' || car == 'o') {
                         tab[j++] = car;
                     }
                 }
                ok = 0;
-		    }
+            }
         } while (ok);
 
 	}else {
@@ -313,11 +324,12 @@ char * transformGraphToBoardOfChar(int size){
 	fclose(file);
     return tab;
  }
+
 /*-------------------------------------------------------------------------------------------------*/
 
 void destroyGraph(Graph g) {
     for (int i = 0; i < getNbVertexGraph(g)+4; i++) {
-        free(g->s[i]->Adjacents);
+        //free(g->s[i]->Adjacents);
         free(g->s[i]);
     }
     free(g);

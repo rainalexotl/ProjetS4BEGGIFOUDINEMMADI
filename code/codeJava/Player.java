@@ -8,15 +8,27 @@ public class Player {
 	private String email;
 	private Board board; //the board the player is playing on
 	private Scanner input;
-
+	private Coordinates[] tabGame;
+	private int nbTurnsPlays;
+	// private int size;
 	public Player(char color, String alias, String dateOfBirth,
-				  String email, Board board){
+				  String email, Board board){ //size = nomber of turns
 		this.color = color;
 		this.alias = alias;
 		this.dateOfBirth = dateOfBirth;
 		this.email = email;
 		this.board = board;
 		this.input = new Scanner(System.in);
+		//this.size = size;
+		tabGame = new Coordinates[(board.getBoardSize() * board.getBoardSize()) / 2];
+		nbTurnsPlays = 0;
+	}
+
+	public int getNbTurnsPlay() {
+		return nbTurnsPlays;
+	}
+	public void setNbTurnsPlay(int nbTurnsPlays) {
+		this.nbTurnsPlays = nbTurnsPlays;
 	}
 
 	public char getColor(){
@@ -67,12 +79,16 @@ public class Player {
 			y = input.nextInt();
 		}
 
+		// tabGame[nbTurnsPlays++] = x; //a voir si ca marche
+		// tabGame[nbTurnsPlays++] = y;
 		coord = new Coordinates(x, y);
+		tabGame[nbTurnsPlays++] = coord;
 		return coord;
 	}
 
 	public void placePiece(){
 		Coordinates coord = enterCoordinates();
+
 		int pos = coord.calcPosition(coord.getXCoord(), coord.getYCoord(), board.getBoardSize());
 		if (! board.getHex(pos).isFull()){
 			board.getHex(pos).getPiece().setColor(color);
@@ -84,6 +100,8 @@ public class Player {
 			}
 			board.getHex(pos).getPiece().setColor(color);
 		}
+		//pour modifier dans le meme temps le graphe cote c;
+		InterfaceAvecC.nativePlacePiece(pos, color);
 	}
 
 	public static char quiJoue(boolean joueur){
