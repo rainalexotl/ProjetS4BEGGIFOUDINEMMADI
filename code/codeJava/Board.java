@@ -7,7 +7,7 @@ public class Board {
 	private Hex[] hex; //table of hexagons
 
 	//if not entered boardSize will be the defaultSize;
-	public Board(int boardSize){
+	public Board(int boardSize, String spots){
 		this.boardSize = boardSize;
 		// this.nbHexes = boardSize * boardSize;
 		this.hex = new Hex[getNbHexes()];
@@ -16,8 +16,7 @@ public class Board {
 			 int y = Coordinates.calcYCoord(i, boardSize);
 			// this.hex[i] = new Hex(x, y, Piece.EMPTY);
 
-
-			this.hex[i] = InterfaceAvecC.nativeInitHex(x, y,Piece.EMPTY);
+			this.hex[i] = InterfaceAvecC.nativeInitHex(x, y, spots.charAt(i));
 		}
 	}
 
@@ -66,7 +65,7 @@ public class Board {
 	}
 
 	public static void main(String[] args) {
-		Board b = new Board(defaultSize);
-		b.printBoard();
+		//Board b = new Board(defaultSize);
+		//b.printBoard();
 	}
 }

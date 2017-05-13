@@ -18,15 +18,15 @@ enum {UP = 0, RIGHT = 1, DOWN = 2, LEFT = 3, UP_RIGHT = 4, DOWN_LEFT = 5};
 
 Graph CreateGraph(int sizeGraph);
 
-Graph CreateBoardGraph (Graph g, char *colorTab);
+Graph CreateBoardGraph (Graph g, const char *colorTab);
 
-char* transformGraphToBoardOfChar(int size);
+char* transformGraphToBoardOfChar(const char * fileName);
 
 void calculateNbAdjacentsGraph(Graph g);
 
 void calculateSideAdjacentsGraph(int board, Graph g);
 
-void replaceVertexGraph(Graph g);
+void replaceVertexGraph(Graph g, int pos, char color);
 
 void destroyGraph(Graph g);
 
