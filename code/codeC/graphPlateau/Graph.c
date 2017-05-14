@@ -6,6 +6,20 @@
 //  Copyright © 2017 Mmadi.anzilane. All rights reserved.
 //
 
+// si on n'en a pas besoin
+#define _POSIX_C_SOURCE 1
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <time.h>
+#include <sys/types.h>
+#include <string.h> /* utiliser strcmp */
+#include <sys/wait.h>
+#include <sys/stat.h> /* constantes symboliques pour les droits d’accès */
+#include <fcntl.h> /*constantes symboliques pour les différents types d’ouverture */
+#include <dirent.h> /*pour le parcours de repertoire */
+
+//
 #include "Graph.h"
 #include <stdbool.h>
 #include <mm_malloc.h>
@@ -16,8 +30,16 @@
 #define WHITE 'o'
 #define EMPTY '.'
 
+
+#define LONG_MAX_NOM 50
+#define LONG_MAX_REP 50
+#define OK 0
+#define ERR_NB_PARAM 1
+#define ERR_ACCES_FICHIER 2
+#define ERR_CREATION_FIC 3
+
 typedef struct sVertex {
-    char color; //color du noeud reprenté par un caractere
+    char colar; //colar du noeud reprenté par un caractere
     Coordinates coord; //positionement du Vertex
     struct sVertex **Adjacents;
 }Vertex;
@@ -26,6 +48,7 @@ struct sGraph {
     int sizeGraph; // la largeur ou la heuteur du graph
     Vertex **s;
 };
+
 
 /*------------------Recherche des groupes--------------------------*/
 Position makePosition(int v){
@@ -60,7 +83,7 @@ Position makePositionTable(Position p, Vertex * s, const Graph g){
     int i = 0;
     int j = 0;
     int pos;
-    
+
     while (s->Adjacents[i] != NULL){
         // its added to the table only if they share the same color
         if (s->Adjacents[i]->color == g->s[p->pos]->color){
@@ -148,7 +171,7 @@ void findGroups(int * plays, int nbOfPlays, List ** groups, int *nbOfGroups, Gra
 
             if (allPositionsVisited(positionTab[goTo]))
             //the list is saved before we start search for new ones;
-                *groups[*nbOfGroups++] = l; 
+                *groups[*nbOfGroups++] = l;
 
             // while (allPositionsVisited(positionTab[goTo])){
             while (allPositionsVisited(top(s))){
@@ -157,7 +180,7 @@ void findGroups(int * plays, int nbOfPlays, List ** groups, int *nbOfGroups, Gra
                 deletePos(&l, top(s));
 
                 //search for the minimum of the new top:
-                min = minPosition(top(s), s); 
+                min = minPosition(top(s), s);
             }
             pushAndAdd(&l, &s, min);
             goTo = findPositionIndex(positionTab, min);
@@ -169,12 +192,11 @@ void findGroups(int * plays, int nbOfPlays, List ** groups, int *nbOfGroups, Gra
 
 /*--------------------------------------------------------------------------------------*/
 
-//prototype
+//pritotype
 void postUpAdjacentsVertex(const Vertex *s);
 int getNbVertexGraph(const Graph g);
 int getsizeGraph(const Graph g);
 Vertex *insertVertexGraph(Graph g, int i, char color);
-void calculateAdjacentsVertexGraph(Vertex *s, Graph g);
 
 Graph CreateGraph(int sizeGraph) {
     Graph g = malloc(sizeof(struct sGraph));
@@ -195,7 +217,7 @@ Graph CreateGraph(int sizeGraph) {
 
 Vertex *insertVertexGraph(Graph g, int i, char color) {
     Vertex *s = malloc(sizeof(Vertex));
-    s->color = color;
+    s->colar = color;
     s->coord = calculateCoordinates(i, getsizeGraph(g));
     return s;
 }
@@ -373,7 +395,7 @@ void calculateSideAdjacentsGraph(int bord, Graph g) {
 /*-------------------------------------------------------------------------------------------------*/
 //modificateur
 void replaceVertexGraph(Graph g, int pos, char color) {
-    g->s[pos]->color = color;
+    g->s[pos]->colar = color;
 }
 
 
@@ -396,7 +418,7 @@ void postUpBoard(Graph g) {
                 printf(" ");
             }
         }
-        printf("%c ", g->s[i]->color);
+        printf("%c ", g->s[i]->colar);
     }
     printf("\n\n");
 }
@@ -404,16 +426,16 @@ void postUpBoard(Graph g) {
 
 void postUpAdjacentsVertex(const Vertex *s) {
     for (int i = 0; i < 4; i++) {
-        printf("%c \n", s->Adjacents[i]->color);
+        printf("%c \n", s->Adjacents[i]->colar);
     }
 }
 
 void postUpSideAdjacentGraph(const Graph g) {
     for (int i = getNbVertexGraph(g); i < getNbVertexGraph(g)+4; i++) {
-        printf("%15c\n", g->s[i]->color);
+        printf("%15c\n", g->s[i]->colar);
         for (int j = 0; j < getsizeGraph(g); j++) {
             printf("(%d %c %d) ", g->s[i]->Adjacents[j]->coord.x,
-            g->s[i]->Adjacents[j]->color, g->s[i]->Adjacents[j]->coord.y);
+            g->s[i]->Adjacents[j]->colar, g->s[i]->Adjacents[j]->coord.y);
         }
         printf("\n\n");
     }
@@ -421,34 +443,24 @@ void postUpSideAdjacentGraph(const Graph g) {
 
 char * transformGraphToBoardOfChar(const char * fileName){
  	FILE *file = NULL;
-    //const char *c;
     int size = 0;
-  	//char n[3];
  	char buff[20];
- 	char *tab = malloc(sizeof(char)*(size*size+1));
+ 	char *tab = malloc(sizeof(char)*(size*size));
  	char car = 0;
- // 	char fileName[200]="../../config/size";
- // 	sprintf(n,"%d",size);
- // 	strcat(fileName,n);
-	// strcat(fileName,".txt");
-
-
-
     int ok = 1;
 	file = fopen(fileName, "r");
 	if (file) {
-		// int i;
-        int j;
-		// i = 0;
+		int i,j;
+		i = 0;
         j = 0;
         ok = 1;
 		do {
 		    fscanf(file,"%s", buff);
             if (strcmp(buff,"\\dim") == 0) {
                 fscanf(file,"%s", buff);
-                printf("%s\n", buff);
+                //printf("%s\n", buff);
                 size = atoi(buff);
-                printf("%d\n", size);
+                //printf("%d\n", size);
             }
             if (strcmp(buff,"\\board") == 0 && size != 0) {
                 while(j < size*size) {
@@ -457,17 +469,210 @@ char * transformGraphToBoardOfChar(const char * fileName){
                         tab[j++] = car;
                     }
                 }
-               ok = 0;
+                tab[j] = '\0';
+                ok = 0;
             }
         } while (ok);
 
 	}else {
-	  printf("%s n'existe pas dans ce repertoire",fileName);
+	  fprintf(stderr,"error : %s not found !",fileName);
       exit(-1);
 	}
 	fclose(file);
     return tab;
  }
+
+
+void afficheTab(int tab[]) {
+    printf("taille = %d\n", tab[0]);
+    for (size_t i = 1; i < tab[0]+1; i++) {
+        printf("%d ", tab[i]);
+    }
+    printf("\n");
+}
+
+ void saveBoardFile(const char * fileName, const char *spots, int BTabGame[], int WTabGame[]) {
+     FILE *file = NULL;
+     if ((file = fopen(fileName, "w")) == NULL) {
+         fprintf(stderr, "error : %s not create\n", fileName);
+         exit(-1);
+     }
+
+     //configuration du fichier
+     //spots[0] = la dimention du fichier
+     // i = a global value in this fonction
+     int i = 0;
+     char buf[5];
+     do {
+         buf[i] = spots[i];
+         i++;
+     } while(spots[i] != '#');
+     int dim = atoi(buf);
+     printf("dim %d\n", dim);
+     i = i+1;
+     fprintf(file, "\\Hex\n");
+     fprintf(file, "\\dim %d\n", dim);
+     //save board
+     fprintf(file, "\\board\n");
+     for (int j = 0; j < dim*dim; j++) {
+         if (j%dim == 0 && j != 0) {
+             fprintf(file, "\n");
+             fprintf(file, "%c ", spots[i++]);
+         }else {
+             fprintf(file, "%c ", spots[i++]);
+         }
+     }
+
+     printf("je passe la boucle \n");
+     fprintf(file, "\n\\endboard\n");
+     fprintf(file, "\\game\n");
+
+     int quiACommencer = spots[i]-48;
+     int Bsize = 0;
+     int Wsize = 0;
+    //  afficheTab(BTabGame);
+    //  afficheTab(WTabGame);
+     //scanf("%s\n", buf);
+     int maxSize = (BTabGame[0] > WTabGame[0])? BTabGame[0] : WTabGame[0];
+     int k = 0;
+     while (k < maxSize) {
+         if (quiACommencer) {
+             if (Bsize != BTabGame[0]) {
+                 fprintf(file, "\\play * %d %d\n", BTabGame[Bsize+1], BTabGame[Bsize+2]);
+                 //printf("taille dest tab de int b = %d w = %d\n", BTabGame[i], WTabGame[i]);
+                 Bsize +=2;
+             }
+             if (Wsize != WTabGame[0]) {
+                fprintf(file, "\\play o %d %d\n", WTabGame[Wsize+1], WTabGame[Wsize+2]);
+                //printf("taille dest tab de int b = %d w = %d\n", BTabGame[i], WTabGame[i]);
+                Wsize +=2;
+             }
+         }else{
+             printf("j'enntre dans le else \n");
+             if (Wsize != WTabGame[0]) {
+                fprintf(file, "\\play o %d %d\n", WTabGame[Wsize+1], WTabGame[Wsize+2]);
+                Wsize +=2;
+             }
+             if (Bsize != BTabGame[0]) {
+                fprintf(file, "\\play * %d %d\n", BTabGame[Bsize+1], BTabGame[Bsize+2]);
+                Bsize +=2;
+             }
+         }
+         k++;
+     }
+     fprintf(file, "\\endgame\n");
+     fprintf(file, "\\endhex\n");
+     fclose(file);
+ }
+
+ void savePlayer(const char * fileNameOfSavePlayer, const char * Bplayer, const char * Wplayer) {
+    FILE *file = NULL;
+    if ((file = fopen(fileNameOfSavePlayer, "w")) == NULL) {
+        fprintf(stderr, "error : %s not create !\n", fileNameOfSavePlayer);
+        exit(-1);
+    }
+    int Bsize = (int)strlen(Bplayer);
+    int Wsize = (int)strlen(Wplayer);
+    fprintf(file, "\\blackPlayer %d\n", Bsize);
+    fprintf(file, "*%s\n", Bplayer);
+    fprintf(file, "\\whitePlayer %d\n", Wsize);
+    fprintf(file, "o%s\n", Wplayer);
+    fclose(file);
+}
+
+char * loarPlayer(char color, const char* stringFromFilInC) {
+    FILE * file = NULL;
+    if ((file = fopen(stringFromFilInC,"r")) == NULL) {
+        fprintf(stderr, "error : %s not found !\n", stringFromFilInC);
+        exit(-1);
+    }
+    int ok = 1;
+    char buf[50] = {0};
+    char *chaine = NULL;
+    int size = 0;
+    if (color == '*') {
+        do {
+            fscanf(file, "%s", buf);
+            if (strcmp(buf, "\\blackPlayer") == 0) {
+                //printf("buf %s\n", buf);
+                fscanf(file, "%s\n", buf);
+                size = atoi(buf);
+                char Bchaine[size+2];
+                size_t i = 0;
+                for (i = 0; i < size+1; i++) {
+                    fscanf(file, "%c", &Bchaine[i]);
+                }
+                Bchaine[i] = '\0';
+                //we must be free this malloc after use this String
+                chaine = malloc(sizeof(char)*(size));
+                strcpy(chaine, Bchaine);
+                ok = 0;
+            }
+        } while(ok);
+    }else {
+        do {
+            fscanf(file, "%s", buf);
+            if (strcmp(buf, "\\whitePlayer") == 0) {
+                fscanf(file, "%s\n", buf);
+                size = atoi(buf);
+                char Wchaine[size+2];
+                size_t i = 0;
+                for (i = 0; i < size+1; i++) {
+                    fscanf(file, "%c", &Wchaine[i]);
+                }
+                //we must be free this malloc after use this String
+                chaine = malloc(sizeof(char)*size);
+                strcpy(chaine, Wchaine);
+                ok = 0;
+            }
+        } while(ok);
+    }
+    return chaine;
+}
+/*-------------------------------------------------------------------------------------------------*/
+//this fonction return the name of save
+char ** getSaveFile(const char* NomRep, int *i) {
+
+    char **saveFile = malloc(sizeof(char*)*LONG_MAX_REP);  //
+    for (size_t j = 0; j < LONG_MAX_REP; j++) {
+        saveFile[j] = malloc(sizeof(char)*40);
+    }
+    char newEnTeteRep[300];
+    struct stat infos;
+    DIR *srcDir = NULL;
+    struct dirent *fichOuRep = NULL;
+    if ((srcDir = opendir(NomRep)) == NULL) {
+        perror("Erreur d'ouverture du repertoire\n");
+        exit(1);
+    }else{
+        while ((fichOuRep = readdir(srcDir)) != NULL) {
+            if ((strcmp (fichOuRep->d_name, ".") != 0) && (strcmp (fichOuRep->d_name, "..") != 0)
+                && (strcmp (fichOuRep->d_name, ".DS_Store") != 0)) {
+                //creation du chemin du prochain de mon fichOuRep
+                strcpy(newEnTeteRep, NomRep);
+                strcat(newEnTeteRep, "/");
+                strcat(newEnTeteRep, fichOuRep->d_name);
+                if (stat(newEnTeteRep, &infos) == -1) {
+                    perror("Erreur stat");
+                    exit(2);
+                }
+                //test si l'on travail avec un repertoire ou un fichier
+                //le comportement est different l'appel recursif se fait dans le cas ou c'est un dossier
+                if (!S_ISDIR(infos.st_mode)) {
+                    strcpy(saveFile[(*i)++], fichOuRep->d_name);
+                }
+            }
+        }
+    }
+    return saveFile;
+}
+//We use this foncton to free the saveFile
+void freeSaveFile(char** saveFile) {
+    for (size_t i = 0; i < LONG_MAX_REP; i++) {
+        free (saveFile[i]);
+    }
+    free(saveFile);
+}
 
 /*-------------------------------------------------------------------------------------------------*/
 
@@ -479,8 +684,14 @@ void destroyGraph(Graph g) {
     free(g);
 }
 
+/*-------------------------------------------------------------------------------------------------*/
+//teste De Regression pour le module graph
+int testDeRegression() {
+    return 1;
+}
+
 //----------------------------------------------------------------------------
-//j'initialise le tableau des coups jou�s par un jouer � -1
+//j'initialise le tableau des coups jou�s par un jouer � -1
 //int * initPlayerPlays(int sizeBoard) {
 //	int size = ((sizeBoard * sizeBoard)/2);
 //	int *playerPlays = malloc(sizeof(int)*size);
@@ -489,9 +700,3 @@ void destroyGraph(Graph g) {
 //	}
 //	return(playerPlays);
 //}
-
-/*-------------------------------------------------------------------------------------------------*/
-//teste De Regression pour le module graph
-int testDeRegression() {
-    return 1;
-}
