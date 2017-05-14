@@ -27,10 +27,11 @@ struct sGraph {
     Vertex **s;
 };
 
-
 /*------------------Recherche des groupes--------------------------*/
 Position makePosition(int v){
-    Position p = malloc(sizeof(Position));
+    // Position p = malloc(sizeof(Position));
+    Position p;
+    printf("we're in makePosition\n");
     int i;
     p->pos = v;
     p->visited = false;
@@ -39,14 +40,19 @@ Position makePosition(int v){
     return p;
 }
 
-Position * makePosTableFromIntTable(int * plays, int nbOfPlays){
+Position* makePosTableFromIntTable(int * plays, int nbOfPlays){
     //actual number of plays = nbOfPlays - 2 (the edges)
-    int i = 0;
-    Position * positionTab = malloc(sizeof(Position) * nbOfPlays);
-    while(plays[i] != -1){
+    int i;
+    printf("we are going to make a positions table\n");
+    Position * positionTab = (Position*)malloc(sizeof(Position) * (nbOfPlays));
+    // Position positionTab[nbOfPlays];
+    printf("malloc done\n");
+    for (i = 0; i < nbOfPlays; i++){
         positionTab[i] = makePosition(plays[i]);
-        i++;
+        printf("pos[%d] = %d\n", i, positionTab[i]->pos);
+        // printf("pos[%d] = %d\n", i, positionTab[i]->visited);
     }
+    printf("the table is made\n");
     return positionTab;
 }
 
@@ -60,6 +66,7 @@ Position makePositionTable(Position p, Vertex * s, const Graph g){
         if (s->Adjacents[i]->color == g->s[p->pos]->color){
             pos = calculateSquareCoordinates(s->Adjacents[i]->coord.x,
                 s->Adjacents[i]->coord.y, g->sizeGraph);
+
             p->neighbors[j] = makePosition(pos);
             j++;
         }
@@ -67,7 +74,6 @@ Position makePositionTable(Position p, Vertex * s, const Graph g){
     }
     return p;
 }
-
 
 Position minPosition(Position p, Stack s){
     Position min = p->neighbors[0];
@@ -159,6 +165,9 @@ void findGroups(int * plays, int nbOfPlays, List ** groups, int *nbOfGroups, Gra
         i++;
     }
 }
+
+
+/*--------------------------------------------------------------------------------------*/
 
 //prototype
 void postUpAdjacentsVertex(const Vertex *s);

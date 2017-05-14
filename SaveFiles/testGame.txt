@@ -1,0 +1,10 @@
+\hex
+\dim 3
+\board
+*oo
+o*o
+*o*
+\endboard
+\game
+\endgame
+\endhex 
