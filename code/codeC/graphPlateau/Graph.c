@@ -60,7 +60,7 @@ Position makePositionTable(Position p, Vertex * s, const Graph g){
         if (s->Adjacents[i]->color == g->s[p->pos]->color){
             pos = calculateSquareCoordinates(s->Adjacents[i]->coord.x,
                 s->Adjacents[i]->coord.y, g->sizeGraph);
-            p->neighbors[i] = makePosition(pos);
+            p->neighbors[j] = makePosition(pos);
             j++;
         }
         i++;
@@ -156,6 +156,7 @@ void findGroups(int * plays, int nbOfPlays, List ** groups, int *nbOfGroups, Gra
             pushAndAdd(&l, &s, min);
             goTo = findPositionIndex(positionTab, min);
         } while (!emptyStack(s));
+        i++;
     }
 }
 
