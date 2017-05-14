@@ -6,6 +6,20 @@
 //  Copyright © 2017 Mmadi.anzilane. All rights reserved.
 //
 
+// si on n'en a pas besoin
+#define _POSIX_C_SOURCE 1
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <time.h>
+#include <sys/types.h>
+#include <string.h> /* utiliser strcmp */
+#include <sys/wait.h>
+#include <sys/stat.h> /* constantes symboliques pour les droits d’accès */
+#include <fcntl.h> /*constantes symboliques pour les différents types d’ouverture */
+#include <dirent.h> /*pour le parcours de repertoire */
+
+//
 #include "Graph.h"
 #include <stdbool.h>
 #include <mm_malloc.h>
@@ -15,6 +29,14 @@
 #define BLACK '*'
 #define WHITE 'o'
 #define EMPTY '.'
+
+
+#define LONG_MAX_NOM 50
+#define LONG_MAX_REP 50
+#define OK 0
+#define ERR_NB_PARAM 1
+#define ERR_ACCES_FICHIER 2
+#define ERR_CREATION_FIC 3
 
 typedef struct sVertex {
     char colar; //colar du noeud reprenté par un caractere
@@ -317,6 +339,15 @@ char * transformGraphToBoardOfChar(const char * fileName){
     return tab;
  }
 
+
+void afficheTab(int tab[]) {
+    printf("taille = %d\n", tab[0]);
+    for (size_t i = 1; i < tab[0]+1; i++) {
+        printf("%d ", tab[i]);
+    }
+    printf("\n");
+}
+
  void saveBoardFile(const char * fileName, const char *spots, int BTabGame[], int WTabGame[]) {
      FILE *file = NULL;
      if ((file = fopen(fileName, "w")) == NULL) {
@@ -326,6 +357,7 @@ char * transformGraphToBoardOfChar(const char * fileName){
 
      //configuration du fichier
      //spots[0] = la dimention du fichier
+     // i = a global value in this fonction
      int i = 0;
      char buf[5];
      do {
@@ -337,9 +369,8 @@ char * transformGraphToBoardOfChar(const char * fileName){
      i = i+1;
      fprintf(file, "\\Hex\n");
      fprintf(file, "\\dim %d\n", dim);
-     //creation du du board
+     //save board
      fprintf(file, "\\board\n");
-     //int j = 0;
      for (int j = 0; j < dim*dim; j++) {
          if (j%dim == 0 && j != 0) {
              fprintf(file, "\n");
@@ -348,30 +379,29 @@ char * transformGraphToBoardOfChar(const char * fileName){
              fprintf(file, "%c ", spots[i++]);
          }
      }
+
      printf("je passe la boucle \n");
      fprintf(file, "\n\\endboard\n");
      fprintf(file, "\\game\n");
 
-     //recupere le nombre de coup jouer par les joueur
-     //int nbCoupJouer = spots[i]-48;
-     //i = i+1;
      int quiACommencer = spots[i]-48;
      int Bsize = 0;
      int Wsize = 0;
-     //i = i+1;
-     //BTabGame[0]; --> contient la taille du tableau
-     printf("taille dest tab de int b = %d w = %d quiu commence %d\n", BTabGame[1], WTabGame[2], quiACommencer);
+    //  afficheTab(BTabGame);
+    //  afficheTab(WTabGame);
      //scanf("%s\n", buf);
-     while (Bsize != BTabGame[0] && Wsize != WTabGame[0]) {
+     int maxSize = (BTabGame[0] > WTabGame[0])? BTabGame[0] : WTabGame[0];
+     int k = 0;
+     while (k < maxSize) {
          if (quiACommencer) {
              if (Bsize != BTabGame[0]) {
                  fprintf(file, "\\play * %d %d\n", BTabGame[Bsize+1], BTabGame[Bsize+2]);
-                 printf("taille dest tab de int b = %d w = %d\n", BTabGame[i], WTabGame[i]);
+                 //printf("taille dest tab de int b = %d w = %d\n", BTabGame[i], WTabGame[i]);
                  Bsize +=2;
              }
              if (Wsize != WTabGame[0]) {
                 fprintf(file, "\\play o %d %d\n", WTabGame[Wsize+1], WTabGame[Wsize+2]);
-                printf("taille dest tab de int b = %d w = %d\n", BTabGame[i], WTabGame[i]);
+                //printf("taille dest tab de int b = %d w = %d\n", BTabGame[i], WTabGame[i]);
                 Wsize +=2;
              }
          }else{
@@ -381,11 +411,13 @@ char * transformGraphToBoardOfChar(const char * fileName){
                 Wsize +=2;
              }
              if (Bsize != BTabGame[0]) {
-                 fprintf(file, "\\play * %d %d\n", BTabGame[Bsize+1], BTabGame[Bsize+2]);
-                 Bsize +=2;
+                fprintf(file, "\\play * %d %d\n", BTabGame[Bsize+1], BTabGame[Bsize+2]);
+                Bsize +=2;
              }
          }
+         k++;
      }
+     fprintf(file, "\\endgame\n");
      fprintf(file, "\\endhex\n");
      fclose(file);
  }
@@ -428,6 +460,7 @@ char * loarPlayer(char color, const char* stringFromFilInC) {
                     fscanf(file, "%c", &Bchaine[i]);
                 }
                 Bchaine[i] = '\0';
+                //we must be free this malloc after use this String
                 chaine = malloc(sizeof(char)*(size));
                 strcpy(chaine, Bchaine);
                 ok = 0;
@@ -444,6 +477,7 @@ char * loarPlayer(char color, const char* stringFromFilInC) {
                 for (i = 0; i < size+1; i++) {
                     fscanf(file, "%c", &Wchaine[i]);
                 }
+                //we must be free this malloc after use this String
                 chaine = malloc(sizeof(char)*size);
                 strcpy(chaine, Wchaine);
                 ok = 0;
@@ -451,6 +485,36 @@ char * loarPlayer(char color, const char* stringFromFilInC) {
         } while(ok);
     }
     return chaine;
+}
+/*-------------------------------------------------------------------------------------------------*/
+//this fonction return the name of save
+char ** getSaveFile(const char* NomRep, int *i) {
+
+    char **saveFile = malloc(sizeof(char*)*LONG_MAX_REP);  //
+    for (size_t j = 0; j < LONG_MAX_REP; j++) {
+        saveFile[j] = malloc(sizeof(char)*40);
+    }
+    DIR *srcDir = NULL;
+    struct dirent *fichOuRep = NULL;
+    if ((srcDir = opendir(NomRep)) == NULL) {
+        perror("Erreur d'ouverture du repertoire\n");
+        exit(1);
+    }else{
+        while ((fichOuRep = readdir(srcDir)) != NULL) {
+            if ((strcmp (fichOuRep->d_name, ".") != 0) && (strcmp (fichOuRep->d_name, "..") != 0)
+                && (strcmp (fichOuRep->d_name, ".DS_Store") != 0)) {
+                strcpy(saveFile[(*i)++], fichOuRep->d_name);
+            }
+        }
+    }
+    return saveFile;
+}
+//We use this foncton to free the saveFile
+void freeSaveFile(char** saveFile) {
+    for (size_t i = 0; i < LONG_MAX_REP; i++) {
+        free (saveFile[i]);
+    }
+    free(saveFile);
 }
 
 /*-------------------------------------------------------------------------------------------------*/

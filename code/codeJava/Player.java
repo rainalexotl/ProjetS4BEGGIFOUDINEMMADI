@@ -9,7 +9,7 @@ public class Player {
 	private Board board; //the board the player is playing on
 	private Scanner input;
 	private int[] tabGame;
-	private int nbTurnsPlays = 1; // indice to insert in tabGame
+	private int nbTurnsPlays; // indice to insert in tabGame
 	private boolean ImFirst = false;
 	// private int size;
 	public Player(char color, String alias, String dateOfBirth,
@@ -23,6 +23,7 @@ public class Player {
 		//this.size = size;
 		tabGame = new int[(board.getBoardSize() * board.getBoardSize())+2];
 		tabGame[0] = 0;
+		nbTurnsPlays = 1;
 	}
 
 	public void setImFirst(boolean first) {

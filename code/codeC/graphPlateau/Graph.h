@@ -31,6 +31,10 @@ void replaceVertexGraph(Graph g, int pos, char color);
 void saveBoardFile(const char * fileName, const char *spots, int BTabGame[], int WTabGame[]);
 void savePlayer(const char * fileNameOfSavePlayer, const char * Bplayer, const char * Wplayer);
 char * loarPlayer(char color, const char* stringFromFilInC);
+char ** getSaveFile(const char* NomRep, int *i);
+void freeSaveFile(char** saveFile);
+
+
 void destroyGraph(Graph g);
 
 //

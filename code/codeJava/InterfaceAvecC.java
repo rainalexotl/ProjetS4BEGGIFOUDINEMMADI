@@ -18,4 +18,5 @@ public class InterfaceAvecC {
 	public static native void nativeSaveGame(String savedFileName, String StringToSave, int[]BTabGame, int[]WTabGame);
 	public static native void nativeSavePlayer(String nameOfSavePlayer, String Bplayer, String Wplayer);
 	public static native String nativeStringToLoadPlayer(char color, String stringFromFilInC);
+	public static native String [] nativeGetSaveFile();
 }

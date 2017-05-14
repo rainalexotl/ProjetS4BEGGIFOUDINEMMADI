@@ -18,10 +18,10 @@ int main(int argc, const char * argv[]) {
     // }
     //char * colors = transformGraphToBoardOfChar("../../../SaveFiles/auvgarde1.txt");
     //printf("colors  %s\n", colors);
-    char *spots = "11#o..................o.....................................*..*...........................o................................0" ;//"3..*oo*...4102101211";
-    int BTabGame[] = {4, 5, 2, 5, 5};
-    int WTabGame[] = {6, 1, 8, 8, 0, 0, 0};
-    saveBoardFile("../../../SaveFiles/auvgarde1.txt", spots, BTabGame, WTabGame);
+    // char *spots = "11#o..................o.....................................*..*...........................o................................0" ;//"3..*oo*...4102101211";
+    // int BTabGame[] = {4, 5, 2, 5, 5};
+    // int WTabGame[] = {6, 1, 8, 8, 0, 0, 0};
+    // saveBoardFile("../../../SaveFiles/auvgarde1.txt", spots, BTabGame, WTabGame);
     //Graph g = CreateGraph(12);
     //replaceVertexGraph(g);
     //g = CreateBoardGraph(g, colors);
@@ -33,5 +33,11 @@ int main(int argc, const char * argv[]) {
     // savePlayer("../../../SaveFiles/player.txt", Bplayer, Wplayer);
     // char * player = loarPlayer('o', "../../../SaveFiles/player.txt");
     // printf("BLACK Player %s\n", player);
+    int i = 0;
+    char ** tab = getSaveFile("../../../SaveFiles", &i);
+    for (size_t j = 0; j < i; j++) {
+        printf("str %d = %s\n",(int)j, tab[j]);
+    }
+    freeSaveFile(tab);
     return 0;
 }

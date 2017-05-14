@@ -13,42 +13,45 @@ Graph globGraph;
 /* -*************************************************************************- */
 
 /*-------------------------IMPLEMENTATION InterfaceAvecC-----------------------*/
-JNIEXPORT jobject JNICALL
-Java_InterfaceAvecC_nativeInitPiece (JNIEnv * env, jclass cl, jchar color) {
-    jclass piece = (*env)->FindClass(env, "Piece");
-    jmethodID mid = (*env)->GetMethodID(env, piece, "<init>", "(C)V");
-    jobject object = (*env)->NewObject(env, piece, mid, color);
-    return object;
-}
+// JNIEXPORT jobject JNICALL
+// Java_InterfaceAvecC_nativeInitPiece (JNIEnv * env, jclass cl, jchar color) {
+//     jclass piece = (*env)->FindClass(env, "Piece");
+//     if (/* condition */) {
+//         /* code */
+//     }
+//     jmethodID mid = (*env)->GetMethodID(env, piece, "<init>", "(C)V");
+//     jobject object = (*env)->NewObject(env, piece, mid, color);
+//     return object;
+// }
 
 
-JNIEXPORT jobject JNICALL
-Java_InterfaceAvecC_nativeInitHex (JNIEnv * env, jclass cl, jint x, jint y, jchar color) {
-    jclass hex = (*env)->FindClass(env, "Hex");
-    jmethodID mid = (*env)->GetMethodID(env, hex, "<init>", "(IIC)V");
-    jobject object = (*env)->NewObject(env, hex, mid, x, y, color);
-    return object;
-}
+// JNIEXPORT jobject JNICALL
+// Java_InterfaceAvecC_nativeInitHex (JNIEnv * env, jclass cl, jint x, jint y, jchar color) {
+//     jclass hex = (*env)->FindClass(env, "Hex");
+//     jmethodID mid = (*env)->GetMethodID(env, hex, "<init>", "(IIC)V");
+//     jobject object = (*env)->NewObject(env, hex, mid, x, y, color);
+//     return object;
+// }
 
-JNIEXPORT jobject JNICALL
-Java_InterfaceAvecC_nativeInitBoard (JNIEnv * env, jclass cl, jint sizeBoard, jstring spots) {
-    printf("je passe par initBoard\n");
-    jclass board = (*env)->FindClass(env, "Board");
-    if (board == NULL) {
-        fprintf(stderr, "error : class not found !\n");
-        exit(-1);
-    }
-    printf("je passe par initBoard\n");
-    jmethodID mid = (*env)->GetMethodID(env, board, "<init>", "(ILjava/lang/String;)V");
-    if (mid == NULL) {
-        fprintf(stderr, "error : method not found !\n");
-        exit(-1);
-    }
-    printf("je passe par initBoard\n");
-    jobject object = (*env)->NewObject(env, board, mid, sizeBoard, spots);
-    printf("je passe par initBoard\n");
-    return object;
-}
+// JNIEXPORT jobject JNICALL
+// Java_InterfaceAvecC_nativeInitBoard (JNIEnv * env, jclass cl, jint sizeBoard, jstring spots) {
+//     printf("je passe par initBoard\n");
+//     jclass board = (*env)->FindClass(env, "Board");
+//     if (board == NULL) {
+//         fprintf(stderr, "error : class not found !\n");
+//         exit(-1);
+//     }
+//     printf("je passe par initBoard\n");
+//     jmethodID mid = (*env)->GetMethodID(env, board, "<init>", "(ILjava/lang/String;)V");
+//     if (mid == NULL) {
+//         fprintf(stderr, "error : method not found !\n");
+//         exit(-1);
+//     }
+//     printf("je passe par initBoard\n");
+//     jobject object = (*env)->NewObject(env, board, mid, sizeBoard, spots);
+//     printf("je passe par initBoard\n");
+//     return object;
+// }
 
 //appel la methode play de java
 JNIEXPORT int JNICALL
@@ -96,23 +99,16 @@ Java_InterfaceAvecC_nativeCalcPosition (JNIEnv * env, jclass cl, jint x, jint y,
 //modifier la couleur du graph
 JNIEXPORT void JNICALL
 Java_InterfaceAvecC_nativePlacePiece (JNIEnv * env, jclass cl, jint pos, jchar color) {
-    //printf("1 %d %c\n", pos, color);
-    //postUpBoard(globGraph);
-    //printf("2\n");
     replaceVertexGraph(globGraph, pos, color);
-    //printf("3\n");
-    //postUpBoard(globGraph);
-    //printf("4\n");
 }
 
 JNIEXPORT jstring JNICALL
 Java_InterfaceAvecC_nativeGetSpots (JNIEnv * env, jclass cl, jstring fileName) {
     const char *s = (*env)->GetStringUTFChars(env, fileName, 0);
     char *spots = transformGraphToBoardOfChar(s);
-    //printf("spots = %s\n", transformGraphToBoardOfChar(s));
+
     jstring str = (*env)->NewStringUTF(env, spots);
     (*env)->ReleaseStringUTFChars(env, fileName, s);
-    //free(spots);
     return str;
 }
 
@@ -121,13 +117,13 @@ Java_InterfaceAvecC_nativeSaveGame (JNIEnv * env, jclass cl,
     jstring savedFileName, jstring stringToSave, jintArray BTabGame, jintArray WTabGame) {
     jsize Bsize = (*env)->GetArrayLength(env, BTabGame);
     jsize Wsize = (*env)->GetArrayLength(env, WTabGame);
-    //int Bsize = sizeB;
-    //int Wsize = sizeW;
+
     jint *Bbody = (*env)->GetIntArrayElements(env, BTabGame, 0);
     jint *Wbody = (*env)->GetIntArrayElements(env, WTabGame, 0);
 
     int bTabGame[Bsize];
     int wTabGame[Wsize];
+
 	for (int i = 0; i <= Bsize; i++) { bTabGame[i] = Bbody[i]; } //conversion des tab en c
 	for (int i = 0; i <= Wsize; i++) { wTabGame[i] = Wbody[i]; }
 
@@ -135,6 +131,7 @@ Java_InterfaceAvecC_nativeSaveGame (JNIEnv * env, jclass cl,
     const char * strToSave = (*env)->GetStringUTFChars(env, stringToSave, 0);
 
     saveBoardFile(fileName, strToSave, bTabGame, wTabGame);
+
     //for the free from java
     (*env)->ReleaseStringUTFChars(env, savedFileName, fileName);
     (*env)->ReleaseStringUTFChars(env, stringToSave, strToSave);
@@ -150,7 +147,9 @@ Java_InterfaceAvecC_nativeSavePlayer (
     const char * fileName = (*env)->GetStringUTFChars(env, nameOfSavePlayer, 0);
     const char * blackP = (*env)->GetStringUTFChars(env, Bplayer, 0);
     const char * whiteP = (*env)->GetStringUTFChars(env, Wplayer, 0);
+
     savePlayer(fileName, blackP, whiteP);
+
     (*env)->ReleaseStringUTFChars(env, nameOfSavePlayer, fileName);
     (*env)->ReleaseStringUTFChars(env, Bplayer, blackP);
     (*env)->ReleaseStringUTFChars(env, Wplayer, whiteP);
