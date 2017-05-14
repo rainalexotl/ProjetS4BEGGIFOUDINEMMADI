@@ -17,7 +17,7 @@
 #define EMPTY '.'
 
 typedef struct sVertex {
-    char colar; //colar du noeud reprentÃ© par un caractere
+    char color; //color du noeud reprentÃ© par un caractere
     Coordinates coord; //positionement du Vertex
     struct sVertex **Adjacents;
 }Vertex;
@@ -27,11 +27,144 @@ struct sGraph {
     Vertex **s;
 };
 
-//pritotype
+
+/*------------------Recherche des groupes--------------------------*/
+Position makePosition(int v){
+    Position p = malloc(sizeof(Position));
+    int i;
+    p->pos = v;
+    p->visited = false;
+    for (i = 0; i < MAXVOISIN; i++)
+        p->neighbors[i] = NULL;
+    return p;
+}
+
+Position * makePosTableFromIntTable(int * plays, int nbOfPlays){
+    //actual number of plays = nbOfPlays - 2 (the edges)
+    int i = 0;
+    Position * positionTab = malloc(sizeof(Position) * nbOfPlays);
+    while(plays[i] != -1){
+        positionTab[i] = makePosition(plays[i]);
+        i++;
+    }
+    return positionTab;
+}
+
+Position makePositionTable(Position p, Vertex * s, const Graph g){
+    int i = 0;
+    int j = 0;
+    int pos;
+    
+    while (s->Adjacents[i] != NULL){
+        // its added to the table only if they share the same color
+        if (s->Adjacents[i]->color == g->s[p->pos]->color){
+            pos = calculateSquareCoordinates(s->Adjacents[i]->coord.x,
+                s->Adjacents[i]->coord.y, g->sizeGraph);
+            p->neighbors[i] = makePosition(pos);
+            j++;
+        }
+        i++;
+    }
+    return p;
+}
+
+
+Position minPosition(Position p, Stack s){
+    Position min = p->neighbors[0];
+    int i = 1;
+    while (p->neighbors[i] != NULL){
+        //if its in the stack we consider it visited and continue:
+        if (searchStack(s, p->neighbors[i]))
+            p->neighbors[i]->visited = true;
+        if ((p->neighbors[i]->pos < min->pos) && (!p->neighbors[i]->visited)){
+            min = p->neighbors[i];
+        }
+        i++;
+    }
+    //??
+    min->visited = true;
+    return min;
+}
+
+
+int findPositionIndex(Position * positionTable, Position p){
+    int i = 0;
+    while (positionTable[i] != NULL){
+        if (positionTable[i] == p)
+            return i;
+        else
+            i++;
+    }
+    return i;
+}
+
+void pushAndAdd(List *l, Stack *s, Position p){
+    push(s, p);
+    addPos(l, p);
+}
+
+bool allPositionsVisited(Position p){
+    int i = 0;
+    while (p->neighbors[i] != NULL){
+        if (!p->neighbors[i]->visited)
+            return false;
+    }
+    return true;
+}
+
+void findGroups(int * plays, int nbOfPlays, List ** groups, int *nbOfGroups, Graph g){
+    int i = 0;
+    Position min; //la position la plus petite des voisins et n'ayant pas ete visite
+    Position * positionTab = makePosTableFromIntTable(plays, nbOfPlays);//the positions of the plays
+    List l = initList();
+    Stack s = initStack();
+
+    while (plays[i] != -1){
+        //the neighbors of the vertex at position plays[i] are calculated...
+        calculateAdjacentsVertexGraph(g->s[plays[i]], g);
+        i++;
+    }
+
+    i = 0;
+    while (positionTab[i] != NULL){
+        positionTab[i] = makePositionTable(positionTab[i], g->s[plays[i]]->Adjacents[positionTab[i]->pos], g);
+    }
+
+    i = 0;
+    int goTo; //the index of the position to go to in the position table
+    while (positionTab[i] != NULL){
+        goTo = i;
+        pushAndAdd(&l, &s, positionTab[i]);
+        do {
+            // pushAndAdd(&s, &l, positionTab[goTo]);
+            // min = minPosition(positionTab[goTo]);
+            min = minPosition(top(s), s);
+
+            if (allPositionsVisited(positionTab[goTo]))
+            //the list is saved before we start search for new ones;
+                *groups[*nbOfGroups++] = l; 
+
+            // while (allPositionsVisited(positionTab[goTo])){
+            while (allPositionsVisited(top(s))){
+                //if all the neighboring positions are visited we remove them
+                pop(&s);
+                deletePos(&l, top(s));
+
+                //search for the minimum of the new top:
+                min = minPosition(top(s), s); 
+            }
+            pushAndAdd(&l, &s, min);
+            goTo = findPositionIndex(positionTab, min);
+        } while (!emptyStack(s));
+    }
+}
+
+//prototype
 void postUpAdjacentsVertex(const Vertex *s);
 int getNbVertexGraph(const Graph g);
 int getsizeGraph(const Graph g);
 Vertex *insertVertexGraph(Graph g, int i, char color);
+void calculateAdjacentsVertexGraph(Vertex *s, Graph g);
 
 Graph CreateGraph(int sizeGraph) {
     Graph g = malloc(sizeof(struct sGraph));
@@ -52,7 +185,7 @@ Graph CreateGraph(int sizeGraph) {
 
 Vertex *insertVertexGraph(Graph g, int i, char color) {
     Vertex *s = malloc(sizeof(Vertex));
-    s->colar = color;
+    s->color = color;
     s->coord = calculateCoordinates(i, getsizeGraph(g));
     return s;
 }
@@ -230,7 +363,7 @@ void calculateSideAdjacentsGraph(int bord, Graph g) {
 /*-------------------------------------------------------------------------------------------------*/
 //modificateur
 void replaceVertexGraph(Graph g, int pos, char color) {
-    g->s[pos]->colar = color;
+    g->s[pos]->color = color;
 }
 
 
@@ -253,7 +386,7 @@ void postUpBoard(Graph g) {
                 printf(" ");
             }
         }
-        printf("%c ", g->s[i]->colar);
+        printf("%c ", g->s[i]->color);
     }
     printf("\n\n");
 }
@@ -261,16 +394,16 @@ void postUpBoard(Graph g) {
 
 void postUpAdjacentsVertex(const Vertex *s) {
     for (int i = 0; i < 4; i++) {
-        printf("%c \n", s->Adjacents[i]->colar);
+        printf("%c \n", s->Adjacents[i]->color);
     }
 }
 
 void postUpSideAdjacentGraph(const Graph g) {
     for (int i = getNbVertexGraph(g); i < getNbVertexGraph(g)+4; i++) {
-        printf("%15c\n", g->s[i]->colar);
+        printf("%15c\n", g->s[i]->color);
         for (int j = 0; j < getsizeGraph(g); j++) {
             printf("(%d %c %d) ", g->s[i]->Adjacents[j]->coord.x,
-            g->s[i]->Adjacents[j]->colar, g->s[i]->Adjacents[j]->coord.y);
+            g->s[i]->Adjacents[j]->color, g->s[i]->Adjacents[j]->coord.y);
         }
         printf("\n\n");
     }
@@ -294,8 +427,9 @@ char * transformGraphToBoardOfChar(const char * fileName){
     int ok = 1;
 	file = fopen(fileName, "r");
 	if (file) {
-		int i,j;
-		i = 0;
+		// int i;
+        int j;
+		// i = 0;
         j = 0;
         ok = 1;
 		do {
@@ -334,6 +468,17 @@ void destroyGraph(Graph g) {
     }
     free(g);
 }
+
+//----------------------------------------------------------------------------
+//j'initialise le tableau des coups joués par un jouer à -1
+//int * initPlayerPlays(int sizeBoard) {
+//	int size = ((sizeBoard * sizeBoard)/2);
+//	int *playerPlays = malloc(sizeof(int)*size);
+//	for(int i = 0; i < size; i++ ) {
+//		playerPlays[i]=-1;
+//	}
+//	return(playerPlays);
+//}
 
 /*-------------------------------------------------------------------------------------------------*/
 //teste De Regression pour le module graph
