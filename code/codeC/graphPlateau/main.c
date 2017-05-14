@@ -16,13 +16,36 @@ int main(int argc, const char * argv[]) {
     // for (size_t i = 0; i < 6*6; i++) {
     //     colors[i] = '*';
     // }
-    char * colors = transformGraphToBoardOfChar("../../../config/size12.txt");
+    char * colors = transformGraphToBoardOfChar("../../../SaveFiles/testGame.txt");
 
-    Graph g = CreateGraph(12);
+    // int i;
+    // printf("WhitePositions\n");
+    // for (i = 0; i < WNbPlays; i++){
+    //     printf("%d\n", WhitePositions[i]->pos);
+    // }
+
+    // printf("BlackPositions\n");
+    // for (i = 0; i < BNbPlays; i++){
+    //     printf("%d\n", BlackPositions[i]->pos);
+    // }
+
+    Graph g = CreateGraph(3);
     //replaceVertexGraph(g);
     g = CreateBoardGraph(g, colors);
     postUpBoard(g);
     //postUpSideAdjacentGraph(g);
     //destroyGraph(g);
+
+
+    int WNbPlays = 7;
+    // int BNbPlays = 6;
+    int WhitePlays[] = {1, 2, 3, 5, 7, 9, 10};
+    // int BlackPlays[] = {0, 4, 11, 6, 8, 12};
+    Position * WhitePositions = makePosTableFromIntTable(WhitePlays, WNbPlays);
+    printf("the table was returned\n");
+    // Position * BlackPositions = makePosTableFromIntTable(BlackPlays, BNbPlays);
+
+    free(WhitePositions);
+    // free(BlackPositions);
     return 0;
 }
