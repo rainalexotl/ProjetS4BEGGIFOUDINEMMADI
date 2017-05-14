@@ -170,8 +170,11 @@ Java_InterfaceAvecC_nativeStringToLoadPlayer (JNIEnv * env, jclass cl, jchar col
 JNIEXPORT jobjectArray JNICALL
 Java_InterfaceAvecC_nativeGetSaveFile (JNIEnv * env, jclass cl) {
     const char* NomRep = "../../SaveFiles";
-    jint size = 0;
+    int size = 0;
     char ** saveFile = getSaveFile(NomRep, &size);
+    for (size_t i = 0; i < size; i++) {
+        printf("str1 = %s\n", saveFile[i]);
+    }
     // On récupère l'objet classe String
     jclass stringClass = (*env)->FindClass(env, "java/lang/String");
     // On construit un tableau de String
@@ -180,7 +183,7 @@ Java_InterfaceAvecC_nativeGetSaveFile (JNIEnv * env, jclass cl) {
     for (size_t i = 0; i < size; i++) {
         jstring str = (*env)->NewStringUTF(env, saveFile[i]);
         (*env)->SetObjectArrayElement(env, tabString, i, (jobject)str);
-        (*env)->ReleaseStringUTFChars(env, str, saveFile[i++]);
+        //(*env)->ReleaseStringUTFChars(env, str, saveFile[i++]);
     }
     //freeSaveFile(saveFile);
     return tabString;
