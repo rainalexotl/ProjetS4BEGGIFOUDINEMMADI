@@ -34,7 +34,7 @@ int main(int argc, const char * argv[]) {
     // char * player = loarPlayer('o', "../../../SaveFiles/player.txt");
     // printf("BLACK Player %s\n", player);
     int i = 0;
-    char ** tab = getSaveFile("../../../SaveFiles", &i);
+    char ** tab = getSaveFile("../../../SaveFiles/", &i);
     for (size_t j = 0; j < i; j++) {
         printf("str %d = %s\n",(int)j, tab[j]);
     }

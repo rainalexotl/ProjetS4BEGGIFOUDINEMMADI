@@ -79,6 +79,14 @@ JNIEXPORT void JNICALL Java_InterfaceAvecC_nativeSavePlayer
 JNIEXPORT jstring JNICALL Java_InterfaceAvecC_nativeStringToLoadPlayer
   (JNIEnv *, jclass, jchar, jstring);
 
+/*
+ * Class:     InterfaceAvecC
+ * Method:    nativeGetSaveFile
+ * Signature: ()[Ljava/lang/String;
+ */
+JNIEXPORT jobjectArray JNICALL Java_InterfaceAvecC_nativeGetSaveFile
+  (JNIEnv *, jclass);
+
 #ifdef __cplusplus
 }
 #endif

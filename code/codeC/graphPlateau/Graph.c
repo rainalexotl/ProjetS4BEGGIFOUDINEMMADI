@@ -494,6 +494,8 @@ char ** getSaveFile(const char* NomRep, int *i) {
     for (size_t j = 0; j < LONG_MAX_REP; j++) {
         saveFile[j] = malloc(sizeof(char)*40);
     }
+    char newEnTeteRep[300];
+    struct stat infos;
     DIR *srcDir = NULL;
     struct dirent *fichOuRep = NULL;
     if ((srcDir = opendir(NomRep)) == NULL) {
@@ -503,7 +505,19 @@ char ** getSaveFile(const char* NomRep, int *i) {
         while ((fichOuRep = readdir(srcDir)) != NULL) {
             if ((strcmp (fichOuRep->d_name, ".") != 0) && (strcmp (fichOuRep->d_name, "..") != 0)
                 && (strcmp (fichOuRep->d_name, ".DS_Store") != 0)) {
-                strcpy(saveFile[(*i)++], fichOuRep->d_name);
+                //creation du chemin du prochain de mon fichOuRep
+                strcpy(newEnTeteRep, NomRep);
+                strcat(newEnTeteRep, "/");
+                strcat(newEnTeteRep, fichOuRep->d_name);
+                if (stat(newEnTeteRep, &infos) == -1) {
+                    perror("Erreur stat");
+                    exit(2);
+                }
+                //test si l'on travail avec un repertoire ou un fichier
+                //le comportement est different l'appel recursif se fait dans le cas ou c'est un dossier
+                if (!S_ISDIR(infos.st_mode)) {
+                    strcpy(saveFile[(*i)++], fichOuRep->d_name);
+                }
             }
         }
     }
