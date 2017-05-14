@@ -12,8 +12,12 @@
 #include <stdio.h>
 #include "Coordinates.h"
 #include "Piece.h"
+#include "../stackAndList/list.h"
+#include "../stackAndList/stack.h"
 
-typedef struct sGraph *Graph;
+typedef struct sGraph * Graph;
+typedef struct sVertex Vertex;
+
 enum {UP = 0, RIGHT = 1, DOWN = 2, LEFT = 3, UP_RIGHT = 4, DOWN_LEFT = 5};
 
 Graph CreateGraph(int sizeGraph);
@@ -21,6 +25,8 @@ Graph CreateGraph(int sizeGraph);
 Graph CreateBoardGraph (Graph g, const char *colorTab);
 
 char* transformGraphToBoardOfChar(const char * fileName);
+
+void calculateAdjacentsVertexGraph(Vertex *s, Graph g);
 
 void calculateNbAdjacentsGraph(Graph g);
 
@@ -42,5 +48,30 @@ int getB2Graph(int sizeGraph);
 void postUpCoordGraph(Graph g);
 void postUpBoard(Graph g);
 void postUpSideAdjacentGraph(const Graph g);
+
+/*------------------Recherche des groupes--------------------------*/
+// void initPositionTable(Position * positions);
+
+Position makePosition(int v);
+
+//takes a table of integers and transforms it into a table of Positions
+Position * makePosTableFromIntTable(int * plays, int nbOfPlays);
+
+//creates the table of neighbor positions based on a given one
+Position makePositionTable(Position p, Vertex * s, const Graph g);
+
+/*retourne le voisin ayant la position la plus petite, n'ayant pas ete visite*/
+Position minPosition(Position p, Stack s);
+
+/*returns the index of a certain position p in a table of positions*/
+int findPositionIndex(Position * positionTable, Position p);
+
+//pushes a position p onto the stack s and adds to the list l
+void pushAndAdd(List *l, Stack *s, Position p);
+
+/*tests if all the neighboring positions of p are visited*/
+bool allPositionsVisited(Position p);
+
+void findGroups(int * plays, int nbOfPlays, List ** groups, int *nbOfGroups, Graph g);
 
 #endif /* Graph_h */
