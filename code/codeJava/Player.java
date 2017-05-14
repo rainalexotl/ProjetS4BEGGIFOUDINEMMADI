@@ -8,8 +8,9 @@ public class Player {
 	private String email;
 	private Board board; //the board the player is playing on
 	private Scanner input;
-	private Coordinates[] tabGame;
-	private int nbTurnsPlays;
+	private int[] tabGame;
+	private int nbTurnsPlays = 1; // indice to insert in tabGame
+	private boolean ImFirst = false;
 	// private int size;
 	public Player(char color, String alias, String dateOfBirth,
 				  String email, Board board){ //size = nomber of turns
@@ -20,12 +21,20 @@ public class Player {
 		this.board = board;
 		this.input = new Scanner(System.in);
 		//this.size = size;
-		tabGame = new Coordinates[(board.getBoardSize() * board.getBoardSize()) / 2];
-		nbTurnsPlays = 0;
+		tabGame = new int[(board.getBoardSize() * board.getBoardSize())+2];
+		tabGame[0] = 0;
+	}
+
+	public void setImFirst(boolean first) {
+		this.ImFirst = first;
+	}
+
+	public boolean isFirst() {
+		return ImFirst;
 	}
 
 	public int getNbTurnsPlay() {
-		return nbTurnsPlays;
+		return tabGame[0];
 	}
 	public void setNbTurnsPlay(int nbTurnsPlays) {
 		this.nbTurnsPlays = nbTurnsPlays;
@@ -58,6 +67,29 @@ public class Player {
 		return board;
 	}
 
+	public int[] getTabGame() {
+		return tabGame;
+	}
+
+	public void printTabGame() {
+		for (int i = 0; i < nbTurnsPlays; i++) {
+			System.out.print(" "+tabGame[i]);
+		}
+	}
+
+	public String toPlayer() {
+		return alias+'#'+dateOfBirth+'@'+email;
+	}
+
+	//change table
+	public void modifTabGame(int pos) {
+		int x = Coordinates.calcXCoord(pos, board.getBoardSize());
+		int y = Coordinates.calcYCoord(pos, board.getBoardSize());
+		tabGame[nbTurnsPlays++] = x;
+		tabGame[nbTurnsPlays++] = y;
+		tabGame[0] +=2;
+	}
+
 	public Coordinates enterCoordinates(){
 		Coordinates coord;
 		int x;
@@ -79,34 +111,107 @@ public class Player {
 			y = input.nextInt();
 		}
 
-		// tabGame[nbTurnsPlays++] = x; //a voir si ca marche
-		// tabGame[nbTurnsPlays++] = y;
+	 	//tabGame[nbTurnsPlays++] = x; //a voir si ca marche
+		//tabGame[nbTurnsPlays++] = y;
 		coord = new Coordinates(x, y);
-		tabGame[nbTurnsPlays++] = coord;
+		//System.out.println("size : "+nbTurnsPlays);
+		//tabGame[nbTurnsPlays++] = coord;
 		return coord;
 	}
 
-	public void placePiece(){
-		Coordinates coord = enterCoordinates();
-
-		int pos = coord.calcPosition(coord.getXCoord(), coord.getYCoord(), board.getBoardSize());
-		if (! board.getHex(pos).isFull()){
-			board.getHex(pos).getPiece().setColor(color);
+	public boolean placePiece() {
+		boolean whatDoYouWant = false;
+		Coordinates coord = null;
+		int choice = 0;
+		int pos = -1;
+		boolean ok = true;
+		boolean ko = true;
+		char colorBis = 0;
+		if (color == Piece.BLACK) {
+			colorBis = 'b';
 		}else{
-			System.out.println("That spot already has a piece on it");
-			while(board.getHex(pos).isFull()){
-				coord = enterCoordinates();
-				pos = coord.calcPosition(coord.getXCoord(), coord.getYCoord(), board.getBoardSize());
-			}
-			board.getHex(pos).getPiece().setColor(color);
+			colorBis = 'w';
 		}
+		do {
+			coord = enterCoordinates();
+			pos = coord.calcPosition(coord.getXCoord(), coord.getYCoord(), board.getBoardSize());
+			if (! board.getHex(pos).isFull()){
+				board.getHex(pos).getPiece().setColor(colorBis);
+			}else{
+				System.out.println("That spot already has a piece on it");
+				while(board.getHex(pos).isFull()){
+					coord = enterCoordinates();
+					pos = coord.calcPosition(coord.getXCoord(), coord.getYCoord(), board.getBoardSize());
+				}
+				board.getHex(pos).getPiece().setColor(colorBis);
+			}
+			board.printBoard();
+			//menu
+			System.out.println("*------------------------------------------*");
+			System.out.println("* Do you want to change your mind or quit? *");
+			System.out.println("* 1 : To change position.                  *");
+			System.out.println("* 2 : To confime your position.            *");
+			System.out.println("* 3 : If you want to quit.                 *");
+			System.out.println("*------------------------------------------*");
+			do {
+				choice = input.nextInt();
+				if(choice == 1 || choice == 2 || choice == 3) {
+					ko = false;
+				}
+			} while (ko);
+			switch (choice) {
+				case 1 :
+					board.getHex(pos).getPiece().setColor(Piece.EMPTY);
+					break;
+				case 2 :
+					board.getHex(pos).getPiece().setColor(color);
+					ok = false;
+					break;
+				case 3 :
+					board.getHex(pos).getPiece().setColor(color);
+					whatDoYouWant = true;
+					ok = false;
+				break;
+			}
+		}while (ok);
+		board.printBoard();
 		//pour modifier dans le meme temps le graphe cote c;
+		modifTabGame(pos);
 		InterfaceAvecC.nativePlacePiece(pos, color);
+		return whatDoYouWant;
 	}
 
 	public static char quiJoue(boolean joueur){
 		return joueur ? Piece.BLACK : Piece.WHITE;
 	}
+
+	// public void Menu() {
+    //     int choice = 0;
+	// 	int ok = 1;
+	// 	Coordinates coord = NULL;
+	// 	char colorBis = 0;
+	//
+	// 	if (color == Piece.BLACK) {
+	// 		colorBis = 'b';
+	// 	}else{
+	// 		colorBis = 'w';
+	// 	}
+	//
+	// 	do {
+	// 		input.next
+	// 		switch (choice) {
+	//             case 1 : //entrer des coordonner
+	// 				coord = enterCoordinates();
+	// 				int pos = coord.calcPosition(coord.getXCoord(), coord.getYCoord(), board.getBoardSize());
+	// 				board.getHex(pos).getPiece().setColor(colorBis);
+	// 				board.printBoard();
+	// 				break;
+	//             case 2 :
+	//
+	//         }
+	// 	}while(ok);
+	//
+    // }
 
 	// public static void main(String[] args) {
 	// 	boolean joueur = true;

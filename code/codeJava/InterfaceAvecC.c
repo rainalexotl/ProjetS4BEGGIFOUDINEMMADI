@@ -58,7 +58,7 @@ Java_InterfaceAvecC_nativeInitGame (JNIEnv * env, jclass cl, jstring spots, jobj
     int sizeBoard = sqrt(nbSpots); printf("sizeBoard = %d\n", sizeBoard);
     globGraph = CreateGraph(sizeBoard);
     globGraph = CreateBoardGraph(globGraph, s);
-    printf("je passe la \n");
+    //printf("je passe la \n");
     jclass jeuHex = (*env)->GetObjectClass(env, obj);
     if (jeuHex == NULL) {
         fprintf(stderr, "error : class not found !\n");
@@ -70,9 +70,9 @@ Java_InterfaceAvecC_nativeInitGame (JNIEnv * env, jclass cl, jstring spots, jobj
         fprintf(stderr, "error : method not found !\n");
         exit(-1);
     }
-    printf("je passe la \n");
+    //printf("je passe la \n");
     jint etatDuJeu = (*env)->CallIntMethod(env, obj, play, sizeBoard, s);
-    printf("je passe la \n");
+    //printf("je passe la \n");
     // destroyGraph(globGraph);
     (*env)->ReleaseStringUTFChars(env, spots, s);
     return etatDuJeu;
@@ -96,22 +96,76 @@ Java_InterfaceAvecC_nativeCalcPosition (JNIEnv * env, jclass cl, jint x, jint y,
 //modifier la couleur du graph
 JNIEXPORT void JNICALL
 Java_InterfaceAvecC_nativePlacePiece (JNIEnv * env, jclass cl, jint pos, jchar color) {
-    printf("1 %d %c\n", pos, color);
-    postUpBoard(globGraph);
-    printf("2\n");
+    //printf("1 %d %c\n", pos, color);
+    //postUpBoard(globGraph);
+    //printf("2\n");
     replaceVertexGraph(globGraph, pos, color);
-    printf("3\n");
-    postUpBoard(globGraph);
-    printf("4\n");
+    //printf("3\n");
+    //postUpBoard(globGraph);
+    //printf("4\n");
 }
 
 JNIEXPORT jstring JNICALL
 Java_InterfaceAvecC_nativeGetSpots (JNIEnv * env, jclass cl, jstring fileName) {
     const char *s = (*env)->GetStringUTFChars(env, fileName, 0);
     char *spots = transformGraphToBoardOfChar(s);
+    //printf("spots = %s\n", transformGraphToBoardOfChar(s));
     jstring str = (*env)->NewStringUTF(env, spots);
-    (*env)->ReleaseStringUTFChars(env, fileName, spots);
+    (*env)->ReleaseStringUTFChars(env, fileName, s);
+    //free(spots);
     return str;
+}
+
+JNIEXPORT void JNICALL
+Java_InterfaceAvecC_nativeSaveGame (JNIEnv * env, jclass cl,
+    jstring savedFileName, jstring stringToSave, jintArray BTabGame, jintArray WTabGame) {
+    jsize Bsize = (*env)->GetArrayLength(env, BTabGame);
+    jsize Wsize = (*env)->GetArrayLength(env, WTabGame);
+    //int Bsize = sizeB;
+    //int Wsize = sizeW;
+    jint *Bbody = (*env)->GetIntArrayElements(env, BTabGame, 0);
+    jint *Wbody = (*env)->GetIntArrayElements(env, WTabGame, 0);
+
+    int bTabGame[Bsize];
+    int wTabGame[Wsize];
+	for (int i = 0; i <= Bsize; i++) { bTabGame[i] = Bbody[i]; } //conversion des tab en c
+	for (int i = 0; i <= Wsize; i++) { wTabGame[i] = Wbody[i]; }
+
+    const char * fileName = (*env)->GetStringUTFChars(env, savedFileName, 0);
+    const char * strToSave = (*env)->GetStringUTFChars(env, stringToSave, 0);
+
+    saveBoardFile(fileName, strToSave, bTabGame, wTabGame);
+    //for the free from java
+    (*env)->ReleaseStringUTFChars(env, savedFileName, fileName);
+    (*env)->ReleaseStringUTFChars(env, stringToSave, strToSave);
+    (*env)->ReleaseIntArrayElements(env, BTabGame, Bbody, 0);
+    (*env)->ReleaseIntArrayElements(env, WTabGame, Wbody, 0);
+}
+
+//save player
+JNIEXPORT void JNICALL
+Java_InterfaceAvecC_nativeSavePlayer (
+    JNIEnv *env, jclass cl, jstring nameOfSavePlayer, jstring Bplayer, jstring Wplayer) {
+
+    const char * fileName = (*env)->GetStringUTFChars(env, nameOfSavePlayer, 0);
+    const char * blackP = (*env)->GetStringUTFChars(env, Bplayer, 0);
+    const char * whiteP = (*env)->GetStringUTFChars(env, Wplayer, 0);
+    savePlayer(fileName, blackP, whiteP);
+    (*env)->ReleaseStringUTFChars(env, nameOfSavePlayer, fileName);
+    (*env)->ReleaseStringUTFChars(env, Bplayer, blackP);
+    (*env)->ReleaseStringUTFChars(env, Wplayer, whiteP);
+}
+
+//load
+JNIEXPORT jstring JNICALL
+Java_InterfaceAvecC_nativeStringToLoadPlayer (JNIEnv * env, jclass cl, jchar color,
+    jstring stringFromFilInC) {
+
+    const char * fileName = (*env)->GetStringUTFChars(env, stringFromFilInC, 0);
+    char *s = loarPlayer(color, fileName);
+    jstring loadFil = (*env)->NewStringUTF(env, s);
+    (*env)->ReleaseStringUTFChars(env, stringFromFilInC, fileName);
+    return loadFil;
 }
 /*-----------------------------------------------------------------------------*/
 /* -*************************************************************************- */

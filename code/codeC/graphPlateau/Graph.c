@@ -278,19 +278,10 @@ void postUpSideAdjacentGraph(const Graph g) {
 
 char * transformGraphToBoardOfChar(const char * fileName){
  	FILE *file = NULL;
-    //const char *c;
     int size = 0;
-  	//char n[3];
  	char buff[20];
- 	char *tab = malloc(sizeof(char)*(size*size+1));
+ 	char *tab = malloc(sizeof(char)*(size*size));
  	char car = 0;
- // 	char fileName[200]="../../config/size";
- // 	sprintf(n,"%d",size);
- // 	strcat(fileName,n);
-	// strcat(fileName,".txt");
-
-
-
     int ok = 1;
 	file = fopen(fileName, "r");
 	if (file) {
@@ -302,9 +293,9 @@ char * transformGraphToBoardOfChar(const char * fileName){
 		    fscanf(file,"%s", buff);
             if (strcmp(buff,"\\dim") == 0) {
                 fscanf(file,"%s", buff);
-                printf("%s\n", buff);
+                //printf("%s\n", buff);
                 size = atoi(buff);
-                printf("%d\n", size);
+                //printf("%d\n", size);
             }
             if (strcmp(buff,"\\board") == 0 && size != 0) {
                 while(j < size*size) {
@@ -313,17 +304,154 @@ char * transformGraphToBoardOfChar(const char * fileName){
                         tab[j++] = car;
                     }
                 }
-               ok = 0;
+                tab[j] = '\0';
+                ok = 0;
             }
         } while (ok);
 
 	}else {
-	  printf("%s n'existe pas dans ce repertoire",fileName);
+	  fprintf(stderr,"error : %s not found !",fileName);
       exit(-1);
 	}
 	fclose(file);
     return tab;
  }
+
+ void saveBoardFile(const char * fileName, const char *spots, int BTabGame[], int WTabGame[]) {
+     FILE *file = NULL;
+     if ((file = fopen(fileName, "w")) == NULL) {
+         fprintf(stderr, "error : %s not create\n", fileName);
+         exit(-1);
+     }
+
+     //configuration du fichier
+     //spots[0] = la dimention du fichier
+     int i = 0;
+     char buf[5];
+     do {
+         buf[i] = spots[i];
+         i++;
+     } while(spots[i] != '#');
+     int dim = atoi(buf);
+     printf("dim %d\n", dim);
+     i = i+1;
+     fprintf(file, "\\Hex\n");
+     fprintf(file, "\\dim %d\n", dim);
+     //creation du du board
+     fprintf(file, "\\board\n");
+     //int j = 0;
+     for (int j = 0; j < dim*dim; j++) {
+         if (j%dim == 0 && j != 0) {
+             fprintf(file, "\n");
+             fprintf(file, "%c ", spots[i++]);
+         }else {
+             fprintf(file, "%c ", spots[i++]);
+         }
+     }
+     printf("je passe la boucle \n");
+     fprintf(file, "\n\\endboard\n");
+     fprintf(file, "\\game\n");
+
+     //recupere le nombre de coup jouer par les joueur
+     //int nbCoupJouer = spots[i]-48;
+     //i = i+1;
+     int quiACommencer = spots[i]-48;
+     int Bsize = 0;
+     int Wsize = 0;
+     //i = i+1;
+     //BTabGame[0]; --> contient la taille du tableau
+     printf("taille dest tab de int b = %d w = %d quiu commence %d\n", BTabGame[1], WTabGame[2], quiACommencer);
+     //scanf("%s\n", buf);
+     while (Bsize != BTabGame[0] && Wsize != WTabGame[0]) {
+         if (quiACommencer) {
+             if (Bsize != BTabGame[0]) {
+                 fprintf(file, "\\play * %d %d\n", BTabGame[Bsize+1], BTabGame[Bsize+2]);
+                 printf("taille dest tab de int b = %d w = %d\n", BTabGame[i], WTabGame[i]);
+                 Bsize +=2;
+             }
+             if (Wsize != WTabGame[0]) {
+                fprintf(file, "\\play o %d %d\n", WTabGame[Wsize+1], WTabGame[Wsize+2]);
+                printf("taille dest tab de int b = %d w = %d\n", BTabGame[i], WTabGame[i]);
+                Wsize +=2;
+             }
+         }else{
+             printf("j'enntre dans le else \n");
+             if (Wsize != WTabGame[0]) {
+                fprintf(file, "\\play o %d %d\n", WTabGame[Wsize+1], WTabGame[Wsize+2]);
+                Wsize +=2;
+             }
+             if (Bsize != BTabGame[0]) {
+                 fprintf(file, "\\play * %d %d\n", BTabGame[Bsize+1], BTabGame[Bsize+2]);
+                 Bsize +=2;
+             }
+         }
+     }
+     fprintf(file, "\\endhex\n");
+     fclose(file);
+ }
+
+ void savePlayer(const char * fileNameOfSavePlayer, const char * Bplayer, const char * Wplayer) {
+    FILE *file = NULL;
+    if ((file = fopen(fileNameOfSavePlayer, "w")) == NULL) {
+        fprintf(stderr, "error : %s not create !\n", fileNameOfSavePlayer);
+        exit(-1);
+    }
+    int Bsize = (int)strlen(Bplayer);
+    int Wsize = (int)strlen(Wplayer);
+    fprintf(file, "\\blackPlayer %d\n", Bsize);
+    fprintf(file, "*%s\n", Bplayer);
+    fprintf(file, "\\whitePlayer %d\n", Wsize);
+    fprintf(file, "o%s\n", Wplayer);
+    fclose(file);
+}
+
+char * loarPlayer(char color, const char* stringFromFilInC) {
+    FILE * file = NULL;
+    if ((file = fopen(stringFromFilInC,"r")) == NULL) {
+        fprintf(stderr, "error : %s not found !\n", stringFromFilInC);
+        exit(-1);
+    }
+    int ok = 1;
+    char buf[50] = {0};
+    char *chaine = NULL;
+    int size = 0;
+    if (color == '*') {
+        do {
+            fscanf(file, "%s", buf);
+            if (strcmp(buf, "\\blackPlayer") == 0) {
+                //printf("buf %s\n", buf);
+                fscanf(file, "%s\n", buf);
+                size = atoi(buf);
+                char Bchaine[size+2];
+                size_t i = 0;
+                for (i = 0; i < size+1; i++) {
+                    fscanf(file, "%c", &Bchaine[i]);
+                }
+                Bchaine[i] = '\0';
+                chaine = malloc(sizeof(char)*(size));
+                strcpy(chaine, Bchaine);
+                ok = 0;
+            }
+        } while(ok);
+    }else {
+        do {
+            fscanf(file, "%s", buf);
+            if (strcmp(buf, "\\whitePlayer") == 0) {
+                fscanf(file, "%s\n", buf);
+                size = atoi(buf);
+                char Wchaine[size+2];
+                size_t i = 0;
+                for (i = 0; i < size+1; i++) {
+                    fscanf(file, "%c", &Wchaine[i]);
+                }
+                chaine = malloc(sizeof(char)*size);
+                strcpy(chaine, Wchaine);
+                ok = 0;
+            }
+        } while(ok);
+    }
+    return chaine;
+}
 
 /*-------------------------------------------------------------------------------------------------*/
 

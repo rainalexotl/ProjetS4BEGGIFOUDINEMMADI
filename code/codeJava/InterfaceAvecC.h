@@ -9,30 +9,6 @@ extern "C" {
 #endif
 /*
  * Class:     InterfaceAvecC
- * Method:    nativeInitPiece
- * Signature: (C)LPiece;
- */
-JNIEXPORT jobject JNICALL Java_InterfaceAvecC_nativeInitPiece
-  (JNIEnv *, jclass, jchar);
-
-/*
- * Class:     InterfaceAvecC
- * Method:    nativeInitHex
- * Signature: (IIC)LHex;
- */
-JNIEXPORT jobject JNICALL Java_InterfaceAvecC_nativeInitHex
-  (JNIEnv *, jclass, jint, jint, jchar);
-
-/*
- * Class:     InterfaceAvecC
- * Method:    nativeInitBoard
- * Signature: (ILjava/lang/String;)LBoard;
- */
-JNIEXPORT jobject JNICALL Java_InterfaceAvecC_nativeInitBoard
-  (JNIEnv *, jclass, jint, jstring);
-
-/*
- * Class:     InterfaceAvecC
  * Method:    nativeInitGame
  * Signature: (Ljava/lang/String;LJeuHex;)I
  */
@@ -78,6 +54,30 @@ JNIEXPORT void JNICALL Java_InterfaceAvecC_nativePlacePiece
  */
 JNIEXPORT jstring JNICALL Java_InterfaceAvecC_nativeGetSpots
   (JNIEnv *, jclass, jstring);
+
+/*
+ * Class:     InterfaceAvecC
+ * Method:    nativeSaveGame
+ * Signature: (Ljava/lang/String;Ljava/lang/String;[I[I)V
+ */
+JNIEXPORT void JNICALL Java_InterfaceAvecC_nativeSaveGame
+  (JNIEnv *, jclass, jstring, jstring, jintArray, jintArray);
+
+/*
+ * Class:     InterfaceAvecC
+ * Method:    nativeSavePlayer
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_InterfaceAvecC_nativeSavePlayer
+  (JNIEnv *, jclass, jstring, jstring, jstring);
+
+/*
+ * Class:     InterfaceAvecC
+ * Method:    nativeStringToLoadPlayer
+ * Signature: (CLjava/lang/String;)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_InterfaceAvecC_nativeStringToLoadPlayer
+  (JNIEnv *, jclass, jchar, jstring);
 
 #ifdef __cplusplus
 }
