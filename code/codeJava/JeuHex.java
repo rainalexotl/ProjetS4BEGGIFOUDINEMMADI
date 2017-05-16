@@ -217,7 +217,7 @@ public boolean gameSetup(){
     		System.out.println("WHITE player...");
     		color = Piece.WHITE;
     	}
-
+        input.nextLine(); 
     	System.out.print("Alias? ");
     	alias = input.nextLine();
 
