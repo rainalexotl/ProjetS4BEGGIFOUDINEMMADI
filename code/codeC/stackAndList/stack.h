@@ -17,6 +17,6 @@ void push(Stack *s, Position p);
 void pop(Stack *s);
 bool searchStack(Stack s, Position p);
 Position top(Stack s);
-//stack *saisir_pile();	
+//stack *saisir_pile();
 
 #endif //stack_h

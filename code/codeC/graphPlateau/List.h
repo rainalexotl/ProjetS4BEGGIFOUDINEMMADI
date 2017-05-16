@@ -1,43 +1,43 @@
 //
-//  Coordinates.h
-//  graphes
+//  List.h
+//  List
 //
 //  Created by Mmadi.anzilane on 14/04/2017.
 //  Copyright © 2017 Mmadi.anzilane. All rights reserved.
 //
-
-#ifndef Coordinates_h
-#define Coordinates_h
-
+#ifndef List_h
+#define List_h
 #include <stdio.h>
 /*-----------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------*/
-                            //implement TAD Coordinates
+                            //implement TAD List
 /*-----------------------------------------------------------------------------*/
+typedef struct s_Node {
+    int pos;
+    struct s_Node *prev;
+    struct s_Node *next;
+}Node;
 
-typedef struct sCoordinates {
-    int x;
-    int y;
-} Coordinates;
-
+typedef struct sList {
+    Node *sent;
+    int sizeList;
+}List;
 /*-----------------------------------------------------------------------------*/
                             //Create Fonctions
 /*-----------------------------------------------------------------------------*/
+List *createList();
+List *pushBack(List *l, int pos);
 /*-----------------------------------------------------------------------------*/
                             //Modify Fonctions
 /*-----------------------------------------------------------------------------*/
-Coordinates calculateCoordinates(int index, int sizeBoard);
-/*-----------------------------------------------------------------------------*/
-                            //Observation Fonctions
-/*-----------------------------------------------------------------------------*/
+void destroyList(List *l);
 /*-----------------------------------------------------------------------------*/
                             //Get Fonctions
 /*-----------------------------------------------------------------------------*/
-int calculateSquareCoordinates(int x, int y, int sizeBoard);
 /*-----------------------------------------------------------------------------*/
                             //Post Up Fonctions
 /*-----------------------------------------------------------------------------*/
-void postUpCoordinates(Coordinates coord);
+void printList(const List *l);
 /*-----------------------------------------------------------------------------*/
                             //End
 /*-----------------------------------------------------------------------------*/
@@ -45,6 +45,4 @@ void postUpCoordinates(Coordinates coord);
 
 
 
-
-
-#endif /* Coordinates_h */
+#endif /* List_h */

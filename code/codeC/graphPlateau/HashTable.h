@@ -5,84 +5,67 @@
 //  Created by Mmadi.anzilane on 14/04/2017.
 //  Copyright © 2017 Mmadi.anzilane. All rights reserved.
 //
-#ifndef Graph_h
-#define Graph_h
+#ifndef HashTable_h
+#define HashTable_h
 
-#include <stdio.h>
-#include <stdbool.h>
-#include <assert.h>
-#include "Coordinates.h"
-#include "Piece.h"
-#include "../accessFiles/FileProcessing.h"
+#include "List.h"
+#include "Graph.h"
 /*-----------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------*/
-                            //implement TAD Graph
+                            //implement TAD TabHash
 /*-----------------------------------------------------------------------------*/
-
-#define MAXVOISIN 6
-#define BLACK '*'
-#define WHITE 'o'
-#define EMPTY '.'
-
-typedef struct sVertex {
-    char color; //color du noeud reprenté par un caractere
-    Coordinates coord; //positionement du Vertex
-    bool isInGroup; //inform is this vertex is in group
-    int theLeaderOfGroup; //infom the leader of group
-    struct sVertex **Adjacents;
-}Vertex;
-
-struct sGraph {
-    int sizeGraph; // la largeur ou la heuteur du graph
-    Vertex **s;
-};
-
-
-
-typedef struct sGraph *Graph;
-
-enum {UP = 0, RIGHT = 1, DOWN = 2, LEFT = 3, UP_RIGHT = 4, DOWN_LEFT = 5};
+typedef struct s_TabHash {
+    List ** boardListGroup;
+    int nbGroups;
+} TabHash;
 
 /*-----------------------------------------------------------------------------*/
                             //Create Fonctions
 /*-----------------------------------------------------------------------------*/
-Graph CreateGraph(int sizeGraph);
-Graph CreateBoardGraph (Graph g, const char *colorTab);
 
+TabHash * createTabHashRg(int sizeTab);
+TabHash * hashFonctionRg(TabHash* tabH, List * group);
+
+
+/*-----------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------*/
                             //Modify Fonctions
 /*-----------------------------------------------------------------------------*/
-void destroyGraph(Graph g);
-void calculateNbAdjacentsGraph(Graph g);
-void calculateSideAdjacentsGraph(int board, Graph g);
-void replaceVertexGraph(Graph g, int pos, char color);
+void freeTabHash(TabHash *tabH, int sizeTab);
+/*******************************************************************************/
+                            //implement Search group
+/*******************************************************************************/
+void modifyLeaderOfVertex(Graph g, int pos, int newLeader);
 
+//Graph g to modify the leader the group
+List *groupUnion(List *g1, List *g2, Graph g);
+
+//v1 and v2 are the positions of vertexs
+//v1 is the leader of the new group
+List *createNewGroup(Graph g, int v1, int v2);
+
+//put a alone vertex in a  group
+List * putItInGroup(List *group, int v, Graph g);
+
+bool searchGroup(TabHash *tabH, Graph g, int pos, char color);
 /*-----------------------------------------------------------------------------*/
                             //Observation Fonctions
 /*-----------------------------------------------------------------------------*/
-bool isInGroup(const Vertex *v);
-bool areVertexAdjacent(const Vertex * v1, const Vertex * v2);
-bool isInSameGroup(const Vertex *v1, const Vertex *v2);
+//To find out which is the largest group between two groups
+bool whichIsLargestGroup(const TabHash *tabH, int leader1, int leader2);
 
+//thougnt to create a alias
+bool IsAWinGroup(List * group, int side1, int side2);
 /*-----------------------------------------------------------------------------*/
                             //Get Fonctions
 /*-----------------------------------------------------------------------------*/
-int getsizeGraph(const Graph g);
-int getNbVertexGraph(const Graph g);
-int getW1Graph(int sizeGraph);
-int getW2Graph(int sizeGraph);
-int getB1Graph(int sizeGraph);
-int getB2Graph(int sizeGraph);
-int getLeaderOfGroup(const Vertex *v);
-
 /*-----------------------------------------------------------------------------*/
                             //Post Up Fonctions
 /*-----------------------------------------------------------------------------*/
-void postUpCoordGraph(Graph g);
-void postUpBoard(Graph g);
-void postUpSideAdjacentGraph(const Graph g);
-
 /*-----------------------------------------------------------------------------*/
                             //End
 /*-----------------------------------------------------------------------------*/
-#endif /* Graph_h */
+
+
+
+#endif /* HashTable_h */
