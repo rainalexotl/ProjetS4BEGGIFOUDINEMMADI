@@ -11,6 +11,7 @@ public class Player {
 	private int[] tabGame;
 	private int nbTurnsPlays; // indice to insert in tabGame
 	private boolean ImFirst = false;
+	private boolean ImWinner = false;
 	// private int size;
 	public Player(char color, String alias, String dateOfBirth,
 				  String email, Board board){ //size = nomber of turns
@@ -24,6 +25,14 @@ public class Player {
 		tabGame = new int[(board.getBoardSize() * board.getBoardSize())+2];
 		tabGame[0] = 0;
 		nbTurnsPlays = 1;
+	}
+
+	public boolean IsWinner() {
+		return ImWinner;
+	}
+
+	public void setImWinner(boolean win) {
+		this.ImWinner = win;
 	}
 
 	public void setImFirst(boolean first) {
@@ -120,8 +129,8 @@ public class Player {
 		return coord;
 	}
 
-	public boolean placePiece() {
-		boolean whatDoYouWant = false;
+	public char placePiece() {
+		char circonstance = 'c';
 		Coordinates coord = null;
 		int choice = 0;
 		int pos = -1;
@@ -170,7 +179,7 @@ public class Player {
 					break;
 				case 3 :
 					board.getHex(pos).getPiece().setColor(color);
-					whatDoYouWant = true;
+					circonstance = 'q'; //save
 					ok = false;
 				break;
 			}
@@ -178,8 +187,11 @@ public class Player {
 		board.printBoard();
 		//pour modifier dans le meme temps le graphe cote c;
 		modifTabGame(pos);
-		InterfaceAvecC.nativePlacePiece(pos, color);
-		return whatDoYouWant;
+		if (InterfaceAvecC.nativePlacePiece(pos, color) == 1) {
+			circonstance = 'w'; //win
+		}
+
+		return circonstance;
 	}
 
 	public static char quiJoue(boolean joueur){

@@ -5,11 +5,13 @@
 #include <assert.h>
 #include <string.h>
 #include <math.h>
-#include "InterfaceAvecC.h"
-#include "../codeC/graphPlateau/Graph.h"
+#include "../../codeJava/InterfaceAvecC.h"
+#include "Graph.h"
+#include "ReducedGraph.h"
 /*-----------------------------------------------------------------------------*/
 //Global Value
 Graph globGraph;
+ReducedGraph * globRg;
 /* -*************************************************************************- */
 
 /*-------------------------IMPLEMENTATION InterfaceAvecC-----------------------*/
@@ -54,13 +56,18 @@ Graph globGraph;
 // }
 
 //appel la methode play de java
-JNIEXPORT int JNICALL
+JNIEXPORT jchar JNICALL
 Java_InterfaceAvecC_nativeInitGame (JNIEnv * env, jclass cl, jstring spots, jobject obj) {
     const char * s = (*env)->GetStringUTFChars(env, spots, 0);
     int nbSpots= strlen(s); printf("nbSpots = %d\n", nbSpots);
     int sizeBoard = sqrt(nbSpots); printf("sizeBoard = %d\n", sizeBoard);
+    int loaded = 0;
     globGraph = CreateGraph(sizeBoard);
-    globGraph = CreateBoardGraph(globGraph, s);
+    globGraph = CreateBoardGraph(globGraph, s, &loaded);
+    globRg = createReducedGraph(globGraph);
+    if (loaded == 1) {
+        globRg = reloadGroups(globGraph, globRg);
+    }
     //printf("je passe la \n");
     jclass jeuHex = (*env)->GetObjectClass(env, obj);
     if (jeuHex == NULL) {
@@ -68,17 +75,17 @@ Java_InterfaceAvecC_nativeInitGame (JNIEnv * env, jclass cl, jstring spots, jobj
         exit(-1);
     }
 
-    jmethodID play = (*env)->GetMethodID(env, jeuHex, "play", "()I");
+    jmethodID play = (*env)->GetMethodID(env, jeuHex, "play", "()C");
     if (play == NULL) {
         fprintf(stderr, "error : method not found !\n");
         exit(-1);
     }
     //printf("je passe la \n");
-    jint etatDuJeu = (*env)->CallIntMethod(env, obj, play, sizeBoard, s);
+    jchar circonstance = (*env)->CallIntMethod(env, obj, play, sizeBoard, s);
     //printf("je passe la \n");
     // destroyGraph(globGraph);
     (*env)->ReleaseStringUTFChars(env, spots, s);
-    return etatDuJeu;
+    return circonstance;
 }
 
 JNIEXPORT jint JNICALL
@@ -97,9 +104,17 @@ Java_InterfaceAvecC_nativeCalcPosition (JNIEnv * env, jclass cl, jint x, jint y,
 }
 
 //modifier la couleur du graph
-JNIEXPORT void JNICALL
+//on cherchera les groupe
+JNIEXPORT int JNICALL
 Java_InterfaceAvecC_nativePlacePiece (JNIEnv * env, jclass cl, jint pos, jchar color) {
+    jint win = 0;
     replaceVertexGraph(globGraph, pos, color);
+    if (color == BLACK) {
+        win = searchGroup(globRg->blackHashTab, globGraph, pos, BLACK);
+    }else {
+        win = searchGroup(globRg->whiteHashTab, globGraph, pos, WHITE);
+    }
+    return win;
 }
 
 JNIEXPORT jstring JNICALL

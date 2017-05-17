@@ -10,9 +10,9 @@ extern "C" {
 /*
  * Class:     InterfaceAvecC
  * Method:    nativeInitGame
- * Signature: (Ljava/lang/String;LJeuHex;)I
+ * Signature: (Ljava/lang/String;LJeuHex;)C
  */
-JNIEXPORT jint JNICALL Java_InterfaceAvecC_nativeInitGame
+JNIEXPORT jchar JNICALL Java_InterfaceAvecC_nativeInitGame
   (JNIEnv *, jclass, jstring, jobject);
 
 /*
@@ -42,9 +42,9 @@ JNIEXPORT jint JNICALL Java_InterfaceAvecC_nativeCalcPosition
 /*
  * Class:     InterfaceAvecC
  * Method:    nativePlacePiece
- * Signature: (IC)V
+ * Signature: (IC)I
  */
-JNIEXPORT void JNICALL Java_InterfaceAvecC_nativePlacePiece
+JNIEXPORT jint JNICALL Java_InterfaceAvecC_nativePlacePiece
   (JNIEnv *, jclass, jint, jchar);
 
 /*
