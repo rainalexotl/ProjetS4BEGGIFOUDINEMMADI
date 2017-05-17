@@ -19,3 +19,16 @@ ReducedGraph * createReducedGraph(Graph g) {
     _rG->blackHashTab = createTabHashRg(getNbVertexGraph(g));
     return _rG;
 }
+
+ReducedGraph * reloadGroups(Graph g, ReducedGraph *_rG) {
+    for (int i = 0; i < getNbVertexGraph(g); i++) {
+        if (g->s[i]->color != EMPTY) {
+            if (g->s[i]->color == BLACK) {
+                searchGroup((*_rG).blackHashTab, g, i, BLACK);
+            }else {
+                searchGroup((*_rG).whiteHashTab, g, i, WHITE);
+            }
+        }
+    }
+    return _rG;
+}

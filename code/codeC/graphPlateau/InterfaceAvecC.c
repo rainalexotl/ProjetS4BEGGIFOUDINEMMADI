@@ -61,9 +61,13 @@ Java_InterfaceAvecC_nativeInitGame (JNIEnv * env, jclass cl, jstring spots, jobj
     const char * s = (*env)->GetStringUTFChars(env, spots, 0);
     int nbSpots= strlen(s); printf("nbSpots = %d\n", nbSpots);
     int sizeBoard = sqrt(nbSpots); printf("sizeBoard = %d\n", sizeBoard);
+    int loaded = 0;
     globGraph = CreateGraph(sizeBoard);
-    globGraph = CreateBoardGraph(globGraph, s);
+    globGraph = CreateBoardGraph(globGraph, s, &loaded);
     globRg = createReducedGraph(globGraph);
+    if (loaded == 1) {
+        globRg = reloadGroups(globGraph, globRg);
+    }
     //printf("je passe la \n");
     jclass jeuHex = (*env)->GetObjectClass(env, obj);
     if (jeuHex == NULL) {

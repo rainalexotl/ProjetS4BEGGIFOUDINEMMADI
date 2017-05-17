@@ -64,8 +64,11 @@ Vertex *insertVertexGraph(Graph g, int i, char color) {
 }
 
 //creation du plateuau de jeu grâce à un tableau de char String en java
-Graph CreateBoardGraph (Graph g, const char *colorTab) {
+Graph CreateBoardGraph (Graph g, const char *colorTab, int *loaded) {
+    *loaded = 0;
     for (int i = 0; i < getNbVertexGraph(g); i++) {
+        if (colorTab[i] != EMPTY)
+            *loaded = 1;
         g->s[i] = insertVertexGraph(g, i, colorTab[i]);
     }
     calculateNbAdjacentsGraph(g);

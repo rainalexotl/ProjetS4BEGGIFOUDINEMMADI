@@ -16,6 +16,7 @@ typedef struct s_ReducedGraph {
     Graph rG;
 } ReducedGraph;
 
-ReducedGraph * createReducedGraph();
+ReducedGraph * createReducedGraph(Graph g);
+ReducedGraph * reloadGroups(Graph g, ReducedGraph *_rG);
 
 /*-----------------------------------------------------------------------------*/

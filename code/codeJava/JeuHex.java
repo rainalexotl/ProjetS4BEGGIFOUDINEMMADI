@@ -10,6 +10,7 @@ public class JeuHex {
     private Player b, w;
     private int size; //size entered by the players
     private String spots;
+    private char letterAnswer;
 
     public int getSize(){
         return size;
@@ -35,80 +36,81 @@ public class JeuHex {
     		System.out.println("SaveFiles directory created successfully.");
     }
 
-    //
-public boolean gameSetup(){
-    char letterAnswer;
-    char finalChoice;
-    boolean ok = true;
-    boolean ko = true; //if we want to continue the game
-	do {
-        System.out.println("*------------------------------------------*");
-		System.out.println("* New game?  -> please  type N             *");
-		System.out.println("* Load game? -> please  type L             *");
-		System.out.println("* Quit game? -> please  tape Q             *");
-		System.out.println("*------------------------------------------*");
+    public char newLoadQuitMenu(){
+        System.out.println("*-----------------------------------------*");
+		System.out.println("* New game?  -> please type N             *");
+		System.out.println("* Load game? -> please type L             *");
+		System.out.println("* Quit game? -> please type Q             *");
+		System.out.println("*-----------------------------------------*");
         System.out.print("choice = ");
 		answer = input.nextLine();
-        letterAnswer = answer.toUpperCase().charAt(0);
-        boolean test = (letterAnswer == 'L');
-        if (letterAnswer == 'N' || letterAnswer == 'L' || letterAnswer == 'Q') {
-            System.out.println("choice = "+letterAnswer );
-            do{
-                System.out.println("*------------------------------------------*");
-        		System.out.println("* Is this your final choice?               *");
-        		System.out.println("* To confirm -> please  type Y             *");
-        		System.out.println("* To Return  -> please  tape N             *");
-        		System.out.println("*------------------------------------------*");
-                System.out.print("choice = ");
-                finalChoice = input.nextLine().toUpperCase().charAt(0);
-            }while(finalChoice != 'N' && finalChoice != 'Y');
-            if (finalChoice != 'N') {
-                ok = false;
-            }
-        }
-	} while (ok);
-
-
-	if (letterAnswer == 'N'){
-		size = setBoardSize();
-        System.out.println(size);
-        spots = InterfaceAvecC.nativeGetSpots(createFileName(letterAnswer,
-        Integer.toString(size)));
-		board = initBoard(size, spots);
-	    joueur = whoPlaysFirst();
-	    if (joueur){
-			b = addPlayer();
-            w = addPlayer();
-		}else{
-			w = addPlayer();
-            b = addPlayer();
-		}
-        //save the first player
-        if (joueur) {
-            b.setImFirst(true);
-        }else {
-            w.setImFirst(true);
-        }
-        //System.out.println("j'affiche les information des joueurs\n"+b.toPlayer()
-        //+"\n"+w.toPlayer());
-	}else if (letterAnswer == 'L'){
-        String nameOfLoadGame = menuChooseFile();
-        spots = loadGame(nameOfLoadGame); //menuChooseFile() : return the save file
-        size = (int)Math.sqrt(spots.length());
-        board = initBoard(size, spots);
-        loadPlayerFromString(nameOfLoadGame, Piece.BLACK);
-        loadPlayerFromString(nameOfLoadGame, Piece.WHITE);
-        loadCirconstanceOfPlayerTabGame(spots);
-        //System.out.println("j'affiche les information des joueurs\n"+b.toPlayer()
-        //+"\n"+w.toPlayer());
-	}else {
-        ko = false;
-        System.out.println("***********************");
-        System.out.println("*    SEE YOUY SOON    *");
-        System.out.println("***********************");
+        return answer.toUpperCase().charAt(0);
     }
-    return ko;
-}
+
+    public char finalChoice(){
+        System.out.println("*-----------------------------------------*");
+        System.out.println("* Is this your final choice?              *");
+        System.out.println("* To confirm -> please type Y             *");
+        System.out.println("* To Return  -> please type N             *");
+        System.out.println("*-----------------------------------------*");
+        System.out.print("choice = ");
+        answer = input.nextLine();
+        return answer.toUpperCase().charAt(0);
+    }
+
+    //
+    public boolean gameSetup(){
+        char finalChoice;
+        boolean ok = true;
+        boolean ko = true; //if we want to continue the game
+    	do {
+            letterAnswer = newLoadQuitMenu();
+            boolean test = (letterAnswer == 'L');
+            if (letterAnswer == 'N' || letterAnswer == 'L' || letterAnswer == 'Q') {
+                do{
+                    finalChoice = finalChoice();
+                }while(finalChoice != 'N' && finalChoice != 'Y');
+                if (finalChoice != 'N') {
+                    ok = false;
+                }
+            }
+    	} while (ok);
+
+    	if (letterAnswer == 'N'){
+    		size = enterBoardSize();
+            spots = InterfaceAvecC.nativeGetSpots(createFileName(letterAnswer,
+            Integer.toString(size)));
+    		board = initBoard(size, spots);
+    	    joueur = whoPlaysFirst();
+    	    if (joueur){
+    			b = addPlayer(); w = addPlayer();
+    		}else{
+    			w = addPlayer(); b = addPlayer();
+    		}
+            //save the first player
+            if (joueur) {
+                b.setImFirst(true);
+            }else {
+                w.setImFirst(true);
+            }
+    	}else if (letterAnswer == 'L'){
+            String nameOfLoadGame = menuChooseFile();
+            spots = loadGame(nameOfLoadGame); //menuChooseFile() : return the save file
+            size = (int)Math.sqrt(spots.length());
+            board = initBoard(size, spots);
+            loadPlayerFromString(nameOfLoadGame, Piece.BLACK);
+            loadPlayerFromString(nameOfLoadGame, Piece.WHITE);
+            loadCirconstanceOfPlayerTabGame(spots);
+            //System.out.println("j'affiche les information des joueurs\n"+b.toPlayer()
+            //+"\n"+w.toPlayer());
+    	}else {
+            ko = false;
+            System.out.println("**********************");
+            System.out.println("*    SEE YOU SOON    *");
+            System.out.println("**********************");
+        }
+        return ko;
+    }
 
     // public void loadPlayer(String nameOfLoadPlayer ,char color) {
     //     loadPlayerFromString("player.txt", color);
@@ -135,10 +137,7 @@ public boolean gameSetup(){
     //save game and player
     public void saveGameAndPlayer(String nameOfSaveGame) {
         String newNameOfSaveGame ="../../SaveFiles/"+nameOfSaveGame; //explain the root
-        //String newsNameOfSavePlayer="../../SaveFiles/"+nameOfSavePlayer;
-        //System.out.println(newNameOfSaveGame+"   "+nameOfSavePlayer);
         String stringToSave = creteStringToSaveOnFile();
-        //System.out.println("board to save = "+stringToSave);
         InterfaceAvecC.nativeSaveGame(newNameOfSaveGame, stringToSave, b.getTabGame(), w.getTabGame());
         savePlayer(nameOfSaveGame);
     }
@@ -153,15 +152,17 @@ public boolean gameSetup(){
         return fileName;
     }
 
-    public int setBoardSize(){
+    public int enterBoardSize(){
     	int size;
+        char letterAnswer;
     	do {
     		System.out.println("Would you like to choose the board's size (default = 11)\nY/N?");
     		answer = input.nextLine();
-    	} while (answer.toUpperCase().charAt(0) != 'Y'
-    		&& answer.toUpperCase().charAt(0) != 'N');
+            letterAnswer = answer.toUpperCase().charAt(0);
+    	} while (letterAnswer != 'Y'
+    		&& letterAnswer != 'N');
 
-    	if (answer.charAt(0) == 'Y' || answer.charAt(0) == 'y'){
+    	if (letterAnswer == 'Y'){
     		System.out.println("What size board do you wish to play on?");
 
     		do {
@@ -184,14 +185,16 @@ public boolean gameSetup(){
 
     //
     public boolean whoPlaysFirst(){
+        char letterAnswer;
     	System.out.println("Who will play first? BLACK (*) or WHITE (o)");
     	do {
     		System.out.println("BLACK = B, WHITE = W");
     		answer = input.next();
-    	} while (answer.toUpperCase().charAt(0) != 'B'
-    		&& answer.toUpperCase().charAt(0) != 'W');
+            letterAnswer = answer.toUpperCase().charAt(0);
+    	} while (letterAnswer != 'B'
+    		&& letterAnswer != 'W');
 
-    	if (answer.charAt(0) == 'B' || answer.charAt(0) == 'b'){
+    	if (letterAnswer == 'B'){
     		System.out.println("BLACK (*) will start");
     		joueur = true;
     	}else{
@@ -337,7 +340,7 @@ public boolean gameSetup(){
         }
     }
 
-    void  quitMenu() {
+    void quitMenu() {
         int choice = 0;
         boolean ok = true;
         boolean ko = true;
@@ -361,10 +364,6 @@ public boolean gameSetup(){
                 input.nextLine();
                 System.out.print("enter the name of saveGame   : ");
                 nameOfSaveGame = input.nextLine();
-                //input.nextLine(); //to free buff
-                //System.out.print("enter the name of savePlayer : ");
-                ///nameOfSavePlayer = input.nextLine();
-                //System.out.println("save player in = "+nameOfSavePlayer+"\nsave game in = "+nameOfSaveGame);
                 saveGameAndPlayer(nameOfSaveGame);
                 ok = false;
             }else if (choice == 2) {
