@@ -11,7 +11,8 @@
                             //implement TAD ReducedGraph
 /*-----------------------------------------------------------------------------*/
 typedef struct s_ReducedGraph {
-    TabHash * tabH;
+    TabHash * whiteHashTab;
+    TabHash * blackHashTab;
     Graph rG;
 } ReducedGraph;
 

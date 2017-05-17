@@ -12,9 +12,10 @@
 /*-----------------------------------------------------------------------------*/
                         //implement TAD ReducedGraph
 /*-----------------------------------------------------------------------------*/
-ReducedGraph * createReducedGraph(Graph g, TabHash *tabH) {
+ReducedGraph * createReducedGraph(Graph g) {
     ReducedGraph * _rG = malloc(sizeof(ReducedGraph));
-    _rG->tabH = tabH;
     _rG->rG = g;
+    _rG->whiteHashTab = createTabHashRg(getNbVertexGraph(g));
+    _rG->blackHashTab = createTabHashRg(getNbVertexGraph(g));
     return _rG;
 }

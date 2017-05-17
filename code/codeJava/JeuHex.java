@@ -217,7 +217,7 @@ public boolean gameSetup(){
     		System.out.println("WHITE player...");
     		color = Piece.WHITE;
     	}
-        input.nextLine(); 
+        input.nextLine();
     	System.out.print("Alias? ");
     	alias = input.nextLine();
 
@@ -373,14 +373,14 @@ public boolean gameSetup(){
         } while (ok);
     }
 
-    public int play() {
+    public char play() {
         System.out.println("je passe la en java");
         board.printBoard();
         Player p;
     	int i = 0;
-        boolean stop = false;
+        char circonstance = 'c';
         System.out.println(board.getNbHexes());
-    	while(i < board.getNbHexes() && !stop){
+    	while(i < board.getNbHexes() && (circonstance == 'c')){
     		char color = Player.quiJoue(joueur);
 
     		if (color == Piece.BLACK)
@@ -388,7 +388,7 @@ public boolean gameSetup(){
     		else
     			p = w;
 
-    		stop = p.placePiece();
+    		circonstance = p.placePiece();
 
     		//board.printBoard();
             p.printTabGame();
@@ -397,13 +397,14 @@ public boolean gameSetup(){
     		joueur = !joueur;
             //System.out.println("\n "+i);
             i++;
+            if (circonstance == 'w') { //I do just that but we can change if we want, just for test
+                p.setImWinner(true);
+                circonstance = 'w';
+            }else if (circonstance == 'q'){
+                circonstance = 'q';
+            }
     	}
-        if (stop) { //I do just that but we can change if we want, just for test
-            return 1;
-        }else {
-            return 0;
-        }
-
+        return circonstance;
     }
 
     public String menuChooseFile() {
@@ -434,7 +435,12 @@ public boolean gameSetup(){
     	JeuHex jeu = new JeuHex();
     	jeu.makeSaveDirectory();
         if(jeu.gameSetup())
-            if(InterfaceAvecC.nativeInitGame(jeu.getSpots(), jeu) == 1)
+            if(InterfaceAvecC.nativeInitGame(jeu.getSpots(), jeu) == 'q')
                 jeu.quitMenu();
+            else
+                if (jeu.getBlackPlayer().IsWinner())
+                    System.out.println("\nPLAYER BLACK WON !\n");
+                else
+                    System.out.println("\nPLAYER WHITE WON !\n");
     }
 }
