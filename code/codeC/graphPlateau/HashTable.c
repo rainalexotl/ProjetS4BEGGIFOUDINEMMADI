@@ -23,7 +23,7 @@ TabHash * createTabHashRg(int sizeTab) {
     tabH->nbGroups = 0;
     tabH->boardListGroup = malloc(sizeof(List*)*sizeTab);
     for (int i = 0; i < sizeTab; ++i) { //a voir s'il faut initialiser ou pas
-        tabH->boardListGroup[i] = NULL;//createList();
+        tabH->boardListGroup[i] = NULL; //createList();
     }
     return tabH;
 }
