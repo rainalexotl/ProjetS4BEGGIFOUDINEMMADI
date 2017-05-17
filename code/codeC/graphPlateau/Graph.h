@@ -81,6 +81,7 @@ int getLeaderOfGroup(const Vertex *v);
 void postUpCoordGraph(Graph g);
 void postUpBoard(Graph g);
 void postUpSideAdjacentGraph(const Graph g);
+void postUpPositionAdjacentVertex(int posV, Graph g);
 
 /*-----------------------------------------------------------------------------*/
                             //End

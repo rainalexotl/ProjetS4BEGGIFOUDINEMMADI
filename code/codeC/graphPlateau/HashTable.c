@@ -98,6 +98,7 @@ List *createNewGroup(Graph g, int v1, int v2) {
 
 //put a alone vertex in a  group
 List * putItInGroup(List *group, int v, Graph g) {
+    assert(group->sent->next);
     int leaderOfGroup = group->sent->next->pos;
     modifyLeaderOfVertex(g, v, leaderOfGroup);
     group = pushBack(group, v);
@@ -149,11 +150,11 @@ bool searchGroup(TabHash *tabH, Graph g, int pos, char color) {
                 }
             }
         }
-        if (newGroupe != NULL)
+    }
+    if (newGroupe != NULL)
             printList(newGroupe);
-        if (IsAWinGroup(newGroupe, side1, side2)) {
-            winningGroup = true;
-        }
+    if (IsAWinGroup(newGroupe, side1, side2)) {
+        winningGroup = true;
     }
     return winningGroup;
 }
@@ -182,14 +183,21 @@ bool IsAWinGroup(List * group, int side1, int side2) {
     Node *itr = group->sent;
     while (itr->next != group->sent && stop == 0) {
         //printf("elem %d %d\n",i++, itr->next->pos);
-        if (itr->next->pos == side1 || itr->next->pos == side2) {
-            if (++i == 2) {
-                stop = true;
-            }
+        if (itr->next->pos == side2) {
+            printf("somme %d\n", itr->next->pos);
+            i++;
+        }
+        if (itr->next->pos == side1) {
+            i++;
+            printf("sommet %d\n", itr->next->pos);
+        }
+        if (i == 2) {
+            stop = true;
         }
         assert(itr->next);
         itr = itr->next;
     }
+    printf("valeur de stop à la sortie de la fonction win %d\n", stop);
     return stop;
 }
 /*-----------------------------------------------------------------------------*/

@@ -22,18 +22,24 @@ int main(int argc, const char * argv[]) {
     int stop = 0;
     Piece p;
     int pos;
-
+    g->s[15]->color = '*';
+    g->s[15]->color = 'o';
+    postUpBoard(g);
+    postUpSideAdjacentGraph(g);
     while (i < getNbVertexGraph(g) && stop == 0){
         if (joueur){
             p = createPiece(BLACK);
             pos = calculateSquareCoordinates(p.coord.x, p.coord.y, getsizeGraph(g));
             replaceVertexGraph(g, pos, BLACK);
-
+            printf("position du sommet adjacent des sommet \n");
+            postUpPositionAdjacentVertex(pos, g);
             stop = searchGroup(tabHBlack, g, pos, BLACK);
         }else {
             p = createPiece(WHITE);
             pos = calculateSquareCoordinates(p.coord.x, p.coord.y, getsizeGraph(g));
             replaceVertexGraph(g, pos, WHITE);
+            printf("position du sommet adjacent des sommet \n");
+            postUpPositionAdjacentVertex(pos, g);
             stop = searchGroup(tabHWhite, g, pos, WHITE);
         }
         postUpBoard(g);
@@ -42,7 +48,7 @@ int main(int argc, const char * argv[]) {
     }
 
     if (stop){
-        printf("groupe gagnant trouvé\n");
+        printf("groupe gagnant trouvé\nvaleur de stop = %d\n", stop);
     }
 
     return 0;

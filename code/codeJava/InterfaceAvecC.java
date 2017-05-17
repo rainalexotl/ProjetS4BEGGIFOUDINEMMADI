@@ -3,7 +3,7 @@
 public class InterfaceAvecC {
 
 	static {
-		System.load("/Users/Angelo/Desktop/ProjetHex/ProjetS4BEGGIFOUDINEMMADI/code/lib/libInterfaceAvecC.dylib");
+		System.load("/home/manzilane/Documents/ProjetS4/ProjetS4BEGGIFOUDINEMMADI/code/lib/libInterfaceAvecC.so");
 	}
 
 	//public static native Piece nativeInitPiece(char color);
