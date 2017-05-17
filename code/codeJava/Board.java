@@ -14,15 +14,13 @@ public class Board {
 		for (int i = 0; i < getNbHexes(); i++){
 			 int x = Coordinates.calcXCoord(i, boardSize);
 			 int y = Coordinates.calcYCoord(i, boardSize);
-			// this.hex[i] = new Hex(x, y, Piece.EMPTY);
-
-			this.hex[i] = InterfaceAvecC.nativeInitHex(x, y, spots.charAt(i));
+			 this.hex[i] = new Hex(x, y, spots.charAt(i));
+			//this.hex[i] = InterfaceAvecC.nativeInitHex(x, y, spots.charAt(i));
 		}
 	}
 
 	public void  printBoard(){
 		int i, j;
-
 		System.out.print("W");
 		for (i = 0; i < boardSize; i++)
 			System.out.print(" W");
@@ -64,8 +62,18 @@ public class Board {
 		return hex[i];
 	}
 
-	public static void main(String[] args) {
-		//Board b = new Board(defaultSize);
-		//b.printBoard();
+	//retourne un string à partir du graphe
+	public String convertBoardToString() {
+		String str ="";
+		int i;
+		for (i = 0; i < boardSize*boardSize; i++) {
+			str += hex[i].getPiece().getColor();
+		}
+		return str;
 	}
+
+	// public static void main(String[] args) {
+	// 	//Board b = new Board(defaultSize);
+	// 	//b.printBoard();
+	// }
 }

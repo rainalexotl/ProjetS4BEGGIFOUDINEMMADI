@@ -1,10 +1,10 @@
 #include "list.h"
 
-typedef struct s_node {
+struct s_node {
 	struct s_node *next;
 	struct s_node *prev;
 	Position p;
-} Node;
+};
 
 struct s_list {
 	Node *sent;
@@ -123,4 +123,3 @@ void printListForward(List l, bool b){
 	}
 	printf("\n");
 }
-

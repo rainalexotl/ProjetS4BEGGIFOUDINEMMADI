@@ -5,73 +5,85 @@
 //  Created by Mmadi.anzilane on 14/04/2017.
 //  Copyright © 2017 Mmadi.anzilane. All rights reserved.
 //
-
 #ifndef Graph_h
 #define Graph_h
 
 #include <stdio.h>
+#include <stdbool.h>
+#include <assert.h>
 #include "Coordinates.h"
 #include "Piece.h"
-#include "../stackAndList/list.h"
-#include "../stackAndList/stack.h"
+#include "../accessFiles/FileProcessing.h"
+/*-----------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------*/
+                            //implement TAD Graph
+/*-----------------------------------------------------------------------------*/
 
-typedef struct sGraph * Graph;
-typedef struct sVertex Vertex;
+#define MAXVOISIN 6
+#define BLACK '*'
+#define WHITE 'o'
+#define EMPTY '.'
+
+typedef struct sVertex {
+    char color; //color du noeud reprenté par un caractere
+    Coordinates coord; //positionement du Vertex
+    bool isInGroup; //inform is this vertex is in group
+    int theLeaderOfGroup; //infom the leader of group
+    struct sVertex **Adjacents;
+}Vertex;
+
+struct sGraph {
+    int sizeGraph; // la largeur ou la heuteur du graph
+    Vertex **s;
+};
+
+
+
+typedef struct sGraph *Graph;
 
 enum {UP = 0, RIGHT = 1, DOWN = 2, LEFT = 3, UP_RIGHT = 4, DOWN_LEFT = 5};
 
+/*-----------------------------------------------------------------------------*/
+                            //Create Fonctions
+/*-----------------------------------------------------------------------------*/
 Graph CreateGraph(int sizeGraph);
-
 Graph CreateBoardGraph (Graph g, const char *colorTab);
 
-char* transformGraphToBoardOfChar(const char * fileName);
-
-void calculateAdjacentsVertexGraph(Vertex *s, Graph g);
-
+/*-----------------------------------------------------------------------------*/
+                            //Modify Fonctions
+/*-----------------------------------------------------------------------------*/
+void destroyGraph(Graph g);
 void calculateNbAdjacentsGraph(Graph g);
-
 void calculateSideAdjacentsGraph(int board, Graph g);
-
 void replaceVertexGraph(Graph g, int pos, char color);
 
-void destroyGraph(Graph g);
+/*-----------------------------------------------------------------------------*/
+                            //Observation Fonctions
+/*-----------------------------------------------------------------------------*/
+bool isInGroup(const Vertex *v);
+bool areVertexAdjacent(const Vertex * v1, const Vertex * v2);
+bool isInSameGroup(const Vertex *v1, const Vertex *v2);
 
-//
+/*-----------------------------------------------------------------------------*/
+                            //Get Fonctions
+/*-----------------------------------------------------------------------------*/
 int getsizeGraph(const Graph g);
 int getNbVertexGraph(const Graph g);
-//obtenir les 4 sommet
 int getW1Graph(int sizeGraph);
 int getW2Graph(int sizeGraph);
 int getB1Graph(int sizeGraph);
 int getB2Graph(int sizeGraph);
+int getLeaderOfGroup(const Vertex *v);
 
+/*-----------------------------------------------------------------------------*/
+                            //Post Up Fonctions
+/*-----------------------------------------------------------------------------*/
 void postUpCoordGraph(Graph g);
 void postUpBoard(Graph g);
 void postUpSideAdjacentGraph(const Graph g);
+void postUpPositionAdjacentVertex(int posV, Graph g);
 
-/*------------------Recherche des groupes--------------------------*/
-// void initPositionTable(Position * positions);
-
-Position makePosition(int v);
-
-//takes a table of integers and transforms it into a table of Positions
-Position * makePosTableFromIntTable(int * plays, int nbOfPlays);
-
-//creates the table of neighbor positions based on a given one
-Position makePositionTable(Position p, Vertex * s, const Graph g);
-
-/*retourne le voisin ayant la position la plus petite, n'ayant pas ete visite*/
-Position minPosition(Position p, Stack s);
-
-/*returns the index of a certain position p in a table of positions*/
-int findPositionIndex(Position * positionTable, Position p);
-
-//pushes a position p onto the stack s and adds to the list l
-void pushAndAdd(List *l, Stack *s, Position p);
-
-/*tests if all the neighboring positions of p are visited*/
-bool allPositionsVisited(Position p);
-
-void findGroups(int * plays, int nbOfPlays, List ** groups, int *nbOfGroups, Graph g);
-
+/*-----------------------------------------------------------------------------*/
+                            //End
+/*-----------------------------------------------------------------------------*/
 #endif /* Graph_h */

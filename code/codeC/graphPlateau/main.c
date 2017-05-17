@@ -1,51 +1,55 @@
 //
 //  main.c
-//  graphes
+//
 //
 //  Created by Mmadi.anzilane on 14/04/2017.
 //  Copyright © 2017 Mmadi.anzilane. All rights reserved.
 //
 
 #include <stdio.h>
-#include "Graph.h"
-
+//#include "Graph.h"
+#include "ReducedGraph.h"
 int main(int argc, const char * argv[]) {
-
-    // int dim(char*fich);
-    // char colors[36] = {0};
-    // for (size_t i = 0; i < 6*6; i++) {
-    //     colors[i] = '*';
-    // }
-    char * colors = transformGraphToBoardOfChar("../../../SaveFiles/testGame.txt");
-
-    // int i;
-    // printf("WhitePositions\n");
-    // for (i = 0; i < WNbPlays; i++){
-    //     printf("%d\n", WhitePositions[i]->pos);
-    // }
-
-    // printf("BlackPositions\n");
-    // for (i = 0; i < BNbPlays; i++){
-    //     printf("%d\n", BlackPositions[i]->pos);
-    // }
-
-    Graph g = CreateGraph(3);
-    //replaceVertexGraph(g);
-    g = CreateBoardGraph(g, colors);
+    Graph g = CreateGraph(4);
+    char * str = transformGraphToBoardOfChar("../../../config/size4.txt");
+    g = CreateBoardGraph(g, str);
     postUpBoard(g);
-    //postUpSideAdjacentGraph(g);
-    //destroyGraph(g);
 
+    TabHash * tabHBlack = createTabHashRg(getNbVertexGraph(g));
+    TabHash * tabHWhite = createTabHashRg(getNbVertexGraph(g));
+    bool joueur = true;
+    int i = 0;
+    int stop = 0;
+    Piece p;
+    int pos;
+    g->s[15]->color = '*';
+    g->s[15]->color = 'o';
+    postUpBoard(g);
+    postUpSideAdjacentGraph(g);
+    while (i < getNbVertexGraph(g) && stop == 0){
+        if (joueur){
+            p = createPiece(BLACK);
+            pos = calculateSquareCoordinates(p.coord.x, p.coord.y, getsizeGraph(g));
+            replaceVertexGraph(g, pos, BLACK);
+            printf("position du sommet adjacent des sommet \n");
+            postUpPositionAdjacentVertex(pos, g);
+            stop = searchGroup(tabHBlack, g, pos, BLACK);
+        }else {
+            p = createPiece(WHITE);
+            pos = calculateSquareCoordinates(p.coord.x, p.coord.y, getsizeGraph(g));
+            replaceVertexGraph(g, pos, WHITE);
+            printf("position du sommet adjacent des sommet \n");
+            postUpPositionAdjacentVertex(pos, g);
+            stop = searchGroup(tabHWhite, g, pos, WHITE);
+        }
+        postUpBoard(g);
+        joueur = !joueur;
+        i++;
+    }
 
-    int WNbPlays = 7;
-    // int BNbPlays = 6;
-    int WhitePlays[] = {1, 2, 3, 5, 7, 9, 10};
-    // int BlackPlays[] = {0, 4, 11, 6, 8, 12};
-    Position * WhitePositions = makePosTableFromIntTable(WhitePlays, WNbPlays);
-    printf("the table was returned\n");
-    // Position * BlackPositions = makePosTableFromIntTable(BlackPlays, BNbPlays);
+    if (stop){
+        printf("groupe gagnant trouvé\nvaleur de stop = %d\n", stop);
+    }
 
-    free(WhitePositions);
-    // free(BlackPositions);
     return 0;
 }

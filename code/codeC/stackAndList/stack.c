@@ -1,9 +1,9 @@
 #include "stack.h"
 
-typedef struct s_node{
+struct s_node{
 	Position p;
 	struct s_node *next;
-} Node;
+};
 
 struct s_Stack{
 	Node *top;
@@ -50,14 +50,14 @@ void pop(Stack *s){
 bool searchStack(Stack s, Position p){
 	if (emptyStack(s)) return false;
 	Node * itr = s->top;
-	
+
 	while (itr != NULL){
 		if (itr->p->pos == p->pos)
 			return true;
 		else
 			itr = itr->next;
 	}
-	return false;	
+	return false;
 }
 
 //T_pile *saisir_pile(){
@@ -79,5 +79,5 @@ int main(){
 	p=saisir_pile();
     affiche_Pile(p);
 }
-	
+
 */

@@ -8,10 +8,9 @@
 
 #include "Piece.h"
 
-Piece createPiece() {
+Piece createPiece(char color) {
     Piece p;
-    printf("Please enter the colar of the Piece : ");
-    scanf("%c", &p.color);
+    p.color = color;
     printf("Please enter the coodinates\n");
     printf("x = ");
     scanf("%d", &p.coord.x);
