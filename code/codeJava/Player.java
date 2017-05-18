@@ -2,63 +2,33 @@ import java.util.Scanner;
 
 public class Player {
 
-	private char color;
+	private char color; //the player's color
 	private String alias;
 	private String dateOfBirth;
 	private String email;
 	private Board board; //the board the player is playing on
 	private Scanner input;
-	private int[] tabGame;
-	private int nbTurnsPlays; // indice to insert in tabGame
-	private boolean ImFirst = false;
-	private boolean ImWinner = false;
-	// private int size;
+	private int[] movesTab; //
+	private int nbTurnsPlays; // indice to insert in movesTab
+	private boolean firstPlayer = false;
+	private boolean winner = false;
+
 	public Player(char color, String alias, String dateOfBirth,
-				  String email, Board board){ //size = nomber of turns
+				  String email, Board board){
 		this.color = color;
 		this.alias = alias;
 		this.dateOfBirth = dateOfBirth;
 		this.email = email;
 		this.board = board;
 		this.input = new Scanner(System.in);
-		//this.size = size;
-		tabGame = new int[(board.getBoardSize() * board.getBoardSize())+2];
-		tabGame[0] = 0;
-		nbTurnsPlays = 1;
-	}
 
-	public boolean IsWinner() {
-		return ImWinner;
-	}
-
-	public void setImWinner(boolean win) {
-		this.ImWinner = win;
-	}
-
-	public void setImFirst(boolean first) {
-		this.ImFirst = first;
-	}
-
-	public boolean isFirst() {
-		return ImFirst;
-	}
-
-	public int getNbTurnsPlay() {
-		return tabGame[0];
-	}
-	public void setNbTurnsPlay(int nbTurnsPlays) {
-		this.nbTurnsPlays = nbTurnsPlays;
+		movesTab = new int[(board.getBoardSize() * board.getBoardSize()) + 2];
+		movesTab[0] = 0; // number of moves are saved in movesTab[0]
+		nbTurnsPlays = 1; // the moves will be saved starting from the 1st index
 	}
 
 	public char getColor(){
 		return color;
-	}
-
-	public String getColorName(){
-		if (color == Piece.BLACK)
-			return "(*) BLACK ";
-		else
-			return "(o) WHITE ";
 	}
 
 	public String getAlias(){
@@ -77,27 +47,58 @@ public class Player {
 		return board;
 	}
 
-	public int[] getTabGame() {
-		return tabGame;
+	public int[] getMovesTab() {
+		return movesTab;
 	}
 
-	public void printTabGame() {
+	public int getNbTurnsPlay() {
+		return movesTab[0];
+	}
+
+	public String getColorName(){
+		if (color == Piece.BLACK)
+			return "(*) BLACK ";
+		else
+			return "(o) WHITE ";
+	}
+
+	public boolean isWinner() {
+		return winner;
+	}
+
+	public boolean isFirst() {
+		return firstPlayer;
+	}
+
+	public void setWinner(boolean win) {
+		this.winner = win;
+	}
+
+	public void setFirstPlayer(boolean first) {
+		this.firstPlayer = first;
+	}
+
+	public void setNbTurnsPlay(int nbTurnsPlays) {
+		this.nbTurnsPlays = nbTurnsPlays;
+	}
+
+	public void printmovesTab() {
 		for (int i = 0; i < nbTurnsPlays; i++) {
-			System.out.print(" "+tabGame[i]);
+			System.out.print(" "+movesTab[i]);
 		}
 	}
 
-	public String toPlayer() {
+	public String toStringPlayer() {
 		return alias+'#'+dateOfBirth+'@'+email;
 	}
 
 	//change table
-	public void modifTabGame(int pos) {
+	public void modifMovesTab(int pos) {
 		int x = Coordinates.calcXCoord(pos, board.getBoardSize());
 		int y = Coordinates.calcYCoord(pos, board.getBoardSize());
-		tabGame[nbTurnsPlays++] = x;
-		tabGame[nbTurnsPlays++] = y;
-		tabGame[0] +=2;
+		movesTab[nbTurnsPlays++] = x;
+		movesTab[nbTurnsPlays++] = y;
+		movesTab[0] +=2;
 	}
 
 	public Coordinates enterCoordinates(){
@@ -121,11 +122,7 @@ public class Player {
 			y = input.nextInt();
 		}
 
-	 	//tabGame[nbTurnsPlays++] = x; //a voir si ca marche
-		//tabGame[nbTurnsPlays++] = y;
 		coord = new Coordinates(x, y);
-		//System.out.println("size : "+nbTurnsPlays);
-		//tabGame[nbTurnsPlays++] = coord;
 		return coord;
 	}
 
@@ -186,7 +183,7 @@ public class Player {
 		}while (ok);
 		board.printBoard();
 		//pour modifier dans le meme temps le graphe cote c;
-		modifTabGame(pos);
+		modifmovesTab(pos);
 		if (InterfaceAvecC.nativePlacePiece(pos, color) == 1) {
 			circonstance = 'w'; //win
 		}

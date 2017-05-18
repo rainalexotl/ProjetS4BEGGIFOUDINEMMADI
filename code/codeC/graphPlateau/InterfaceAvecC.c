@@ -129,29 +129,29 @@ Java_InterfaceAvecC_nativeGetSpots (JNIEnv * env, jclass cl, jstring fileName) {
 
 JNIEXPORT void JNICALL
 Java_InterfaceAvecC_nativeSaveGame (JNIEnv * env, jclass cl,
-    jstring savedFileName, jstring stringToSave, jintArray BTabGame, jintArray WTabGame) {
-    jsize Bsize = (*env)->GetArrayLength(env, BTabGame);
-    jsize Wsize = (*env)->GetArrayLength(env, WTabGame);
+    jstring savedFileName, jstring stringToSave, jintArray BMovesTab, jintArray WMovesTab) {
+    jsize Bsize = (*env)->GetArrayLength(env, BMovesTab);
+    jsize Wsize = (*env)->GetArrayLength(env, WMovesTab);
 
-    jint *Bbody = (*env)->GetIntArrayElements(env, BTabGame, 0);
-    jint *Wbody = (*env)->GetIntArrayElements(env, WTabGame, 0);
+    jint *Bbody = (*env)->GetIntArrayElements(env, BMovesTab, 0);
+    jint *Wbody = (*env)->GetIntArrayElements(env, WMovesTab, 0);
 
-    int bTabGame[Bsize];
-    int wTabGame[Wsize];
+    int bMovesTab[Bsize];
+    int wMovesTab[Wsize];
 
-	for (int i = 0; i <= Bsize; i++) { bTabGame[i] = Bbody[i]; } //conversion des tab en c
-	for (int i = 0; i <= Wsize; i++) { wTabGame[i] = Wbody[i]; }
+	for (int i = 0; i <= Bsize; i++) { bMovesTab[i] = Bbody[i]; } //conversion des tab en c
+	for (int i = 0; i <= Wsize; i++) { wMovesTab[i] = Wbody[i]; }
 
     const char * fileName = (*env)->GetStringUTFChars(env, savedFileName, 0);
     const char * strToSave = (*env)->GetStringUTFChars(env, stringToSave, 0);
 
-    saveBoardFile(fileName, strToSave, bTabGame, wTabGame);
+    saveBoardFile(fileName, strToSave, bMovesTab, wMovesTab);
 
     //for the free from java
     (*env)->ReleaseStringUTFChars(env, savedFileName, fileName);
     (*env)->ReleaseStringUTFChars(env, stringToSave, strToSave);
-    (*env)->ReleaseIntArrayElements(env, BTabGame, Bbody, 0);
-    (*env)->ReleaseIntArrayElements(env, WTabGame, Wbody, 0);
+    (*env)->ReleaseIntArrayElements(env, BMovesTab, Bbody, 0);
+    (*env)->ReleaseIntArrayElements(env, WMovesTab, Wbody, 0);
 }
 
 //save player
