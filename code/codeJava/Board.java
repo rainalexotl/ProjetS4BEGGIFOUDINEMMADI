@@ -61,7 +61,7 @@ public class Board {
 
 	//returns a board in string form
 	public String convertBoardToString(){
-		String str ="";
+		String str = "";
 		int i;
 		for (i = 0; i < boardSize * boardSize; i++){
 			str += hex[i].getPiece().getColor();
