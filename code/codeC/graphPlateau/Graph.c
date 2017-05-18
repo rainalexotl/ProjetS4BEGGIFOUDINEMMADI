@@ -64,8 +64,11 @@ Vertex *insertVertexGraph(Graph g, int i, char color) {
 }
 
 //creation du plateuau de jeu grâce à un tableau de char String en java
-Graph CreateBoardGraph (Graph g, const char *colorTab) {
+Graph CreateBoardGraph (Graph g, const char *colorTab, int *loaded) {
+    *loaded = 0;
     for (int i = 0; i < getNbVertexGraph(g); i++) {
+        if (colorTab[i] != EMPTY)
+            *loaded = 1;
         g->s[i] = insertVertexGraph(g, i, colorTab[i]);
     }
     calculateNbAdjacentsGraph(g);
@@ -241,7 +244,7 @@ int adjacentUpRightGraph(const Vertex *s, int sizeGraph) {
     if (s->coord.x == 0 && s->coord.y != 0) {
         return getW1Graph(sizeGraph);
     }else if (s->coord.x != 0 && s->coord.y == sizeGraph-1){
-        return getB1Graph(sizeGraph);
+        return getB2Graph(sizeGraph);
     }
     return calculateSquareCoordinates(s->coord.x-1, s->coord.y+1, sizeGraph);
 }
@@ -250,7 +253,7 @@ int adjacentDownLeftGraph(const Vertex *s, int sizeGraph) {
     if (s->coord.x == sizeGraph-1 && s->coord.y != 0) {
         return getW2Graph(sizeGraph);
     }else if (s->coord.x != 0 && s->coord.y == 0) {
-        return getB2Graph(sizeGraph);
+        return getB1Graph(sizeGraph);
     }
     return calculateSquareCoordinates(s->coord.x+1, s->coord.y-1, sizeGraph);
 }
@@ -286,6 +289,16 @@ void postUpBoard(Graph g) {
 void postUpAdjacentsVertex(const Vertex *s) {
     for (int i = 0; i < 4; i++) {
         printf("%c \n", s->Adjacents[i]->color);
+    }
+}
+
+void postUpPositionAdjacentVertex(int posV, Graph g) {
+    int pos = -1;
+    for (int i = 0; i < MAXVOISIN; ++i) {
+        if (g->s[posV]->Adjacents[i]) {
+            pos = calculateSquareCoordinates(g->s[posV]->Adjacents[i]->coord.x,  g->s[posV]->Adjacents[i]->coord.y, getsizeGraph(g));
+            printf("(%c %d )\n", g->s[posV]->Adjacents[i]->color, pos);
+        }
     }
 }
 

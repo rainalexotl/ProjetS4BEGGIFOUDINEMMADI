@@ -24,8 +24,8 @@ char * transformGraphToBoardOfChar(const char * fileName){
     int ok = 1;
 	file = fopen(fileName, "r");
 	if (file) {
-		int i,j;
-		i = 0;
+		int j;
+		// i = 0;
         j = 0;
         ok = 1;
 		do {

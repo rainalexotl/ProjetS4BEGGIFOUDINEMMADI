@@ -47,7 +47,7 @@ enum {UP = 0, RIGHT = 1, DOWN = 2, LEFT = 3, UP_RIGHT = 4, DOWN_LEFT = 5};
                             //Create Fonctions
 /*-----------------------------------------------------------------------------*/
 Graph CreateGraph(int sizeGraph);
-Graph CreateBoardGraph (Graph g, const char *colorTab);
+Graph CreateBoardGraph (Graph g, const char *colorTab, int *loaded);
 
 /*-----------------------------------------------------------------------------*/
                             //Modify Fonctions
@@ -81,6 +81,7 @@ int getLeaderOfGroup(const Vertex *v);
 void postUpCoordGraph(Graph g);
 void postUpBoard(Graph g);
 void postUpSideAdjacentGraph(const Graph g);
+void postUpPositionAdjacentVertex(int posV, Graph g);
 
 /*-----------------------------------------------------------------------------*/
                             //End

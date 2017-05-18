@@ -7,6 +7,8 @@
 //
 //
 
+#ifndef FileProcessing_h
+#define FileProcessing_h
 // si on n'en a pas besoin
 #define _POSIX_C_SOURCE 1
 #include <stdio.h>
@@ -26,3 +28,5 @@ void savePlayer(const char * fileNameOfSavePlayer, const char * Bplayer, const c
 char * loarPlayer(char color, const char* stringFromFilInC);
 char ** getSaveFile(const char* NomRep, int *i);
 void freeSaveFile(char** saveFile);
+
+#endif /* FileProcessing_h */
