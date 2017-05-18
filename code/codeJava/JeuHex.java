@@ -9,7 +9,8 @@ public class JeuHex {
     private Player b, w;
     private int size; //size entered by the players
     private String spots;
-    private char letterAnswer;
+    private String configPath = "../../config/size";
+    private String saveFilesPath = "../../SaveFiles/";
 
     public int getSize(){
         return size;
@@ -29,158 +30,161 @@ public class JeuHex {
 
     //makes the save file directory if it does not already exist
     public void makeSaveDirectory(){
-    	File dir = new File("../../SaveFiles");
+    	File dir = new File(saveFilesPath);
     	boolean successful = dir.mkdir();
     	if(successful)
     		System.out.println("SaveFiles directory created successfully.");
     }
-
-    public char newLoadQuitMenu(){
-        System.out.println("*-----------------------------------------*");
-		System.out.println("* New game?  -> please type N             *");
-		System.out.println("* Load game? -> please type L             *");
-		System.out.println("* Quit game? -> please type Q             *");
-		System.out.println("*-----------------------------------------*");
-        System.out.print("choice = ");
-		answer = input.nextLine();
-        return answer.toUpperCase().charAt(0);
-    }
-
-    public char finalChoice(){
-        System.out.println("*-----------------------------------------*");
-        System.out.println("* Is this your final choice?              *");
-        System.out.println("* To confirm -> please type Y             *");
-        System.out.println("* To return  -> please type N             *");
-        System.out.println("*-----------------------------------------*");
-        System.out.print("choice = ");
-        answer = input.nextLine();
-        return answer.toUpperCase().charAt(0);
-    }
+    //
+    // public char newLoadQuitMenu(){
+    //     char letterAnswer;
+    //     System.out.println("\n*-----------------------------------------*");
+	// 	System.out.println("* New game?  -> please type N             *");
+	// 	System.out.println("* Load game? -> please type L             *");
+	// 	System.out.println("* Quit game? -> please type Q             *");
+	// 	System.out.println("*-----------------------------------------*");
+    //     System.out.print("choice : ");
+	// 	answer = input.nextLine();
+    //     letterAnswer = answer.toUpperCase().charAt(0);
+    //     return letterAnswer;
+    // }
+    //
+    // public char finalChoice(){
+    //     char finalChoice;
+    //     System.out.println("\n*-----------------------------------------*");
+    //     System.out.println("* Is this your final choice?              *");
+    //     System.out.println("* To confirm -> please type Y             *");
+    //     System.out.println("* To return  -> please type N             *");
+    //     System.out.println("*-----------------------------------------*");
+    //     System.out.print("choice : ");
+    //     answer = input.nextLine();
+    //     finalChoice = answer.toUpperCase().charAt(0);
+    //     return finalChoice;
+    // }
+    //
+    // public char sizeOrDefaultMenu(){
+    //     char letterAnswer;
+    //     System.out.println("\n*-----------------------------------------*");
+    //     System.out.println("* Would you like to choose the board's    *");
+    //     System.out.println("* size?                                   *");
+    //     System.out.println("* Yes? Enter size? -> please type Y       *");
+    //     System.out.println("* No? (default = 11) -> please type N     *");
+    //     System.out.println("*-----------------------------------------*");
+    //     System.out.print("choice : ");
+    //     answer = input.nextLine();
+    //     letterAnswer = answer.toUpperCase().charAt(0);
+    //     return letterAnswer;
+    // }
+    //
+    // public void enterSizeMenu() {
+    //     System.out.println("\n*-----------------------------------------*");
+    //     System.out.println("* What size board do you wish to play on? *");
+    //     System.out.println("* Please enter a size between 3 and 14    *");
+    //     System.out.println("*-----------------------------------------*");
+    //     System.out.print("size = ");
+    //     size = input.nextInt();
+    //     input.nextLine();
+    // }
+    //
+    // public char firstPlayerMenu() {
+    //     char color;
+    //     System.out.println("\n*-----------------------------------------*");
+    // 	System.out.println("* Who will play first?                    *");
+    // 	System.out.println("* BLACK (*) -> please type B              *");
+    // 	System.out.println("* WHITE (o) -> please type W              *");
+    // 	System.out.println("*-----------------------------------------*");
+    //     System.out.print("first player : ");
+    //     answer = input.nextLine();
+    //     color = answer.toUpperCase().charAt(0);
+    //     return color;
+    // }
 
     public boolean gameSetup(){
+        char letterAnswer;
         char finalChoice;
-        boolean ok = true;
-        boolean ko = true; //if we want to continue the game
+        boolean start = true; // see following do while loop
+        boolean letsPlay = true; // equals false once the player quits the game
+
     	do {
-            letterAnswer = newLoadQuitMenu();
-            boolean test = (letterAnswer == 'L');
+            letterAnswer = Menu.newLoadQuitMenu();
             if (letterAnswer == 'N' || letterAnswer == 'L' || letterAnswer == 'Q') {
                 do {
-                    finalChoice = finalChoice();
+                    finalChoice = Menu.finalChoice();
                 } while(finalChoice != 'N' && finalChoice != 'Y');
-                if (finalChoice != 'N') {
-                    ok = false;
+                if (finalChoice == 'Y') {
+                    start = false;
                 }
             }
-    	} while (ok);
+    	} while (start);
 
-    	if (letterAnswer == 'N'){
-    		size = enterBoardSize();
-            spots = InterfaceAvecC.nativeGetSpots(createFileName(letterAnswer,
-                Integer.toString(size)));
+    	if (letterAnswer == 'N') {
+    		enterBoardSize();
+            String newFileName = configPath + Integer.toString(size) + ".txt";
+            spots = InterfaceAvecC.nativeGetSpots(newFileName);
     		board = initBoard(size, spots);
-    	    joueur = whoPlaysFirst();
-    	    if (joueur){
-    			b = addPlayer(); w = addPlayer();
-    		}else{
-    			w = addPlayer(); b = addPlayer();
+    	    whoPlaysFirst();
+    	    if (joueur) {
+    			b = addPlayer(); b.setFirstPlayer(true);
+                w = addPlayer();
+    		}else {
+    			w = addPlayer(); w.setFirstPlayer(true);
+                b = addPlayer();
     		}
-            //save the first player
-            if (joueur){
-                b.setFirstPlayer(true);
-            }else{
-                w.setFirstPlayer(true);
-            }
-    	}else if (letterAnswer == 'L'){
-            String loadFileName = chooseLoadFileMenu();
-            spots = loadGame(loadFileName); //chooseLoadFileMenu() : return the save file
-            size = (int)Math.sqrt(spots.length());
-            board = initBoard(size, spots);
-            loadPlayerFromString(loadFileName, Piece.BLACK);
-            loadPlayerFromString(loadFileName, Piece.WHITE);
-            loadCirconstanceOfPlayermovesTab(spots);
-            //System.out.println("j'affiche les information des joueurs\n"+b.toStringPlayer()
-            //+"\n"+w.toStringPlayer());
+    	}else if (letterAnswer == 'L') {
+            String loadFileName = chooseLoadFile();
+            loadPlayersAndGame(loadFileName);
     	}else {
-            ko = false;
+            letsPlay = false;
             System.out.println("**********************");
             System.out.println("*    SEE YOU SOON    *");
             System.out.println("**********************");
         }
-        return ko;
+        return letsPlay;
     }
 
-    // public void loadPlayer(String nameOfLoadPlayer ,char color) {
-    //     loadPlayerFromString("player.txt", color);
-    // }
+    public void loadPlayersAndGame(String loadFileName) {
+        spots = loadGame(loadFileName);
+        size = (int)Math.sqrt(spots.length());
+        board = initBoard(size, spots);
+        loadPlayerFromString(loadFileName, Piece.BLACK);
+        loadPlayerFromString(loadFileName, Piece.WHITE);
+        loadPlayerMovesTab(spots);
+    }
 
-    public String loadGame(String nameOfLoadFile) {
-        nameOfLoadFile = "../../SaveFiles/"+nameOfLoadFile;
-        return InterfaceAvecC.nativeGetSpots(nameOfLoadFile);
+    public String loadGame(String loadFileName) {
+        loadFileName = saveFilesPath + loadFileName;
+        return InterfaceAvecC.nativeGetSpots(loadFileName);
     }
 
     // create the file to save
-    public String creteStringToSaveOnFile() {
+    public String createStringToSaveOnFile() {
         String str = "";
 
         char c = '0';
         if (b.isFirst()) {
             c = '1';
         }
-        str =str+size+'#'+board.convertBoardToString()+c;
-        System.out.println("string creer = "+str);
+        str = str + size + '#' + board.convertBoardToString() + c;
         return str;
     }
 
     //save game and player
     public void saveGameAndPlayer(String nameOfSaveGame) {
-        String newNameOfSaveGame ="../../SaveFiles/"+nameOfSaveGame; //explain the root
-        String stringToSave = creteStringToSaveOnFile();
-        InterfaceAvecC.nativeSaveGame(newNameOfSaveGame, stringToSave, b.getmovesTab(), w.getmovesTab());
+        String newNameOfSaveGame = saveFilesPath + nameOfSaveGame; //explain the root
+        String stringToSave = createStringToSaveOnFile();
+        InterfaceAvecC.nativeSaveGame(newNameOfSaveGame, stringToSave, b.getMovesTab(), w.getMovesTab());
         savePlayer(nameOfSaveGame);
     }
 
-    public String createFileName(char c, String input){
-        String fileName;
-        if (c == 'N'){
-            fileName = "../../config/size" + input + ".txt";
-        }else {
-            fileName = "../../SaveFiles/" + input;
-        }
-        return fileName;
-    }
-
-    public char sizeOrDefaultMenu(){
-        System.out.println("*-----------------------------------------*");
-        System.out.println("* Would you like to choose the board's    *");
-        System.out.println("* size?                                   *");
-        System.out.println("* Yes? Enter size? -> please type Y       *");
-        System.out.println("* No? (default = 11) -> please type N     *");
-        System.out.println("*-----------------------------------------*");
-        System.out.print("choice = ");
-        answer = input.nextLine();
-        return answer.toUpperCase().charAt(0);
-    }
-
-    public int enterSizeMenu(){
-        System.out.println("*-----------------------------------------*");
-        System.out.println("* What size board do you wish to play on? *");
-        System.out.println("* Please enter a size between 3 and 14    *");
-        System.out.println("*-----------------------------------------*");
-        System.out.print("size = ");
-        size = input.nextInt();
-        return size;
-    }
-
-    public int enterBoardSize(){
-        int size;
+    public void enterBoardSize(){
+        char letterAnswer;
     	do {
-    		letterAnswer = sizeOrDefaultMenu();
+    		letterAnswer = Menu.sizeOrDefaultMenu();
     	} while (letterAnswer != 'Y' && letterAnswer != 'N');
 
     	if (letterAnswer == 'Y'){
     		do {
-    			size = enterSizeMenu();
+    			size = Menu.enterSizeMenu();
     		} while (size > 14 || size < 3);
 	   	}else{
 	   		System.out.println("The board size will be 11");
@@ -189,30 +193,24 @@ public class JeuHex {
     }
 
     public Board initBoard(int size, String spots){
-    	//board = InterfaceAvecC.nativeInitBoard(size, spots);
         board = new Board(size, spots);
     	return board;
     }
 
     //
-    public boolean whoPlaysFirst(){
+    public void whoPlaysFirst(){
         char letterAnswer;
-    	System.out.println("Who will play first? BLACK (*) or WHITE (o)");
     	do {
-    		System.out.println("BLACK = B, WHITE = W");
-    		answer = input.next();
-            letterAnswer = answer.toUpperCase().charAt(0);
+            letterAnswer = Menu.firstPlayerMenu();
     	} while (letterAnswer != 'B' && letterAnswer != 'W');
 
-    	if (letterAnswer == 'B'){
+    	if (letterAnswer == 'B') {
     		System.out.println("BLACK (*) will start");
     		joueur = true;
-    	}else{
+    	}else {
     		System.out.println("WHITE (o) will start");
     		joueur = false;
     	}
-
-    	return joueur;
     }
 
     //create a new player
@@ -230,7 +228,6 @@ public class JeuHex {
     		System.out.println("WHITE player...");
     		color = Piece.WHITE;
     	}
-        input.nextLine();
     	System.out.print("Alias? ");
     	alias = input.nextLine();
 
@@ -250,7 +247,7 @@ public class JeuHex {
 
     //save the iformation of player
     public void savePlayer(String nameOfSavePlayer){
-        nameOfSavePlayer = "../../SaveFiles/savePlayer/"+"player"+nameOfSavePlayer;
+        nameOfSavePlayer = saveFilesPath + "savePlayer/player" + nameOfSavePlayer;
         char bC = '0';
         char wC = '1';
         if (b.isFirst()) {
@@ -261,43 +258,42 @@ public class JeuHex {
         String BPlayer = b.toStringPlayer()+'$'+bC;
         InterfaceAvecC.nativeSavePlayer(nameOfSavePlayer, BPlayer, WPlayer);
     }
-    // I'm here
-    //load player from save file
-    // return a boolean to specifie who is the turn
-    public void loadPlayerFromString(String stringFromFilInC, char color) {
-        stringFromFilInC = "../../SaveFiles/savePlayer/"+"player"+stringFromFilInC;
-        String loadFil = InterfaceAvecC.nativeStringToLoadPlayer(color, stringFromFilInC);
-        System.out.println(loadFil);
-        int size = loadFil.length();
-        System.out.println(size);
+
+    //loads player from save file in SaveFiles/savePlayer directory
+    public void loadPlayerFromString(String loadFileName, char color) {
+        loadFileName = saveFilesPath + "savePlayer/player" + loadFileName;
+        String loadFile = InterfaceAvecC.nativeStringToLoadPlayer(color, loadFileName);
+        // System.out.println(loadFile);
+        int size = loadFile.length();
+        // System.out.println(size);
         char[] tab = new char[size];
         for (int j = 0; j < size; j++) {
-            tab[j] = loadFil.charAt(j);
+            tab[j] = loadFile.charAt(j);
         }
 
-        String Alias = "", DateOfBirth = "", Email = "", WhoIsTheTurn = "";
+        String alias = "", dateOfBirth = "", email = "", whosTurnIsIt = "";
         int i = 0;
-        System.out.println(loadFil);
-        while (i < size-1) {
+        System.out.println(loadFile);
+        while (i < size - 1) {
             if (tab[i] == color) {
                 i++;
                 while (tab[i] != '#') {
-                    Alias += tab[i++];
+                    alias += tab[i++];
                 }
             }else if (tab[i] == '#'){
                 i++;
                 while (tab[i] != '@') {
-                    DateOfBirth += tab[i++];
+                    dateOfBirth += tab[i++];
                 }
             }else if (tab[i] == '@') {
                 i++;
                 while (tab[i] != '$') {
-                    Email += tab[i++];
+                    email += tab[i++];
                 }
             }else if (tab[i] == '$') {
                 i++;
-                System.out.println(tab[i]+" "+i+" color "+color);
-                WhoIsTheTurn += tab[i++];
+                // System.out.println(tab[i]+" "+i+" color "+color);
+                whosTurnIsIt += tab[i++];
             }else {
                 i++;
             }
@@ -305,21 +301,21 @@ public class JeuHex {
         }
 
         if (color == Piece.BLACK) {
-            b = new Player(color, Alias, DateOfBirth, Email, this.board);
-            if (Integer.parseInt(WhoIsTheTurn) == 1) {
+            b = new Player(color, alias, dateOfBirth, email, this.board);
+            if (Integer.parseInt(whosTurnIsIt) == 1) {
                 b.setFirstPlayer(true);
             }
         }else {
-            w = new Player(color, Alias, DateOfBirth, Email, this.board);
-            if (Integer.parseInt(WhoIsTheTurn) == 1) {
+            w = new Player(color, alias, dateOfBirth, email, this.board);
+            if (Integer.parseInt(whosTurnIsIt) == 1) {
                 w.setFirstPlayer(true);
             }
         }
-        System.out.println("turn "+Integer.parseInt(WhoIsTheTurn)+" color"+color);
-        //return Integer.parseInt(WhoIsTheTurn); //pour savoir qui cmmence
+        // System.out.println("turn "+Integer.parseInt(whosTurnIsIt)+" color"+color);
+        //return Integer.parseInt(whosTurnIsIt); //pour savoir qui cmmence
     }
 
-    void loadCirconstanceOfPlayermovesTab(String spots) {
+    public void loadPlayerMovesTab(String spots) {
         for (int i = 0; i < spots.length(); i++) {
             if (spots.charAt(i) == Piece.BLACK) {
                 b.modifMovesTab(i);
@@ -327,22 +323,16 @@ public class JeuHex {
                 w.modifMovesTab(i);
             }
         }
-        System.out.println("taille du tableau \nblack = "+b.getNbTurnsPlay()+"\nwhile = "+w.getNbTurnsPlay());
-        b.printmovesTab();
-        System.out.println("\n");
-        w.printmovesTab();
-        System.out.println("\n");
 
         //who is turn
         if (b.isFirst()) {
-            if (b.getNbTurnsPlay() == w.getNbTurnsPlay()) {
+            if (b.getNbOfMoves() == w.getNbOfMoves()) {
                 joueur = true;
             }else {
                 joueur = false;
             }
         }else {
-            System.out.println("je passe la poir le teste de a qui le tour");
-            if (b.getNbTurnsPlay() == w.getNbTurnsPlay()) {
+            if (b.getNbOfMoves() == w.getNbOfMoves()) {
                 joueur = false; //while turn
             }else {
                 joueur = true;
@@ -350,24 +340,23 @@ public class JeuHex {
         }
     }
 
-    void quitMenu() {
+    public void quitGame() {
         int choice = 0;
         boolean ok = true;
         boolean ko = true;
         String nameOfSaveGame = "";
         String nameOfSavePlayer = "";
+        char finalChoice;
         do {
-            System.out.println("*------------------------------------------*");
-			System.out.println("* What do you want to do?                  *");
-			System.out.println("* 1 : quit and save.                       *");
-			System.out.println("* 2 : quit and not save.                   *");
-			//System.out.println("* 3 : If you want to quit.                 *");
-			System.out.println("*------------------------------------------*");
             do {
-                System.out.print("choice : ");
-                choice = input.nextInt();
+                choice = Menu.quitMenu();
                 if (choice == 1 || choice == 2) {
-                    ko = false;
+					do {
+						finalChoice = Menu.finalChoice();
+					} while (finalChoice != 'N' && finalChoice != 'Y');
+                    if (finalChoice == 'Y') {
+                        ko = false;
+                    }
                 }
             } while (ko);
             if (choice == 1) {
@@ -377,6 +366,11 @@ public class JeuHex {
                 saveGameAndPlayer(nameOfSaveGame);
                 ok = false;
             }else if (choice == 2) {
+                if (joueur) {
+                    w.setQuitter(true);
+                }else {
+                    b.setQuitter(true);
+                }
                 ok = false;
             }
         } while (ok);
@@ -400,7 +394,7 @@ public class JeuHex {
     		circonstance = p.placePiece();
 
     		//board.printBoard();
-            p.printmovesTab();
+            p.printMovesTab();
             //System.out.println("\n");
             //w.printmovesTab();
     		joueur = !joueur;
@@ -416,7 +410,7 @@ public class JeuHex {
         return circonstance;
     }
 
-    public String chooseLoadFileMenu() {
+    public String chooseLoadFile() {
         String  choice = "";
         boolean ok = true;
         boolean ko = true;
@@ -445,7 +439,7 @@ public class JeuHex {
     	jeu.makeSaveDirectory();
         if(jeu.gameSetup())
             if(InterfaceAvecC.nativeInitGame(jeu.getSpots(), jeu) == 'q')
-                jeu.quitMenu();
+                jeu.quitGame();
             else
                 if (jeu.getBlackPlayer().isWinner())
                     System.out.println("\nPLAYER BLACK WON !\n");
