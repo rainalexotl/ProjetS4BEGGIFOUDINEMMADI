@@ -26,7 +26,7 @@ TabHash * createTabHashRg(int sizeTab) {
     return tabH;
 }
 
-int HashCode(List *group) {
+int HashCode(const List *group) {
     assert(group);
     return group->sent->next->pos;
 }

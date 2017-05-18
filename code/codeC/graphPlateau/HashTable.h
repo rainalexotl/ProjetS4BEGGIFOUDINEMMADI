@@ -55,7 +55,7 @@ bool searchGroup(TabHash *tabH, Graph g, int pos, char color);
 bool whichIsLargestGroup(const TabHash *tabH, int leader1, int leader2);
 
 //thougnt to create a alias
-bool IsAWinGroup(List * group, int side1, int side2);
+bool IsAWinGroup(const List * group, int side1, int side2);
 /*-----------------------------------------------------------------------------*/
                             //Get Fonctions
 /*-----------------------------------------------------------------------------*/

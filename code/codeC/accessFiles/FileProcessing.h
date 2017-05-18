@@ -22,11 +22,11 @@
 #include <fcntl.h> /*constantes symboliques pour les différents types d’ouverture */
 #include <dirent.h> /*pour le parcours de repertoire */
 
-char* transformGraphToBoardOfChar(const char * fileName);
-void saveBoardFile(const char * fileName, const char *spots, int BTabGame[], int WTabGame[]);
-void savePlayer(const char * fileNameOfSavePlayer, const char * Bplayer, const char * Wplayer);
-char * loarPlayer(char color, const char* stringFromFilInC);
-char ** getSaveFile(const char* NomRep, int *i);
-void freeSaveFile(char** saveFile);
+char * getSpotsFromFile(const char * fileName);
+void saveBoardFile(const char * fileName, const char *spots, int bTabGame[], int wTabGame[]);
+void savePlayer(const char * fileNameOfSavePlayer, const char * bPlayer, const char * wPlayer);
+char * loadPlayer(char color, const char * fileNameOfLoadPlayer);
+char ** getSaveFiles(const char * dirName, int * nbFiles);
+void destroySaveFiles(char ** saveFiles);
 
 #endif /* FileProcessing_h */

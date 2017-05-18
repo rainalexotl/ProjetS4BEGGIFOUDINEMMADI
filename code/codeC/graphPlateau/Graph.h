@@ -46,8 +46,8 @@ enum {UP = 0, RIGHT = 1, DOWN = 2, LEFT = 3, UP_RIGHT = 4, DOWN_LEFT = 5};
 /*-----------------------------------------------------------------------------*/
                             //Create Fonctions
 /*-----------------------------------------------------------------------------*/
-Graph CreateGraph(int sizeGraph);
-Graph CreateBoardGraph (Graph g, const char *colorTab, int *loaded);
+Graph createGraph(int sizeGraph);
+Graph createBoardGraph (Graph g, const char *colorTab, int *loaded);
 
 /*-----------------------------------------------------------------------------*/
                             //Modify Fonctions
