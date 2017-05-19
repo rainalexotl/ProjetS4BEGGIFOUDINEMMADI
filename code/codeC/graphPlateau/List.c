@@ -4,7 +4,7 @@
 #include <assert.h>
 
 /*-----------------------------------------------------------------------------*/
-                            //Create Fonctions
+                            //Creation Functions
 /*-----------------------------------------------------------------------------*/
 List *createList() {
     List *l = NULL;
@@ -25,7 +25,7 @@ List *createList() {
 }
 
 List *pushBack(List *l, int pos) {
-    //creation de la Node à ajouter
+    //creation of the node to be added
     Node *n = (Node*)malloc(sizeof(Node));
     n->pos = pos;
 
@@ -37,7 +37,7 @@ List *pushBack(List *l, int pos) {
     return l;
 }
 /*-----------------------------------------------------------------------------*/
-                            //Modify Fonctions
+                            //Modification Functions
 /*-----------------------------------------------------------------------------*/
 void destroyList(List * l) {
     Node *itr = l->sent->next;
@@ -52,10 +52,10 @@ void destroyList(List * l) {
     free(l);
 }
 /*-----------------------------------------------------------------------------*/
-                            //Get Fonctions
+                            //Get Functions
 /*-----------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------*/
-                            //Post Up Fonctions
+                            //Print Functions
 /*-----------------------------------------------------------------------------*/
 void printList(const List *l) {
     Node *itr = l->sent;

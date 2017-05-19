@@ -9,48 +9,46 @@
 /*-----------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------*/
-                            //implement TAD TabHash
+                            //implement ADT TabHash
 /*-----------------------------------------------------------------------------*/
 
 
 /*-----------------------------------------------------------------------------*/
-                            //Create Fonctions
+                            //Creation Functions
 /*-----------------------------------------------------------------------------*/
 TabHash * createTabHashRg(int sizeTab) {
     TabHash *tabH = malloc(sizeof(TabHash));
     tabH->nbGroups = 0;
-    tabH->boardListGroup = malloc(sizeof(List*)*sizeTab);
+    tabH->groupList = malloc(sizeof(List*)*sizeTab);
     for (int i = 0; i < sizeTab; ++i) { //a voir s'il faut initialiser ou pas
-        tabH->boardListGroup[i] = NULL;//createList();
+        tabH->groupList[i] = NULL; //createList();
     }
     return tabH;
 }
 
-int HashCode(List *group) {
-    assert(group);
-    return group->sent->next->pos;
+int hashCode(const List *gp) {
+    assert(gp);
+    return gp->sent->next->pos;
 }
-TabHash * hashFonctionRg(TabHash* tabH, List *group) {
-    int hashCode = HashCode(group);
-    if ((*tabH).boardListGroup[hashCode] == NULL) {
-        printf("je passe dans le if\n");
-        (*tabH).boardListGroup[hashCode] = group;
+
+TabHash * hashFonctionRg(TabHash* tabH, List * gp) {
+    int hc = hashCode(gp);
+    if ((*tabH).groupList[hc] == NULL) {
+        (*tabH).groupList[hc] = gp;
         tabH->nbGroups++;
     }else {
-        printf("je passe dans le else\n");
-        (*tabH).boardListGroup[hashCode] = group;
+        (*tabH).groupList[hc] = gp;
     }
-    printf("nombre d'element dans le tableau %d\n", tabH->nbGroups);
     return tabH;
 }
 
 /*-----------------------------------------------------------------------------*/
-                            //Modify Fonctions
+                            //Modification Functions
 /*-----------------------------------------------------------------------------*/
 void freeTabHash(TabHash * tabH, int sizeTab) {
     for (size_t i = 0; i < sizeTab; i++) {
-        if (tabH->boardListGroup[i]) {
-            destroyList(tabH->boardListGroup[i]);
+        if (tabH->groupList[i]) {
+            destroyList(tabH->groupList[i]);
         }
     }
     tabH = NULL;
@@ -58,136 +56,134 @@ void freeTabHash(TabHash * tabH, int sizeTab) {
 }
 
 /*******************************************************************************/
-                            //implement Search group
+                            //Search group implementation
 /*******************************************************************************/
-void modifyLeaderOfVertex(Graph g, int pos, int newLeader) {
-    assert(g->s[pos] && g);
-    g->s[pos]->theLeaderOfGroup = newLeader;
-    if (!isInGroup(g->s[pos])) { //isn't in group now he is
-        g->s[pos]->isInGroup = 1;
+void modifyVertexLeader(Graph g, int pos, int newLeader) {
+    assert(g->v[pos] && g);
+    g->v[pos]->groupLeader = newLeader;
+    if (!isInGroup(g->v[pos])) { //wasn't previously in group
+        g->v[pos]->isInGroup = 1;
     }
 }
+
 //Graph g to modify the leader the group
-List *groupUnion(List *g1, List *g2, Graph g) {
-    int leaderOfGroup = g1->sent->next->pos;
-    Node * itr = g2->sent->next;
-    while (itr != g2->sent) {
-        modifyLeaderOfVertex(g, itr->pos, leaderOfGroup);
-        g1 = pushBack(g1, itr->pos);
+List *groupUnion(List *gp1, List *gp2, Graph g) {
+    int groupLeader = gp1->sent->next->pos;
+    Node * itr = gp2->sent->next;
+    while (itr != gp2->sent) {
+        modifyVertexLeader(g, itr->pos, groupLeader);
+        gp1 = pushBack(gp1, itr->pos);
         assert(itr->next);
         itr = itr->next;
     }
-    destroyList(g2); // because we dont use that
-    printf("affichage du groupe apres union\n");
-    printList(g1);
-    return g1;
+    destroyList(gp2); // because we dont use that
+    printList(gp1);
+    return gp1;
 }
 
 //v1 and v2 are the positions of vertexs
 //v1 is the leader of the new group
 List *createNewGroup(Graph g, int v1, int v2) {
-    modifyLeaderOfVertex(g, v1, v1); //because it's the leader
-    modifyLeaderOfVertex(g, v2, v1);
-    List * newGroupe = createList();
-    newGroupe = pushBack(newGroupe, v1);
-    newGroupe = pushBack(newGroupe, v2);
-    return newGroupe;
+    modifyVertexLeader(g, v1, v1); //because it's the leader
+    modifyVertexLeader(g, v2, v1);
+    List * newGroup = createList();
+    newGroup = pushBack(newGroup, v1);
+    newGroup = pushBack(newGroup, v2);
+    return newGroup;
 }
 
 //put a alone vertex in a  group
-List * putItInGroup(List *group, int v, Graph g) {
-    assert(group->sent->next);
-    int leaderOfGroup = group->sent->next->pos;
-    modifyLeaderOfVertex(g, v, leaderOfGroup);
-    group = pushBack(group, v);
-    return group;
+List * addToGroup(List *gp, int v, Graph g) {
+    assert(gp->sent->next);
+    int groupLeader = gp->sent->next->pos;
+    modifyVertexLeader(g, v, groupLeader);
+    gp = pushBack(gp, v);
+    return gp;
 }
 
 //thougnt to create a alias
 bool searchGroup(TabHash *tabH, Graph g, int pos, char color) {
     int side1, side2;
-    if (color == BLACK){
-        side1 = getB1Graph(getsizeGraph(g));
-        side2 = getB2Graph(getsizeGraph(g));
-    }else{
-        side1 = getW1Graph(getsizeGraph(g));
-        side2 = getW2Graph(getsizeGraph(g));
+    if (color == BLACK) {
+        side1 = getB1Graph(getSizeGraph(g));
+        side2 = getB2Graph(getSizeGraph(g));
+    }else {
+        side1 = getW1Graph(getSizeGraph(g));
+        side2 = getW2Graph(getSizeGraph(g));
     }
-    List * newGroupe = NULL;
+    List * newGroup = NULL; List * vList = NULL; List * vAdjList = NULL;
+    Vertex * v = NULL; Vertex * vAdj = NULL; 
     int posAdj = -1;
-    Vertex * vAdj = NULL;
-    Vertex * v = NULL;
-    assert(g->s[pos]);
-    v = g->s[pos]; //we create alias
+    assert(g->v[pos]);
+    v = g->v[pos]; //we create alias
     bool winningGroup = false;
-    for (int i = 0; i < MAXVOISIN; i++) { //I put 6 just to try
-        //assert(v->Adjacents[i]); //I test if it's
-        vAdj = v->Adjacents[i]; // we create alias
+    for (int i = 0; i < MAXVOISIN; i++) {
+        vAdj = v->Adjacents[i];
         if (vAdj != NULL) {
-            if (areVertexAdjacent(v ,vAdj)) { //main condition
+            vList = tabH->groupList[(v->groupLeader)];
+            vAdjList = tabH->groupList[(vAdj->groupLeader)];;
+            if (areAdjacentVertexes(v ,vAdj)) { //main condition
                 if (isInGroup(vAdj) && isInGroup(v)) {
                     if (!isInSameGroup(v, vAdj)) {
-                        if (whichIsLargestGroup(tabH, v->theLeaderOfGroup, vAdj->theLeaderOfGroup) == 1 ) {
-                            newGroupe = groupUnion(tabH->boardListGroup[(v->theLeaderOfGroup)], tabH->boardListGroup[(vAdj->theLeaderOfGroup)], g);
+                        if (largerGroup(tabH, v->groupLeader, vAdj->groupLeader) == 1 ) {
+                            newGroup = groupUnion(vList, vAdjList, g);
                         }else {
-                            newGroupe = groupUnion(tabH->boardListGroup[(vAdj->theLeaderOfGroup)], tabH->boardListGroup[(v->theLeaderOfGroup)], g);
+                            newGroup = groupUnion(vAdjList, vList, g);
                         }
-                        tabH = hashFonctionRg(tabH, newGroupe);
-                    }//else is in the same group so, we don't do nothing
-                }else if (!isInGroup(vAdj) && isInGroup(v)) { //isn't in group but they are Adjacents
-                    posAdj = calculateSquareCoordinates(vAdj->coord.x, vAdj->coord.y, getsizeGraph(g));
-                    tabH->boardListGroup[(v->theLeaderOfGroup)] = putItInGroup(tabH->boardListGroup[(v->theLeaderOfGroup)], posAdj, g);
-                    newGroupe = tabH->boardListGroup[(v->theLeaderOfGroup)];
+                        tabH = hashFonctionRg(tabH, newGroup);
+                    } // if its in the same group, nothing is done
+                }else if (!isInGroup(vAdj) && isInGroup(v)) { 
+                    // they aren't in the same group but they are adjacent,
+                    posAdj = calculateHexCoordinates(vAdj->coord.x, vAdj->coord.y,
+                        getSizeGraph(g));
+                    vList = addToGroup(vList, posAdj, g);
+                    newGroup = vList;
                 }else if (isInGroup(vAdj) && !isInGroup(v)){
-                    tabH->boardListGroup[vAdj->theLeaderOfGroup] = putItInGroup(tabH->boardListGroup[vAdj->theLeaderOfGroup], pos, g);
-                    newGroupe = tabH->boardListGroup[vAdj->theLeaderOfGroup];
+                    vAdjList = addToGroup(vAdjList, pos, g);
+                    newGroup = vAdjList;
                 }else {
-                    posAdj = calculateSquareCoordinates(vAdj->coord.x, vAdj->coord.y, getsizeGraph(g));
-                    newGroupe = createNewGroup(g, pos, posAdj);
-                    tabH = hashFonctionRg(tabH, newGroupe);
+                    posAdj = calculateHexCoordinates(vAdj->coord.x, 
+                        vAdj->coord.y, getSizeGraph(g));
+                    newGroup = createNewGroup(g, pos, posAdj);
+                    tabH = hashFonctionRg(tabH, newGroup);
                 }
             }
         }
     }
-    if (newGroupe != NULL)
-            printList(newGroupe);
-    if (IsAWinGroup(newGroupe, side1, side2)) {
+    // if (newGroup != NULL)
+    //     printList(newGroup);
+    if (isAWinningGroup(newGroup, side1, side2)) {
         winningGroup = true;
     }
     return winningGroup;
 }
 /*-----------------------------------------------------------------------------*/
-                            //Observation Fonctions
+                            //Observation Functions
 /*-----------------------------------------------------------------------------*/
-//To find out which is the largest group between two groups
-bool whichIsLargestGroup(const TabHash *tabH, int leader1, int leader2) {
-    printf("leader1 size = %d, leader2 size = %d\n", tabH->boardListGroup[leader1]->sizeList, tabH->boardListGroup[leader2]->sizeList);
-    //because they can't have a same leader
-    //assert(tabH->boardListGroup[leader1]->sizeList == tabH->boardListGroup[leader2]->sizeList);
-    if (tabH->boardListGroup[leader1]->sizeList >= tabH->boardListGroup[leader2]->sizeList){
+//returns true if group with leader1 is >= to group of leader2
+bool largerGroup(const TabHash *tabH, int leader1, int leader2) {
+    if (tabH->groupList[leader1]->sizeList >= tabH->groupList[leader2]->sizeList){
         return true;
     }else
         return false;
 
 }
 
-bool IsAWinGroup(List * group, int side1, int side2) {
+//returns true if group gp contains the two parallel sides of its color
+bool isAWinningGroup(List * gp, int side1, int side2) {
 
     int i = 0;
     bool stop = false;
-    if (!group){
+    if (!gp){
         return stop;
     }
-    Node *itr = group->sent;
-    while (itr->next != group->sent && stop == 0) {
-        //printf("elem %d %d\n",i++, itr->next->pos);
+    Node *itr = gp->sent;
+    while (itr->next != gp->sent && stop == 0) {
         if (itr->next->pos == side2) {
-            printf("somme %d\n", itr->next->pos);
             i++;
         }
         if (itr->next->pos == side1) {
             i++;
-            printf("sommet %d\n", itr->next->pos);
         }
         if (i == 2) {
             stop = true;
@@ -195,14 +191,13 @@ bool IsAWinGroup(List * group, int side1, int side2) {
         assert(itr->next);
         itr = itr->next;
     }
-    printf("valeur de stop à la sortie de la fonction win %d\n", stop);
     return stop;
 }
 /*-----------------------------------------------------------------------------*/
-                            //Get Fonctions
+                            //Get Functions
 /*-----------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------*/
-                            //Post Up Fonctions
+                            //Print Functions
 /*-----------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------*/
                             //End
