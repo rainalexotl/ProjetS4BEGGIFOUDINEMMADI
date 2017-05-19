@@ -55,7 +55,6 @@ ReducedGraph * globRg;
 //     return object;
 // }
 
-//appel la methode play de java
 JNIEXPORT jchar JNICALL
 Java_InterfaceAvecC_nativeInitGame (JNIEnv * env, jclass cl, jstring spots, jobject obj) {
     const char * s = (*env)->GetStringUTFChars(env, spots, 0);
@@ -183,9 +182,9 @@ Java_InterfaceAvecC_nativeGetSaveFile (JNIEnv * env, jclass cl) {
     const char* dirName = "../../SaveFiles";
     int size = 0;
     char ** saveFile = getSaveFiles(dirName, &size);
-    for (size_t i = 0; i < size; i++) {
-        printf("str1 = %s\n", saveFile[i]);
-    }
+    // for (size_t i = 0; i < size; i++) {
+    //     printf("str1 = %s\n", saveFile[i]);
+    // }
     // retrieval of the java String class
     jclass stringClass = (*env)->FindClass(env, "java/lang/String");
     // construction of an array of strings

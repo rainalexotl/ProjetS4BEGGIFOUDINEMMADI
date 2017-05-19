@@ -25,6 +25,7 @@ typedef struct sList {
 /*-----------------------------------------------------------------------------*/
                             //Creation Functions
 /*-----------------------------------------------------------------------------*/
+//allocates memory for a list and for its sentine node
 List *createList();
 
 //named pushBack because the positions are only added to the back of the list
@@ -32,6 +33,7 @@ List *pushBack(List *l, int pos);
 /*-----------------------------------------------------------------------------*/
                             //Modification Functions
 /*-----------------------------------------------------------------------------*/
+//frees the memory allocated for all of l's elements, its sentinel and itself
 void destroyList(List *l);
 /*-----------------------------------------------------------------------------*/
                             //Get Functions
@@ -39,6 +41,14 @@ void destroyList(List *l);
 /*-----------------------------------------------------------------------------*/
                             //Print Functions
 /*-----------------------------------------------------------------------------*/
+/*
+prints the list l with n elements in the format
+elem 0 #
+elem 2 #
+elem 3 #
+....
+elem n #
+*/
 void printList(const List *l);
 /*-----------------------------------------------------------------------------*/
                             //End

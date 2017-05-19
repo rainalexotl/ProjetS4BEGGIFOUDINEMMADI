@@ -22,32 +22,39 @@ typedef struct s_TabHash {
 /*-----------------------------------------------------------------------------*/
                             //Creation Functions
 /*-----------------------------------------------------------------------------*/
-
+//allocates memory for a hashTable and its array of lists (groups)
 TabHash * createTabHashRg(int sizeTab);
-TabHash * hashFonctionRg(TabHash* tabH, List * gp);
 
+//adds a list gp to the hash table tabH and increments tabH's number of groups
+TabHash * hashFonctionRg(TabHash* tabH, List * gp);
 
 /*-----------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------*/
                             //Modification Functions
 /*-----------------------------------------------------------------------------*/
+//frees the memory allocated for a hashTable and for its array of lists
 void destroyTabHash(TabHash *tabH, int sizeTab);
+
 /*******************************************************************************/
                             //Search group implementation
 /*******************************************************************************/
+//changes the leader of the group the vertex at position pos belongs to
 void modifyVertexLeader(Graph g, int pos, int newLeader);
 
-//Graph g to modify the leader the group
+//unites the group gp1 and gp2
 List *groupUnion(List *gp1, List *gp2, Graph g);
 
 //v1 and v2 are the positions of vertexes
 //v1 is the leader of the new group
 List *createNewGroup(Graph g, int v1, int v2);
 
-//put a alone vertex in a  group
+//adds a vertex at a position v to a group gp
 List * addToGroup(List *gp, int v, Graph g);
 
+//checks if a vertex at pos belongs to a group and eventually adds it to a group
+//also checks if a group is a winning group
 bool searchGroup(TabHash *tabH, Graph g, int pos, char color);
+
 /*-----------------------------------------------------------------------------*/
                             //Observation Functions
 /*-----------------------------------------------------------------------------*/

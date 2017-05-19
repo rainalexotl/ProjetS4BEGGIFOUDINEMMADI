@@ -17,6 +17,7 @@ typedef struct sPiece {
     char color;
 }Piece;
 
+//creates a piece with the passed color and prompts its coordinsates
 Piece createPiece(char color);
 
 #endif /* Pion_h */

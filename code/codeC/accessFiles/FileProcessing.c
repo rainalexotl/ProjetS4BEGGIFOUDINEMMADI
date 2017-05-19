@@ -73,9 +73,9 @@ void saveBoardFile(const char * fileName, const char *spots, int bTabGame[], int
         exit(-1);
     }
 
-    //configuration du fichier
-    //spots[0] = la dimention du fichier
-    // i = a global value in this fonction
+    //file configuration
+    //spots[0] = the file's dimension
+    // i = a global variable in this fonction
     int i = 0;
     char buff[5];
     do {
