@@ -151,8 +151,9 @@ char * loadPlayer(char color, const char * fileNameOfLoadPlayer) {
     if (color == '*') {
         do {
             fscanf(file, "%s", buff);
+            printf("buf %s\n", buff);
             if (strcmp(buff, "\\blackPlayer") == 0) {
-                //printf("buf %s\n", buf);
+                // printf("buf %s\n", buff);
                 fscanf(file, "%s\n", buff);
                 size = atoi(buff);
                 char bChaine[size+1];
@@ -227,10 +228,7 @@ char ** getSaveFiles(const char * dirName, int * nbFiles) {
 //We use this foncton to free the saveFile
 void destroySaveFiles(char ** saveFiles) {
     for (size_t i = 0; i < LONG_MAX_REP; i++) {
-        printf("file null ? %d \n", saveFiles[i] == NULL);
         free (saveFiles[i]);
-        printf("\napres le freefile null ? %d \n", saveFiles[i] == NULL);
     }
-    printf("apres la boucle file null ? %d \n", saveFiles == NULL);
     free(saveFiles);
 }

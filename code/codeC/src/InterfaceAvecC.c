@@ -194,9 +194,6 @@ Java_InterfaceAvecC_nativeGetSaveFile (JNIEnv * env, jclass cl) {
     const char* dirName = "../../../doc/SaveFiles";
     int size = 0;
     char ** saveFile = getSaveFiles(dirName, &size);
-    for (size_t i = 0; i < size; i++) {
-        printf("str1 = %s\n", saveFile[i]);
-    }
     // retrieval of the java String class
     jclass stringClass = (*env)->FindClass(env, "java/lang/String");
     // construction of an array of strings
@@ -205,7 +202,6 @@ Java_InterfaceAvecC_nativeGetSaveFile (JNIEnv * env, jclass cl) {
     for (size_t i = 0; i < size; i++) {
         jstring str = (*env)->NewStringUTF(env, saveFile[i]);
         (*env)->SetObjectArrayElement(env, tabString, i, (jobject)str);
-        //(*env)->ReleaseStringUTFChars(env, str, saveFile[i++]);
     }
     destroySaveFiles(saveFile); //libere le tableau de chaine de caractere
     return tabString;
