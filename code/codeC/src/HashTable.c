@@ -53,6 +53,7 @@ void destroyTabHash(TabHash * tabH, int sizeTab) {
         }
     }
     //tabH = NULL;
+    free(tabH->groupList);
     assert(tabH);
     free(tabH);
 }

@@ -142,9 +142,10 @@ void replaceVertexGraph(Graph g, int pos, char color) {
 
 void destroyGraph(Graph g) {
     for (int i = 0; i < getNbVertexGraph(g)+4; i++) {
-        //free(g->s[i]->Adjacents);
+        free(g->v[i]->Adjacents);
         free(g->v[i]);
     }
+    free(g->v);
     free(g);
 }
 
