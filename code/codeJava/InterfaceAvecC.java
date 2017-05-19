@@ -15,8 +15,8 @@ public class InterfaceAvecC {
 	public static native int nativeCalcPosition(int x, int y, int boardSize);
 	public static native int nativePlacePiece(int pos, char color);
 	public static native String nativeGetSpots(String fileName);
-	public static native void nativeSaveGame(String savedFileName, String StringToSave, int[]BTabGame, int[]WTabGame);
-	public static native void nativeSavePlayer(String nameOfSavePlayer, String Bplayer, String Wplayer);
-	public static native String nativeStringToLoadPlayer(char color, String stringFromFilInC);
+	public static native void nativeSaveGame(String savedFileName, String stringToSave, int[] bMovesTab, int[] wMovesTab);
+	public static native void nativeSavePlayer(String nameOfSavePlayer, String bPlayer, String wPlayer);
+	public static native String nativeStringToLoadPlayer(char color, String loadFileName);
 	public static native String [] nativeGetSaveFile();
 }

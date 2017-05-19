@@ -1,4 +1,4 @@
-\blackPlayer 36
-*angelo#28/09/1995@angelo@gmail.com$0
-\whitePlayer 41
-oanzilane#12/02/1997@ANZILANE@hotmail.fr$1
+\blackPlayer 34
+*angelo#28/09/95@angelo@gmail.com$0
+\whitePlayer 39
+oanzilane#12/02/97@ANZILANE@hotmail.fr$1
