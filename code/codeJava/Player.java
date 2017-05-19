@@ -4,7 +4,7 @@ public class Player {
 
 	private char color; //the player's color
 	private String alias;
-	private String dateOfBirth;
+	private Date dateOfBirth;
 	private String email;
 	private Board board; //the board the player is playing on
 	private Scanner input;
@@ -12,9 +12,9 @@ public class Player {
 	private int movesItr; // index to insert in movesTab
 	private boolean firstPlayer = false;
 	private boolean winner = false;
-	private boolean quitter = false; //if the player abandoned the current game
+	private boolean quitter = false; //true if the player abandoned the current game
 
-	public Player(char color, String alias, String dateOfBirth,
+	public Player(char color, String alias, Date dateOfBirth,
 				  String email, Board board){
 		this.color = color;
 		this.alias = alias;
@@ -36,7 +36,7 @@ public class Player {
 		return alias;
 	}
 
-	public String getDOB() {
+	public Date getDOB() {
 		return dateOfBirth;
 	}
 
@@ -99,7 +99,7 @@ public class Player {
 	}
 
 	public String toStringPlayer() {
-		return alias+'#'+dateOfBirth+'@'+email;
+		return alias + '#' + dateOfBirth.toStringDate() + '@' + email;
 	}
 
 	//change table
@@ -137,7 +137,7 @@ public class Player {
 	}
 
 	public char placePiece() {
-		char circonstance = 'c';
+		char event = 'c';
 		Coordinates coord = null;
 		int choice = 0;
 		int pos = -1;
@@ -164,7 +164,7 @@ public class Player {
 				board.getHex(pos).getPiece().setColor(colorBis);
 			}
 			board.printBoard();
-			//menu
+			
 			do {
 				choice = Menu.confirmOrQuitMenu();
 				if(choice == 1 || choice == 2 || choice == 3) {
@@ -186,19 +186,19 @@ public class Player {
 					break;
 				case 3 :
 					board.getHex(pos).getPiece().setColor(color);
-					circonstance = 'q'; //save
+					event = 'q'; //save
 					ok = false;
 				break;
 			}
 		}while (ok);
 		board.printBoard();
-		//pour modifier dans le meme temps le graphe cote c;
+		//to modify the c graph simultaneously
 		modifMovesTab(pos);
 		if (InterfaceAvecC.nativePlacePiece(pos, color) == 1) {
-			circonstance = 'w'; //win
+			event = 'w'; //win
 		}
 
-		return circonstance;
+		return event;
 	}
 
 	public static char quiJoue(boolean joueur) {

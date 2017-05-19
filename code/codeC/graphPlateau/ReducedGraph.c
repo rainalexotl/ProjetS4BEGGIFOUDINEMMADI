@@ -10,7 +10,7 @@
 /*-----------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------*/
-                        //implement TAD ReducedGraph
+                        //implement ADT ReducedGraph
 /*-----------------------------------------------------------------------------*/
 ReducedGraph * createReducedGraph(Graph g) {
     ReducedGraph * _rG = malloc(sizeof(ReducedGraph));
@@ -22,8 +22,8 @@ ReducedGraph * createReducedGraph(Graph g) {
 
 ReducedGraph * reloadGroups(Graph g, ReducedGraph *_rG) {
     for (int i = 0; i < getNbVertexGraph(g); i++) {
-        if (g->s[i]->color != EMPTY) {
-            if (g->s[i]->color == BLACK) {
+        if (g->v[i]->color != EMPTY) {
+            if (g->v[i]->color == BLACK) {
                 searchGroup((*_rG).blackHashTab, g, i, BLACK);
             }else {
                 searchGroup((*_rG).whiteHashTab, g, i, WHITE);
