@@ -8,31 +8,31 @@
 
 #include "Coordinates.h"
 /*-----------------------------------------------------------------------------*/
-                            //Create Fonctions
+                            //Creation Functions
 /*-----------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------*/
-                            //Modify Fonctions
+                            //Modification Functions
 /*-----------------------------------------------------------------------------*/
 Coordinates calculateCoordinates(int index, int sizeBoard) {
     Coordinates coord;
-    coord.x = index/sizeBoard;
-    coord.y = index%sizeBoard;
+    coord.x = index / sizeBoard;
+    coord.y = index % sizeBoard;
     return coord;
 }
 /*-----------------------------------------------------------------------------*/
-                            //Observation Fonctions
+                            //Observation Functions
 /*-----------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------*/
-                            //Get Fonctions
+                            //Get Functions
 /*-----------------------------------------------------------------------------*/
-int calculateSquareCoordinates(int x, int y, int sizeBoard) {
-    return sizeBoard*x+y;
+int calculateHexCoordinates(int x, int y, int sizeBoard) {
+    return sizeBoard * x + y;
 }
 
 /*-----------------------------------------------------------------------------*/
-                            //Post Up Fonctions
+                            //Print Functions
 /*-----------------------------------------------------------------------------*/
-void postUpCoordinates(Coordinates coord) {
+void printCoordinates(Coordinates coord) {
     printf("x = %d\ny = %d\n", coord.x, coord.y);
 }
 /*-----------------------------------------------------------------------------*/

@@ -12,55 +12,55 @@
 #include "Graph.h"
 /*-----------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------*/
-                            //implement TAD TabHash
+                            //implement ADT TabHash
 /*-----------------------------------------------------------------------------*/
 typedef struct s_TabHash {
-    List ** boardListGroup;
+    List ** groupList;
     int nbGroups;
 } TabHash;
 
 /*-----------------------------------------------------------------------------*/
-                            //Create Fonctions
+                            //Creation Functions
 /*-----------------------------------------------------------------------------*/
 
 TabHash * createTabHashRg(int sizeTab);
-TabHash * hashFonctionRg(TabHash* tabH, List * group);
+TabHash * hashFonctionRg(TabHash* tabH, List * gp);
 
 
 /*-----------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------*/
-                            //Modify Fonctions
+                            //Modification Functions
 /*-----------------------------------------------------------------------------*/
-void freeTabHash(TabHash *tabH, int sizeTab);
+void destroyTabHash(TabHash *tabH, int sizeTab);
 /*******************************************************************************/
-                            //implement Search group
+                            //Search group implementation
 /*******************************************************************************/
-void modifyLeaderOfVertex(Graph g, int pos, int newLeader);
+void modifyVertexLeader(Graph g, int pos, int newLeader);
 
 //Graph g to modify the leader the group
-List *groupUnion(List *g1, List *g2, Graph g);
+List *groupUnion(List *gp1, List *gp2, Graph g);
 
-//v1 and v2 are the positions of vertexs
+//v1 and v2 are the positions of vertexes
 //v1 is the leader of the new group
 List *createNewGroup(Graph g, int v1, int v2);
 
 //put a alone vertex in a  group
-List * putItInGroup(List *group, int v, Graph g);
+List * addToGroup(List *gp, int v, Graph g);
 
 bool searchGroup(TabHash *tabH, Graph g, int pos, char color);
 /*-----------------------------------------------------------------------------*/
-                            //Observation Fonctions
+                            //Observation Functions
 /*-----------------------------------------------------------------------------*/
-//To find out which is the largest group between two groups
-bool whichIsLargestGroup(const TabHash *tabH, int leader1, int leader2);
+//returns true if group with leader1 is >= leader2 of to group 
+bool largerGroup(const TabHash *tabH, int leader1, int leader2);
 
-//thougnt to create a alias
-bool IsAWinGroup(List * group, int side1, int side2);
+//returns true if group gp contains the two parallel sides of its color
+bool isAWinningGroup(List * gp, int side1, int side2);
 /*-----------------------------------------------------------------------------*/
-                            //Get Fonctions
+                            //Get Functions
 /*-----------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------*/
-                            //Post Up Fonctions
+                            //Print Functions
 /*-----------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------*/
                             //End
