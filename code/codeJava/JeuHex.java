@@ -2,7 +2,6 @@ import java.util.*;
 import java.io.*;
 
 public class JeuHex {
-    private String answer; //answer of questions asked through interface
     private Board board; //board of the game
     private boolean joueur; //true = black, false = white
     private Scanner input = new Scanner(System.in);
@@ -35,69 +34,6 @@ public class JeuHex {
     	if(successful)
     		System.out.println("SaveFiles directory created successfully.");
     }
-    //
-    // public char newLoadQuitMenu(){
-    //     char letterAnswer;
-    //     System.out.println("\n*-----------------------------------------*");
-	// 	System.out.println("* New game?  -> please type N             *");
-	// 	System.out.println("* Load game? -> please type L             *");
-	// 	System.out.println("* Quit game? -> please type Q             *");
-	// 	System.out.println("*-----------------------------------------*");
-    //     System.out.print("choice : ");
-	// 	answer = input.nextLine();
-    //     letterAnswer = answer.toUpperCase().charAt(0);
-    //     return letterAnswer;
-    // }
-    //
-    // public char finalChoice(){
-    //     char finalChoice;
-    //     System.out.println("\n*-----------------------------------------*");
-    //     System.out.println("* Is this your final choice?              *");
-    //     System.out.println("* To confirm -> please type Y             *");
-    //     System.out.println("* To return  -> please type N             *");
-    //     System.out.println("*-----------------------------------------*");
-    //     System.out.print("choice : ");
-    //     answer = input.nextLine();
-    //     finalChoice = answer.toUpperCase().charAt(0);
-    //     return finalChoice;
-    // }
-    //
-    // public char sizeOrDefaultMenu(){
-    //     char letterAnswer;
-    //     System.out.println("\n*-----------------------------------------*");
-    //     System.out.println("* Would you like to choose the board's    *");
-    //     System.out.println("* size?                                   *");
-    //     System.out.println("* Yes? Enter size? -> please type Y       *");
-    //     System.out.println("* No? (default = 11) -> please type N     *");
-    //     System.out.println("*-----------------------------------------*");
-    //     System.out.print("choice : ");
-    //     answer = input.nextLine();
-    //     letterAnswer = answer.toUpperCase().charAt(0);
-    //     return letterAnswer;
-    // }
-    //
-    // public void enterSizeMenu() {
-    //     System.out.println("\n*-----------------------------------------*");
-    //     System.out.println("* What size board do you wish to play on? *");
-    //     System.out.println("* Please enter a size between 3 and 14    *");
-    //     System.out.println("*-----------------------------------------*");
-    //     System.out.print("size = ");
-    //     size = input.nextInt();
-    //     input.nextLine();
-    // }
-    //
-    // public char firstPlayerMenu() {
-    //     char color;
-    //     System.out.println("\n*-----------------------------------------*");
-    // 	System.out.println("* Who will play first?                    *");
-    // 	System.out.println("* BLACK (*) -> please type B              *");
-    // 	System.out.println("* WHITE (o) -> please type W              *");
-    // 	System.out.println("*-----------------------------------------*");
-    //     System.out.print("first player : ");
-    //     answer = input.nextLine();
-    //     color = answer.toUpperCase().charAt(0);
-    //     return color;
-    // }
 
     public boolean gameSetup(){
         char letterAnswer;
@@ -217,9 +153,10 @@ public class JeuHex {
     public Player addPlayer(){
     	Player p;
     	String alias = "";
-		String dateOfBirth = "";
+		Date dateOfBirth;
 		String email = "";
 		char color;
+        int day; int month; int year;
 
     	if (joueur){
     		System.out.println("BLACK player...");
@@ -231,9 +168,19 @@ public class JeuHex {
     	System.out.print("Alias? ");
     	alias = input.nextLine();
 
-        input.nextLine(); // on vide le cash avant le prochain nextLine
-    	System.out.print("Date of birth (YY/MM/DD)? ");
-    	dateOfBirth = input.nextLine();
+        // input.nextLine(); // on vide le cash avant le prochain nextLine
+    	System.out.println("Date of birth (DD/MM/YY)? ");
+        do {
+            System.out.print("Day? "); day = input.nextInt();
+        } while (day > 31 || day < 1);
+        do {
+            System.out.print("Month? "); month = input.nextInt();
+        } while (month > 12 || month < 1);
+        do {
+            System.out.print("Year? "); year = input.nextInt();
+        } while (year < 0 || year > 99);
+        
+    	dateOfBirth = new Date(day, month, year);
 
         input.nextLine(); // on vide le cash avant le prochain nextLine
     	System.out.print("Email? ");
@@ -241,6 +188,7 @@ public class JeuHex {
         //input.nextLine(); // on vide le cash avant le prochain nextLine
 
     	p = new Player(color, alias, dateOfBirth, email, this.board);
+        dateOfBirth.toStringDate();
     	joueur = !joueur;
     	return p;
     }
@@ -254,9 +202,9 @@ public class JeuHex {
             bC = '1';
             wC = '0';
         }
-        String WPlayer = w.toStringPlayer()+'$'+wC; //on rajoute le prochain joueur
-        String BPlayer = b.toStringPlayer()+'$'+bC;
-        InterfaceAvecC.nativeSavePlayer(nameOfSavePlayer, BPlayer, WPlayer);
+        String wPlayer = w.toStringPlayer()+'$'+wC; //on rajoute le prochain joueur
+        String bPlayer = b.toStringPlayer()+'$'+bC;
+        InterfaceAvecC.nativeSavePlayer(nameOfSavePlayer, bPlayer, wPlayer);
     }
 
     //loads player from save file in SaveFiles/savePlayer directory
@@ -271,8 +219,11 @@ public class JeuHex {
             tab[j] = loadFile.charAt(j);
         }
 
-        String alias = "", dateOfBirth = "", email = "", whosTurnIsIt = "";
+        String alias = "", dobString = "", email = "", whosTurnIsIt = "";
+        String dayString = "", monthString = "", yearString = "";
+        Date dateOfBirth;
         int i = 0;
+        int j = 0;
         System.out.println(loadFile);
         while (i < size - 1) {
             if (tab[i] == color) {
@@ -280,10 +231,20 @@ public class JeuHex {
                 while (tab[i] != '#') {
                     alias += tab[i++];
                 }
-            }else if (tab[i] == '#'){
+            }else if (tab[i] == '#') {
                 i++;
                 while (tab[i] != '@') {
-                    dateOfBirth += tab[i++];
+                    dobString += tab[i++];
+                    if (dobString.charAt(j) != '/') {
+                        if (j == 0 || j == 1) {
+                            dayString += dobString.charAt(j);
+                        }else if (j == 2 || j == 3) {
+                            monthString += dobString.charAt(j + 1);
+                        }else if (j == 4 || j == 5) {
+                            yearString += dobString.charAt(j + 2);
+                        }
+                    }
+                    j++;
                 }
             }else if (tab[i] == '@') {
                 i++;
@@ -292,13 +253,16 @@ public class JeuHex {
                 }
             }else if (tab[i] == '$') {
                 i++;
-                // System.out.println(tab[i]+" "+i+" color "+color);
                 whosTurnIsIt += tab[i++];
             }else {
                 i++;
             }
-
         }
+
+        int day = Integer.parseInt(dayString);
+        int month = Integer.parseInt(monthString);
+        int year = Integer.parseInt(yearString);
+        dateOfBirth = new Date(day, month, year);
 
         if (color == Piece.BLACK) {
             b = new Player(color, alias, dateOfBirth, email, this.board);
@@ -311,8 +275,6 @@ public class JeuHex {
                 w.setFirstPlayer(true);
             }
         }
-        // System.out.println("turn "+Integer.parseInt(whosTurnIsIt)+" color"+color);
-        //return Integer.parseInt(whosTurnIsIt); //pour savoir qui cmmence
     }
 
     public void loadPlayerMovesTab(String spots) {
@@ -345,7 +307,7 @@ public class JeuHex {
         boolean ok = true;
         boolean ko = true;
         String nameOfSaveGame = "";
-        String nameOfSavePlayer = "";
+        // String nameOfSavePlayer = "";
         char finalChoice;
         do {
             do {
@@ -381,9 +343,9 @@ public class JeuHex {
         board.printBoard();
         Player p;
     	int i = 0;
-        char circonstance = 'c';
+        char event = 'c';
         System.out.println(board.getNbHexes());
-    	while(i < board.getNbHexes() && (circonstance == 'c')){
+    	while(i < board.getNbHexes() && (event == 'c')){
     		char color = Player.quiJoue(joueur);
 
     		if (color == Piece.BLACK)
@@ -391,29 +353,25 @@ public class JeuHex {
     		else
     			p = w;
 
-    		circonstance = p.placePiece();
+    		event = p.placePiece();
 
-    		//board.printBoard();
             p.printMovesTab();
-            //System.out.println("\n");
-            //w.printmovesTab();
     		joueur = !joueur;
-            //System.out.println("\n "+i);
             i++;
-            if (circonstance == 'w') { //I do just that but we can change if we want, just for test
+            if (event == 'w') {
                 p.setWinner(true);
-                circonstance = 'w';
-            }else if (circonstance == 'q'){
-                circonstance = 'q';
+                event = 'w';
+            }else if (event == 'q'){
+                event = 'q';
             }
     	}
-        return circonstance;
+        return event;
     }
 
     public String chooseLoadFile() {
         String  choice = "";
         boolean ok = true;
-        boolean ko = true;
+        // boolean ko = true;
         String []saveFile = InterfaceAvecC.nativeGetSaveFile();
 
         System.out.println("Which file do you want to load?");
@@ -425,12 +383,12 @@ public class JeuHex {
             choice = input.nextLine();
             for(int i = 0; i < saveFile.length; i++){
                 if (choice.equals(saveFile[i])) {
-                    ko = false;
+                    ok = false;
                     i = saveFile.length;
                 }
 
             }
-        }while(ko);
+        } while(ok);
         return choice;
     }
 
@@ -442,8 +400,8 @@ public class JeuHex {
                 jeu.quitGame();
             else
                 if (jeu.getBlackPlayer().isWinner())
-                    System.out.println("\nPLAYER BLACK WON !\n");
+                    System.out.println("\nBLACK PLAYER WINS!\n");
                 else
-                    System.out.println("\nPLAYER WHITE WON !\n");
+                    System.out.println("\nWHITE PLAYER WINS!\n");
     }
 }
