@@ -19,9 +19,9 @@ char * getSpotsFromFile(const char * fileName){
  	FILE *file = NULL;
     int size = 0;
  	char buff[20];
- 	char *tab = malloc(sizeof(char)*(size*size));
  	char charac = 0;
     int ok = 1;
+    char *tab;
 	file = fopen(fileName, "r");
 	if (file) {
 		int j;
@@ -34,6 +34,7 @@ char * getSpotsFromFile(const char * fileName){
                 fscanf(file,"%s", buff);
                 //printf("%s\n", buff);
                 size = atoi(buff);
+                tab = malloc(sizeof(char)*((size*size) + 1));
                 //printf("%d\n", size);
             }
             if (strcmp(buff,"\\board") == 0 && size != 0) {

@@ -34,6 +34,7 @@ public class Date {
 	}
 
 	public String toStringDate() {
-		return day + "/" + month + "/" + year;
+		return String.format("%02d", day) + "/" + String.format("%02d", month) +
+		 	"/" + String.format("%02d", year);
 	}
 }

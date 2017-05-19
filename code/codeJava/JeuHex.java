@@ -179,7 +179,7 @@ public class JeuHex {
         do {
             System.out.print("Year? "); year = input.nextInt();
         } while (year < 0 || year > 99);
-        
+
     	dateOfBirth = new Date(day, month, year);
 
         input.nextLine(); // on vide le cash avant le prochain nextLine
@@ -221,7 +221,7 @@ public class JeuHex {
 
         String alias = "", dobString = "", email = "", whosTurnIsIt = "";
         String dayString = "", monthString = "", yearString = "";
-        Date dateOfBirth;
+        Date dateOfBirth = new Date(0, 0, 0);
         int i = 0;
         int j = 0;
         System.out.println(loadFile);
@@ -234,17 +234,30 @@ public class JeuHex {
             }else if (tab[i] == '#') {
                 i++;
                 while (tab[i] != '@') {
-                    dobString += tab[i++];
-                    if (dobString.charAt(j) != '/') {
-                        if (j == 0 || j == 1) {
-                            dayString += dobString.charAt(j);
-                        }else if (j == 2 || j == 3) {
-                            monthString += dobString.charAt(j + 1);
-                        }else if (j == 4 || j == 5) {
-                            yearString += dobString.charAt(j + 2);
+                    if (tab[i] != '/') {
+                        dobString += tab[i];
+                        if (j == 1) {
+                            dateOfBirth.setDay(Integer.parseInt(dobString));
+                        }else if (j == 3) {
+                            dateOfBirth.setMonth(Integer.parseInt(dobString));
+                        }else if (j == 5) {
+                            dateOfBirth.setYear(Integer.parseInt(dobString));
                         }
+                        dobString = "";
+                        j++;
                     }
-                    j++;
+                    i++;
+
+                    // if (dobString.charAt(j) != '/') {
+                    //     if (j == 0 || j == 1) {
+                    //         dayString += dobString.charAt(j);
+                    //     }else if (j == 2 || j == 3) {
+                    //         monthString += dobString.charAt(j + 1);
+                    //     }else if (j == 4 || j == 5) {
+                    //         yearString += dobString.charAt(j + 2);
+                    //     }
+                    // }
+                    // j++;
                 }
             }else if (tab[i] == '@') {
                 i++;
@@ -258,11 +271,7 @@ public class JeuHex {
                 i++;
             }
         }
-
-        int day = Integer.parseInt(dayString);
-        int month = Integer.parseInt(monthString);
-        int year = Integer.parseInt(yearString);
-        dateOfBirth = new Date(day, month, year);
+        System.out.println(dateOfBirth.toStringDate());
 
         if (color == Piece.BLACK) {
             b = new Player(color, alias, dateOfBirth, email, this.board);
