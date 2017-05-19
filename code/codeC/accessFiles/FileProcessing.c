@@ -232,7 +232,7 @@ char ** getSaveFiles(const char * dirName, int * nbFiles) {
                 //test si l'on travail avec un repertoire ou un fichier
                 //le comportement est different l'appel recursif se fait dans le cas ou c'est un dossier
                 if (!S_ISDIR(infos.st_mode)) {
-                    strcpy(saveFile[(*i)++], fileOrDir->d_name);
+                    strcpy(saveFile[(*nbFiles)++], fileOrDir->d_name);
                 }
             }
         }
