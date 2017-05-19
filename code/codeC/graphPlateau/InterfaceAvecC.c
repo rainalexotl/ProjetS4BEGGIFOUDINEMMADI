@@ -62,30 +62,27 @@ Java_InterfaceAvecC_nativeInitGame (JNIEnv * env, jclass cl, jstring spots, jobj
     int nbSpots= strlen(s); printf("nbSpots = %d\n", nbSpots);
     int sizeBoard = sqrt(nbSpots); printf("sizeBoard = %d\n", sizeBoard);
     int loaded = 0;
-    globGraph = CreateGraph(sizeBoard);
-    globGraph = CreateBoardGraph(globGraph, s, &loaded);
+    globGraph = createGraph(sizeBoard);
+    globGraph = createBoardGraph(globGraph, s, &loaded);
     globRg = createReducedGraph(globGraph);
     if (loaded == 1) {
         globRg = reloadGroups(globGraph, globRg);
     }
-    //printf("je passe la \n");
+
     jclass jeuHex = (*env)->GetObjectClass(env, obj);
     if (jeuHex == NULL) {
-        fprintf(stderr, "error : class not found !\n");
+        fprintf(stderr, "Error : class not found !\n");
         exit(-1);
     }
 
     jmethodID play = (*env)->GetMethodID(env, jeuHex, "play", "()C");
     if (play == NULL) {
-        fprintf(stderr, "error : method not found !\n");
+        fprintf(stderr, "Error : method not found !\n");
         exit(-1);
     }
-    //printf("je passe la \n");
-    jchar circonstance = (*env)->CallIntMethod(env, obj, play, sizeBoard, s);
-    //printf("je passe la \n");
-    // destroyGraph(globGraph);
+    jchar event = (*env)->CallIntMethod(env, obj, play, sizeBoard, s);
     (*env)->ReleaseStringUTFChars(env, spots, s);
-    return circonstance;
+    return event;
 }
 
 JNIEXPORT jint JNICALL
@@ -100,11 +97,9 @@ Java_InterfaceAvecC_nativeCalcYCoord (JNIEnv * env, jclass cl, jint i, jint size
 
 JNIEXPORT jint JNICALL
 Java_InterfaceAvecC_nativeCalcPosition (JNIEnv * env, jclass cl, jint x, jint y, jint sizeBoard) {
-    return calculateSquareCoordinates(x, y, sizeBoard);
+    return calculateHexCoordinates(x, y, sizeBoard);
 }
 
-//modifier la couleur du graph
-//on cherchera les groupe
 JNIEXPORT int JNICALL
 Java_InterfaceAvecC_nativePlacePiece (JNIEnv * env, jclass cl, jint pos, jchar color) {
     jint win = 0;
@@ -120,7 +115,7 @@ Java_InterfaceAvecC_nativePlacePiece (JNIEnv * env, jclass cl, jint pos, jchar c
 JNIEXPORT jstring JNICALL
 Java_InterfaceAvecC_nativeGetSpots (JNIEnv * env, jclass cl, jstring fileName) {
     const char *s = (*env)->GetStringUTFChars(env, fileName, 0);
-    char *spots = transformGraphToBoardOfChar(s);
+    char *spots = getSpotsFromFile(s);
 
     jstring str = (*env)->NewStringUTF(env, spots);
     (*env)->ReleaseStringUTFChars(env, fileName, s);
@@ -129,70 +124,71 @@ Java_InterfaceAvecC_nativeGetSpots (JNIEnv * env, jclass cl, jstring fileName) {
 
 JNIEXPORT void JNICALL
 Java_InterfaceAvecC_nativeSaveGame (JNIEnv * env, jclass cl,
-    jstring savedFileName, jstring stringToSave, jintArray BMovesTab, jintArray WMovesTab) {
-    jsize Bsize = (*env)->GetArrayLength(env, BMovesTab);
-    jsize Wsize = (*env)->GetArrayLength(env, WMovesTab);
+    jstring savedFileName, jstring stringToSave, jintArray bMovesTab, jintArray wMovesTab) {
+    jsize bSize = (*env)->GetArrayLength(env, bMovesTab);
+    jsize wSize = (*env)->GetArrayLength(env, wMovesTab);
 
-    jint *Bbody = (*env)->GetIntArrayElements(env, BMovesTab, 0);
-    jint *Wbody = (*env)->GetIntArrayElements(env, WMovesTab, 0);
+    jint *bBody = (*env)->GetIntArrayElements(env, bMovesTab, 0);
+    jint *wBody = (*env)->GetIntArrayElements(env, wMovesTab, 0);
 
-    int bMovesTab[Bsize];
-    int wMovesTab[Wsize];
+    int bMovesTabBis[bSize];
+    int wMovesTabBis[wSize];
 
-	for (int i = 0; i <= Bsize; i++) { bMovesTab[i] = Bbody[i]; } //conversion des tab en c
-	for (int i = 0; i <= Wsize; i++) { wMovesTab[i] = Wbody[i]; }
+    //conversion of the java tables into c tables
+	for (int i = 0; i <= bSize; i++) { bMovesTabBis[i] = bBody[i]; }
+	for (int i = 0; i <= wSize; i++) { wMovesTabBis[i] = wBody[i]; }
 
     const char * fileName = (*env)->GetStringUTFChars(env, savedFileName, 0);
     const char * strToSave = (*env)->GetStringUTFChars(env, stringToSave, 0);
 
-    saveBoardFile(fileName, strToSave, bMovesTab, wMovesTab);
+    saveBoardFile(fileName, strToSave, bMovesTabBis, wMovesTabBis);
 
-    //for the free from java
+    //for the free in java
     (*env)->ReleaseStringUTFChars(env, savedFileName, fileName);
     (*env)->ReleaseStringUTFChars(env, stringToSave, strToSave);
-    (*env)->ReleaseIntArrayElements(env, BMovesTab, Bbody, 0);
-    (*env)->ReleaseIntArrayElements(env, WMovesTab, Wbody, 0);
+    (*env)->ReleaseIntArrayElements(env, bMovesTab, bBody, 0);
+    (*env)->ReleaseIntArrayElements(env, wMovesTab, wBody, 0);
 }
 
 //save player
 JNIEXPORT void JNICALL
 Java_InterfaceAvecC_nativeSavePlayer (
-    JNIEnv *env, jclass cl, jstring nameOfSavePlayer, jstring Bplayer, jstring Wplayer) {
+    JNIEnv *env, jclass cl, jstring nameOfSavePlayer, jstring bPlayer, jstring wPlayer) {
 
     const char * fileName = (*env)->GetStringUTFChars(env, nameOfSavePlayer, 0);
-    const char * blackP = (*env)->GetStringUTFChars(env, Bplayer, 0);
-    const char * whiteP = (*env)->GetStringUTFChars(env, Wplayer, 0);
+    const char * blackP = (*env)->GetStringUTFChars(env, bPlayer, 0);
+    const char * whiteP = (*env)->GetStringUTFChars(env, wPlayer, 0);
 
     savePlayer(fileName, blackP, whiteP);
 
     (*env)->ReleaseStringUTFChars(env, nameOfSavePlayer, fileName);
-    (*env)->ReleaseStringUTFChars(env, Bplayer, blackP);
-    (*env)->ReleaseStringUTFChars(env, Wplayer, whiteP);
+    (*env)->ReleaseStringUTFChars(env, bPlayer, blackP);
+    (*env)->ReleaseStringUTFChars(env, wPlayer, whiteP);
 }
 
 //load
 JNIEXPORT jstring JNICALL
 Java_InterfaceAvecC_nativeStringToLoadPlayer (JNIEnv * env, jclass cl, jchar color,
-    jstring stringFromFilInC) {
+    jstring loadFileName) {
 
-    const char * fileName = (*env)->GetStringUTFChars(env, stringFromFilInC, 0);
-    char *s = loarPlayer(color, fileName);
-    jstring loadFil = (*env)->NewStringUTF(env, s);
-    (*env)->ReleaseStringUTFChars(env, stringFromFilInC, fileName);
-    return loadFil;
+    const char * fileName = (*env)->GetStringUTFChars(env, loadFileName, 0);
+    char *s = loadPlayer(color, fileName);
+    jstring loadFile = (*env)->NewStringUTF(env, s);
+    (*env)->ReleaseStringUTFChars(env, loadFileName, fileName);
+    return loadFile;
 }
 
 JNIEXPORT jobjectArray JNICALL
 Java_InterfaceAvecC_nativeGetSaveFile (JNIEnv * env, jclass cl) {
-    const char* NomRep = "../../SaveFiles";
+    const char* dirName = "../../SaveFiles";
     int size = 0;
-    char ** saveFile = getSaveFile(NomRep, &size);
+    char ** saveFile = getSaveFiles(dirName, &size);
     for (size_t i = 0; i < size; i++) {
         printf("str1 = %s\n", saveFile[i]);
     }
-    // On récupère l'objet classe String
+    // retrieval of the java String class
     jclass stringClass = (*env)->FindClass(env, "java/lang/String");
-    // On construit un tableau de String
+    // construction of an array of strings
     jobjectArray tabString = (jobjectArray)(*env)->NewObjectArray(env, size, stringClass, NULL);
 
     for (size_t i = 0; i < size; i++) {

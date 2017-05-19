@@ -17,6 +17,6 @@ typedef struct sPiece {
     char color;
 }Piece;
 
-Piece  createPiece(char color);
+Piece createPiece(char color);
 
 #endif /* Pion_h */

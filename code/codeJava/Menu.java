@@ -1,7 +1,8 @@
 import java.util.Scanner;
 
 public class Menu {
-    private static String answer;
+    //answer to the questions asked through the interface:
+    private static String answer; 
     private static Scanner input = new Scanner(System.in);
 
     public static char newLoadQuitMenu(){
