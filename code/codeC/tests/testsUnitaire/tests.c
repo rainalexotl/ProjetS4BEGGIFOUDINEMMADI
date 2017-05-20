@@ -26,13 +26,13 @@ void testInsertionOfTheVertexInGraph() {
 //		Graph g1 = NULL;
 //		Vertex *s= NULL;
 //		
-//		s = (Vertex *)insertVertexGraph(g, g->sizeGraph, BLACK);
+//		s = insertVertexGraph(g, g->sizeGraph, BLACK);
 //		printf("this insertion worked\n");
-//		s = (Vertex *)insertVertexGraph(g1, g->sizeGraph, BLACK);
+//		s = insertVertexGraph(g1, g->sizeGraph, BLACK);
 //		printf("this insertion worked\n");
-//		s = (Vertex *)insertVertexGraph(g,0, BLACK);
-//		s = (Vertex *)insertVertexGraph(g,g->sizeGraph, NULL);
-//		 
+//		s = insertVertexGraph(g,0, BLACK);
+//		s = insertVertexGraph(g,g->sizeGraph, NULL);
+//		 printf("%d",s->groupLeader);
 //		destroyGraph(g);
 //	 	destroyGraph(g1);
 }
@@ -164,23 +164,67 @@ void testGettersGraph(){
 	getSizeGraph(g);
 }
 
+void printMenu(){
+	printf("wich test do you want to test?\n");
+	printf("Choose the number of the test you want or '0' to stop the tests\n");
+	printf("1- Test of the fonction that create  the graph\n");
+	printf("2- Test of the fonction that create the board's graph\n");
+	printf("3- Test of the fonction that  calculate an adjacent vertex\n");
+	printf("4- Test of the fonction that  calculate all adjacents vertexes\n");
+	printf("5- Test of the fonction that  calculate a side adjacents\n");
+	printf("6- Test of the fonction that  replace  a vertex in the graph\n");
+	printf("7- Test of the fonction that  test if a Vertex belongs to a group\n");
+	printf("8- Test of the fonction that test if two vertexes are adjacent\n");
+	printf("9- Test of the fonction that test if two Vertexes belongs to the same group\n");
+	printf("10- Test of all the fonctions that calculate different things in a vertex\n");
+	printf("11- Test of all the Getters fonctions\n");
+}
+
 int main(int argc, const char * argv[]) {
 	printf("*********************************\n");
 	printf("*            Unit Tests         *\n");
 	printf("*********************************\n");
-	
-	testGreationOfTheGraph();
-//	testGreationOfTheGraph();
-//	testCreationOfTheBoardsGraph();
-//	testOfcalcAdjacentVertexesGraph();
-//	testOfcalcAllAdjacentsGraph();
-//	testOfcalcSideAdjacentsGraph();
-//	testReplaceVertexGraph();
-//	testIsInGroup();
-//	testAreAdjacentVertexes();
-//	testIsInSameGroup();
-//	testVertexGraph();
-//	testGettersGraph();
+	int i = -1;
+	while(i != 0){
+		printMenu();
+		scanf("%d",&i);
+		switch(i){
+			case 1 :
+				testGreationOfTheGraph();
+				break;
+			case 2 :
+				testCreationOfTheBoardsGraph();
+				break;
+			case 3 :
+				testOfcalcAdjacentVertexesGraph();
+				break;
+			case 4 :
+				testOfcalcAllAdjacentsGraph();
+				break;
+			case 5 :
+				testOfcalcSideAdjacentsGraph();
+				break;
+			case 6 :
+				testReplaceVertexGraph();
+				break;
+			case 7 :
+				testIsInGroup();
+				break;
+			case 8 :
+				testAreAdjacentVertexes();
+				break;
+			case 9 :
+				testIsInSameGroup();
+				break;
+			case 10 :
+				testVertexGraph();
+				break;
+			case 11 :
+				testGettersGraph();
+				break;
+		}
+		
+    }
     
 	
 	
