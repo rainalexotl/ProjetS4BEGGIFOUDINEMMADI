@@ -1,10 +1,18 @@
 import java.util.Scanner;
 
+/**
+ * @class Menu
+ * @brief this class contains all the menus to be shown through the interface
+ * @var answer the answer to the questions asked in the menus
+ */
 public class Menu {
-    //answer to the questions asked through the interface:
     private static String answer; 
     private static Scanner input = new Scanner(System.in);
 
+    /**
+     * @brief asks the players if they want to start a new game, load, or quit
+     * @return letterAnswer equal to N (new), L (load) or Q (quit)
+     */
     public static char newLoadQuitMenu(){
         char letterAnswer;
         System.out.println("\n*-----------------------------------------*");
@@ -18,6 +26,10 @@ public class Menu {
         return letterAnswer;
     }
 
+    /**
+     * @brief asks the player or players to confirm his or their choice
+     * @return letterAnswer equal to Y (yes) or N (no)
+     */
     public static char finalChoice(){
         char finalChoice;
         System.out.println("\n*-----------------------------------------*");
@@ -31,6 +43,10 @@ public class Menu {
         return finalChoice;
     }
 
+    /**
+     * @brief asks the players if they want to enter a size or use the default
+     * @return letterAnswer equal to Y (yes, enter a size) or N (no, use default)
+     */
     public static char sizeOrDefaultMenu(){
         char letterAnswer;
         System.out.println("\n*-----------------------------------------*");
@@ -45,6 +61,10 @@ public class Menu {
         return letterAnswer;
     }
 
+    /**
+     * @brief asks the players to enter the board size they want to play on
+     * @return size the size entered by the players
+     */
     public static int enterSizeMenu() {
         int size;
         System.out.println("\n*-----------------------------------------*");
@@ -57,6 +77,10 @@ public class Menu {
         return size;
     }
 
+    /**
+     * @brief asks the players to enter the letter of the player who will start
+     * @return letterAnswer equal to B (black) or W (white)
+     */
     public static char firstPlayerMenu() {
         char color;
         System.out.println("\n*-----------------------------------------*");
@@ -70,6 +94,10 @@ public class Menu {
         return color;
     }
 
+    /**
+     * @brief asks the player to confirm or undo their move or quit the game
+     * @return choice equals 1 (undo move), 2 (confirm their move) or 3 (quit)
+     */
     public static int confirmOrQuitMenu() {
         int choice;
         System.out.println("\n*------------------------------------------*");
@@ -83,6 +111,10 @@ public class Menu {
         return choice;
     }
 
+    /**
+     * @brief asks the players want to save their game or not
+     * @return choice equals 1 (save the game) or 2 (discard the game)
+     */
     public static int quitMenu() {
         int choice;
         System.out.println("\n*------------------------------------------*");
