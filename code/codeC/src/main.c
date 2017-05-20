@@ -16,8 +16,10 @@ int main(int argc, const char * argv[]) {
     g = createBoardGraph(g, str, &i);
     printf("i = %d\n", i);
     printBoard(g);
+
     char * player = loadPlayer('o', "../../../doc/SaveFiles/savePlayer/playerparti1.txt");
     printf("player %s\ntaille %d \n", player, (int)strlen(player));
+
     free(player);
     int k = 0;
     char ** saveFiles = getSaveFiles(argv[1], &k);
@@ -26,7 +28,9 @@ int main(int argc, const char * argv[]) {
     }
     free(str);
     free(player);
-    //printf("player %s\n", player);
+
+    printf("player %s\n", player);
+
     destroySaveFiles(saveFiles);
     ReducedGraph * rg = createReducedGraph(g);
     destroyReducedGraph(rg);
