@@ -31,7 +31,7 @@ char * getSpotsFromFile(const char * fileName){
             if (strcmp(buff,"\\dim") == 0) {
                 fscanf(file,"%s", buff);
                 size = atoi(buff);
-                tab = malloc(sizeof(char)*((size*size) + 1));
+                tab = malloc(sizeof(char)*((size*size+1)));
             }
             if (strcmp(buff,"\\board") == 0 && size != 0) {
                 while(j < size*size) {
@@ -68,7 +68,6 @@ void saveBoardFile(const char * fileName, const char *spots, int bTabGame[], int
         fprintf(stderr, "Error : %s not created!\n", fileName);
         exit(-1);
     }
-
     int i = 0;
     char buff[5];
     do {
@@ -153,17 +152,17 @@ char * loadPlayer(char color, const char * fileNameOfLoadPlayer) {
             fscanf(file, "%s", buff);
             printf("buf %s\n", buff);
             if (strcmp(buff, "\\blackPlayer") == 0) {
-                // printf("buf %s\n", buff);
                 fscanf(file, "%s\n", buff);
+                printf("buf %s\n", buff);
                 size = atoi(buff);
-                char bChaine[size+1];
+                char bChaine[size+2];
                 size_t i = 0;
-                for (i = 0; i < size+1; i++) {
+                for (i = 0; i < size+2; i++) {
                     fscanf(file, "%c", &bChaine[i]);
                 }
                 bChaine[i] = '\0';
                 //we must be free this malloc after use this String
-                chaine = malloc(sizeof(char)*(size));
+                chaine = malloc(sizeof(char)*(size+2));
                 strcpy(chaine, bChaine);
                 ok = 0;
             }
@@ -174,18 +173,20 @@ char * loadPlayer(char color, const char * fileNameOfLoadPlayer) {
             if (strcmp(buff, "\\whitePlayer") == 0) {
                 fscanf(file, "%s\n", buff);
                 size = atoi(buff);
-                char wChaine[size+1];
+                char wChaine[size+2];
                 size_t i = 0;
                 for (i = 0; i < size+1; i++) {
                     fscanf(file, "%c", &wChaine[i]);
                 }
+                wChaine[i] = '\0';
                 //we must be free this malloc after use this String
-                chaine = malloc(sizeof(char)*size);
+                chaine = malloc(sizeof(char)*size+2);
                 strcpy(chaine, wChaine);
                 ok = 0;
             }
         } while(ok);
     }
+    fclose(file);
     return chaine;
 }
 /*-------------------------------------------------------------------------------------------------*/
@@ -223,6 +224,7 @@ char ** getSaveFiles(const char * dirName, int * nbFiles) {
             }
         }
     }
+    closedir(srcDir);
     return saveFile;
 }
 //We use this foncton to free the saveFile

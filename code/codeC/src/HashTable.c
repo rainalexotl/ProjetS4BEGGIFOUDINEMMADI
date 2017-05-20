@@ -53,6 +53,7 @@ void destroyTabHash(TabHash * tabH, int sizeTab) {
         }
     }
     //tabH = NULL;
+    free(tabH->groupList);
     assert(tabH);
     free(tabH);
 }
@@ -68,7 +69,7 @@ void modifyVertexLeader(Graph g, int pos, int newLeader) {
     }
 }
 
-//Graph g to modify the leader the group
+//graph g is needed to modify the leader the group
 List *groupUnion(List *gp1, List *gp2, Graph g) {
     int groupLeader = gp1->sent->next->pos;
     Node * itr = gp2->sent->next;
@@ -78,13 +79,11 @@ List *groupUnion(List *gp1, List *gp2, Graph g) {
         assert(itr->next);
         itr = itr->next;
     }
-    destroyList(gp2); // because we dont use that
-    printList(gp1);
+    destroyList(gp2); // gp2 no longer needed because it is part of gp1 now
+    // printList(gp1);
     return gp1;
 }
 
-//v1 and v2 are the positions of vertexs
-//v1 is the leader of the new group
 List *createNewGroup(Graph g, int v1, int v2) {
     modifyVertexLeader(g, v1, v1); //because it's the leader
     modifyVertexLeader(g, v2, v1);
@@ -127,6 +126,7 @@ bool searchGroup(TabHash *tabH, Graph g, int pos, char color) {
             if (areAdjacentVertexes(v ,vAdj)) { //main condition
                 if (isInGroup(vAdj) && isInGroup(v)) {
                     if (!isInSameGroup(v, vAdj)) {
+                        //the groups are united
                         if (largerGroup(tabH, v->groupLeader, vAdj->groupLeader) == 1 ) {
                             newGroup = groupUnion(vList, vAdjList, g);
                         }else {
@@ -134,17 +134,20 @@ bool searchGroup(TabHash *tabH, Graph g, int pos, char color) {
                         }
                         tabH = hashFonctionRg(tabH, newGroup);
                     } // if its in the same group, nothing is done
-                }else if (!isInGroup(vAdj) && isInGroup(v)) {
-                    // they aren't in the same group but they are adjacent,
+                }else if (!isInGroup(vAdj) && isInGroup(v)) { 
+                    /*they aren't in the same group but they are adjacent, 
+                    vAdj is put into v's group*/
                     posAdj = calculateHexCoordinates(vAdj->coord.x, vAdj->coord.y,
                         getSizeGraph(g));
                     vList = addToGroup(vList, posAdj, g);
                     newGroup = vList;
                 }else if (isInGroup(vAdj) && !isInGroup(v)){
+                    //v is put into vAdj's group
                     vAdjList = addToGroup(vAdjList, pos, g);
                     newGroup = vAdjList;
                 }else {
-                    posAdj = calculateHexCoordinates(vAdj->coord.x,
+                    //the two vertexes are solo, so a a new group is created
+                    posAdj = calculateHexCoordinates(vAdj->coord.x, 
                         vAdj->coord.y, getSizeGraph(g));
                     newGroup = createNewGroup(g, pos, posAdj);
                     tabH = hashFonctionRg(tabH, newGroup);
@@ -162,7 +165,6 @@ bool searchGroup(TabHash *tabH, Graph g, int pos, char color) {
 /*-----------------------------------------------------------------------------*/
                             //Observation Functions
 /*-----------------------------------------------------------------------------*/
-//returns true if group with leader1 is >= to group of leader2
 bool largerGroup(const TabHash *tabH, int leader1, int leader2) {
     if (tabH->groupList[leader1]->sizeList >= tabH->groupList[leader2]->sizeList){
         return true;
@@ -171,9 +173,7 @@ bool largerGroup(const TabHash *tabH, int leader1, int leader2) {
 
 }
 
-//returns true if group gp contains the two parallel sides of its color
 bool isAWinningGroup(List * gp, int side1, int side2) {
-
     int i = 0;
     bool stop = false;
     if (!gp){

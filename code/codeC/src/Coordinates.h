@@ -26,6 +26,7 @@ typedef struct sCoordinates {
 /*-----------------------------------------------------------------------------*/
                             //Modification Functions
 /*-----------------------------------------------------------------------------*/
+//returns calculated coordinates based on an index of a board of size = sizeBoard
 Coordinates calculateCoordinates(int index, int sizeBoard);
 /*-----------------------------------------------------------------------------*/
                             //Observation Functions
@@ -33,10 +34,12 @@ Coordinates calculateCoordinates(int index, int sizeBoard);
 /*-----------------------------------------------------------------------------*/
                             //Get Functions
 /*-----------------------------------------------------------------------------*/
+//Calculates the position of a hex based on its x y cordinates
 int calculateHexCoordinates(int x, int y, int sizeBoard);
 /*-----------------------------------------------------------------------------*/
                             //Print Fonctions
 /*-----------------------------------------------------------------------------*/
+//prints passed coordinates
 void printCoordinates(Coordinates coord);
 /*-----------------------------------------------------------------------------*/
                             //End

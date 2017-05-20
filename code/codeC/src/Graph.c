@@ -16,23 +16,52 @@
 /*-----------------------------------------------------------------------------*/
                             //Prototype Of Private Functions
 /*-----------------------------------------------------------------------------*/
+//prints the color of the vertexes adjacent to the vertex v
 void printAdjVertex(const Vertex *v);
+
+//inserts a vertex into the graph g based on its position i and color
 Vertex *insertVertexGraph(Graph g, int i, char color);
 
+/*-----------------------------------------------------------------------------*/
+//tests if the vertex v is at the top-left or bottom-right corner of the graph
 bool isTopLeftOrBottomRightVertexGraph(const Vertex *v, int sizeGraph);
+
+//tests if the vertex v is at the top-right or bottom-left corner of the graph
 bool isTopRightOrBottomLeftVertexGraph(const Vertex *v, int sizeGraph);
+
+//tests if the vertex v is at the top-right corner of the graph
 bool isTopRightVertexGraph(const Vertex *v, int sizeGraph);
+
+//tests if the vertex v is at the bottom-left corner of the graph
 bool isBottomLeftVertexGraph(const Vertex *v, int sizeGraph);
 
+/*-----------------------------------------------------------------------------*/
+//returns the position of the the vertex "on-top" of the vertex v
 int topAdjVertexGraph(const Vertex *v, int sizeGraph);
+
+//returns the position of the vertex "below" the vertex v
 int bottomAdjVertexGraph(const Vertex *v, int sizeGraph);
+
+//returns the position of the vertex on the left of the vertex v
 int leftAdjVertexGraph(const Vertex *v, int sizeGraph);
+
+//returns the position of the vertex on the right of the vertex v
 int rightAdjVertexGraph(const Vertex *v, int sizeGraph);
+
+//returns the position of the vertex on the "top-right" of the vertex v
 int topRightAdjVertexGraph(const Vertex *v, int sizeGraph);
+
+//returns the position of the vertex on the "bottom-left" of the vertex v
 int bottomLeftAdjVertexGraph(const Vertex *v, int sizeGraph);
 
+/*-----------------------------------------------------------------------------*/
+//calculates the adjacent vertexes of the vertex v
 void calcAdjacentVertexesGraph(Vertex *v, Graph g);
+
+//calculates all the adjacent vertex of each vertex of the graph g
 void calcAllAdjacentsGraph(Graph g);
+
+//calulcates all theadjacent vertexes of the four sides of the graph
 void calcSideAdjacentsGraph(int sidePos, Graph g);
 /*-----------------------------------------------------------------------------*/
                             //Creation Functions
@@ -41,9 +70,11 @@ Graph createGraph(int sizeGraph) {
     Graph g = malloc(sizeof(struct sGraph));
     g->sizeGraph = sizeGraph;
 
+    /* +4 represents the four sides of the graph which are each represented by
+    a single vertex */
     g->v = (Vertex**)malloc(sizeof(Vertex*)*(getNbVertexGraph(g)+4));
 
-    //initialisation des 4 sommets
+    //the four sides of the graph already have a specific color
     for (int i = getNbVertexGraph(g); i < getNbVertexGraph(g)+4; i++) {
         if (i >= getNbVertexGraph(g) && i < getNbVertexGraph(g)+2) {
             g->v[i] = insertVertexGraph(g, i ,WHITE);
@@ -63,7 +94,6 @@ Vertex *insertVertexGraph(Graph g, int i, char color) {
     return v;
 }
 
-//creation du plateuau de jeu grâce à un tableau de char String en java
 Graph createBoardGraph (Graph g, const char *colorTab, int *loaded) {
     *loaded = 0;
     for (int i = 0; i < getNbVertexGraph(g); i++) {
@@ -101,7 +131,6 @@ void calcAdjacentVertexesGraph(Vertex *v, Graph g) {
 
 }
 
-//calcul les Adjacents de tous les Vertexs du graph
 void calcAllAdjacentsGraph(Graph g) {
     int taille = getSizeGraph(g);
     for (int i = 0; i < getNbVertexGraph(g); ++i) {
@@ -113,7 +142,6 @@ void calcAllAdjacentsGraph(Graph g) {
     calcSideAdjacentsGraph(getW2Graph(taille), g);
 }
 
-//calcul des Adjacents des 4 bord
 void calcSideAdjacentsGraph(int sidePos, Graph g) {
     g->v[sidePos]->Adjacents = (Vertex**)malloc(sizeof(Vertex*)*getSizeGraph(g));
     int j = 0;
@@ -142,9 +170,10 @@ void replaceVertexGraph(Graph g, int pos, char color) {
 
 void destroyGraph(Graph g) {
     for (int i = 0; i < getNbVertexGraph(g)+4; i++) {
-        //free(g->s[i]->Adjacents);
+        free(g->v[i]->Adjacents);
         free(g->v[i]);
     }
+    free(g->v);
     free(g);
 }
 
