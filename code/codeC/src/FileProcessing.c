@@ -68,7 +68,6 @@ void saveBoardFile(const char * fileName, const char *spots, int bTabGame[], int
         fprintf(stderr, "Error : %s not created!\n", fileName);
         exit(-1);
     }
-
     int i = 0;
     char buff[5];
     do {
