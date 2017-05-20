@@ -54,6 +54,9 @@ void destroyGraph(Graph g);
 void calculateNbAdjacentsGraph(Graph g);
 void calculateSideAdjacentsGraph(int board, Graph g);
 void replaceVertexGraph(Graph g, int pos, char color);
+void calcAdjacentVertexesGraph(Vertex *v, Graph g);
+void calcAllAdjacentsGraph(Graph g);
+void calcSideAdjacentsGraph(int sidePos, Graph g);
 
 /*-----------------------------------------------------------------------------*/
                             //Observation Functions
@@ -61,6 +64,7 @@ void replaceVertexGraph(Graph g, int pos, char color);
 bool isInGroup(const Vertex *v);
 bool areAdjacentVertexes(const Vertex *v1, const Vertex *v2);
 bool isInSameGroup(const Vertex *v1, const Vertex *v2);
+bool isTopLeftOrBottomRightVertexGraph(const Vertex *v, int sizeGraph);
 
 /*-----------------------------------------------------------------------------*/
                             //Get Functions
@@ -80,6 +84,7 @@ void printCoordGraph(Graph g);
 void printBoard(Graph g);
 void printAdjSidesGraph(const Graph g);
 void printVertexAdjPositions(int posV, Graph g);
+void printBoard(Graph g);
 
 /*-----------------------------------------------------------------------------*/
                             //End
