@@ -10,26 +10,26 @@
 //#include "Graph.h"
 #include "ReducedGraph.h"
 int main(int argc, const char * argv[]) {
-    // int i;
-    // Graph g = createGraph(4);
-    // char * str = getSpotsFromFile("../../../doc/config/size4.txt");
-    // g = createBoardGraph(g, str, &i);
-    // printf("i = %d\n", i);
-    // printBoard(g);
-    // char * player = loadPlayer('*', "../../../doc/SaveFiles/savePlayer/playerparti1.txt");
-    // printf("player %s\n", player);
-    // free(player);
-    // int k = 0;
-    // char ** saveFiles = getSaveFiles(argv[1], &k);
-    // for (int j = 0; j < k; j++) {
-    //     printf("fils %d : %s\n", j, saveFiles[j]);
-    // }
-    // free(str);
-    // printf("player %s\n", player);
-    // destroySaveFiles(saveFiles);
-    // ReducedGraph * rg = createReducedGraph(g);
-    // destroyReducedGraph(rg);
-    // destroyGraph(g);
+    int i;
+    Graph g = createGraph(4);
+    char * str = getSpotsFromFile("../../../doc/config/size4.txt");
+    g = createBoardGraph(g, str, &i);
+    printf("i = %d\n", i);
+    printBoard(g);
+    char * player = loadPlayer('*', "../../../doc/SaveFiles/savePlayer/playerparti1.txt");
+    printf("player %s\n", player);
+    free(player);
+    int k = 0;
+    char ** saveFiles = getSaveFiles(argv[1], &k);
+    for (int j = 0; j < k; j++) {
+        printf("fils %d : %s\n", j, saveFiles[j]);
+    }
+    free(str);
+    printf("player %s\n", player);
+    destroySaveFiles(saveFiles);
+    ReducedGraph * rg = createReducedGraph(g);
+    destroyReducedGraph(rg);
+    destroyGraph(g);
     //
     //
     //

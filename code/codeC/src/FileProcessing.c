@@ -156,14 +156,14 @@ char * loadPlayer(char color, const char * fileNameOfLoadPlayer) {
                 // printf("buf %s\n", buff);
                 fscanf(file, "%s\n", buff);
                 size = atoi(buff);
-                char bChaine[size+1];
+                char bChaine[size+2];
                 size_t i = 0;
                 for (i = 0; i < size+1; i++) {
                     fscanf(file, "%c", &bChaine[i]);
                 }
                 bChaine[i] = '\0';
                 //we must be free this malloc after use this String
-                chaine = malloc(sizeof(char)*(size));
+                chaine = malloc(sizeof(char)*(size+2));
                 strcpy(chaine, bChaine);
                 ok = 0;
             }
@@ -174,13 +174,13 @@ char * loadPlayer(char color, const char * fileNameOfLoadPlayer) {
             if (strcmp(buff, "\\whitePlayer") == 0) {
                 fscanf(file, "%s\n", buff);
                 size = atoi(buff);
-                char wChaine[size+1];
+                char wChaine[size+2];
                 size_t i = 0;
                 for (i = 0; i < size+1; i++) {
                     fscanf(file, "%c", &wChaine[i]);
                 }
                 //we must be free this malloc after use this String
-                chaine = malloc(sizeof(char)*size);
+                chaine = malloc(sizeof(char)*size+2);
                 strcpy(chaine, wChaine);
                 ok = 0;
             }
