@@ -163,19 +163,34 @@ public class Player {
 	}
 
 	/**
+	 * @return the player info in format : ALIAS#DD/MM/YY@PLAYER@EMAIL.COM
+	 */
+	public String toStringPlayer() {
+		return alias + '#' + dateOfBirth.toStringDate() + '@' + email;
+	}
+
+	/**
+	 * @par printPlayerInfo()
+	 * @parblock
+	 * Prints the player's number of turn and their previous move's coordinates
+	 * @endparblock
+	 */
+	public void printPlayerInfo() {
+		// System.out.println(getColorName() + "PLAYER");
+		System.out.println("Turn #" + ((movesItr + 1) / 2));
+		if (movesItr > 1)
+		System.out.println("Last move: (" + movesTab[(movesItr - 2)] + "," 
+			+ movesTab[(movesItr - 1)] + ")");
+	}
+
+	/**
 	 * @brief prints the moves played by the player
 	 */
 	public void printMovesTab() {
 		for (int i = 0; i < movesItr; i++) {
 			System.out.print(" "+movesTab[i]);
 		}
-	}
-
-	/**
-	 * @return the player info in format : ALIAS#DD/MM/YY@PLAYER@EMAIL.COM
-	 */
-	public String toStringPlayer() {
-		return alias + '#' + dateOfBirth.toStringDate() + '@' + email;
+		System.out.println();
 	}
 
 	/**
@@ -198,7 +213,7 @@ public class Player {
 		Coordinates coord;
 		int x;
 		int y;
-		System.out.println("\n" + getColorName() + "player, where do you want to put your piece?");
+		System.out.println(getColorName() + "PLAYER, where do you want to put your piece?");
 		System.out.print("x = ");
 		x = input.nextInt();
 		while(x < 0 || x >= board.getBoardSize()){
@@ -284,10 +299,7 @@ public class Player {
 		}while (ok);
 		board.printBoard();
 		modifMovesTab(pos);
-		if (InterfaceAvecC.nativePlacePiece(pos, color) == 1) {
-			event = 'w';
-		}
-
+		
 		return event;
 	}
 
@@ -299,29 +311,34 @@ public class Player {
 	}
 
 	// public static void main(String[] args) {
-	// 	boolean joueur = true;
-	// 	// Board board = new Board(5);
-	//
-	//
-	// 	Board board = InterfaceAvecC.nativeInitBoard(5);
-	// 	Player b = new Player(Piece.BLACK, "turner", "guy", "guy@truc.com", board);
-	// 	Player w = new Player(Piece.WHITE, "miller", "pam", "pam@thing.fr", board);
-	//
-	// 	board.printBoard();
-	//
-	// 	Player p;
+	// 	Board board = new Board(4);
+	// 	Date kaneDay = new Date(12, 01, 99);
+	// 	Date romaDay = new Date(29, 06, 06);
+	// 	Player b = new Player(Piece.BLACK, "kold", kaneDay, "kane@gmail.com", board);
+	// 	Player w = new Player(Piece.WHITE, "rotem", romaDay, "roma@gmail.com", board);
 	// 	int i = 0;
-	// 	while(i < board.getNbHexes()){
-	// 		char color = quiJoue(joueur);
-	//
-	// 		if (color == Piece.BLACK)
-	// 			p = b;
-	// 		else
-	// 			p = w;
-	//
-	// 		p.placePiece();
-	// 		p.board.printBoard();
-	// 		joueur = !joueur;
-	// 	}
+	// 	Player p;
+	// 	boolean joueur = true;
+	// 	char event = 'c';
+	// 	while(i < board.getNbHexes() && (event == 'c')){
+ //    		char color = Player.quiJoue(joueur);
+
+ //    		if (color == Piece.BLACK)
+ //    			p = b;
+ //    		else
+ //    			p = w;
+
+ //    		event = p.placePiece();
+
+ //            p.printMovesTab();
+ //    		joueur = !joueur;
+ //            i++;
+ //            if (event == 'w') {
+ //                p.setWinner(true);
+ //                event = 'w';
+ //            }else if (event == 'q'){
+ //                event = 'q';
+ //            }
+ //    	}
 	// }
 }

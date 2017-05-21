@@ -12,7 +12,7 @@ public class Board {
 	 * @param boardSize the size of the board, =defaultSize if not entered
 	 * @param spots a string that contains the colors of the board
 	 */
-	public Board(int boardSize, String spots){
+	public Board(int boardSize, String spots) {
 		this.boardSize = boardSize;
 		this.hex = new Hex[getNbHexes()];
 		for (int i = 0; i < getNbHexes(); i++){

@@ -421,6 +421,7 @@ public class JeuHex {
     		else
     			p = w;
 
+            p.printPlayerInfo();
     		event = p.placePiece();
 
             p.printMovesTab();
