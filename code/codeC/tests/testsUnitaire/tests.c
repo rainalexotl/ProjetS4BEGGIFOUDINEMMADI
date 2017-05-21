@@ -1,18 +1,37 @@
-#include "../../graphPlateau/ReducedGraph.h"
+#include "../../src/ReducedGraph.h"
+
+/*I need this fonction because in some tests I dont use Adjacents
+and for example in the fonction that tests the creation of the graph
+when I use the fonction's graph to destroy the graph , there is a problem
+because I do free to values that doesn't exist
+*/ 
+
+void destroyGraphBis(Graph g) {
+	assert(g != NULL);
+    for (int i = 0; i < getNbVertexGraph(g)+4; i++) {
+        free(g->v[i]);
+    }
+    free(g->v);
+    free(g);
+}
 
 void testGreationOfTheGraph() {
 	Graph g;
-	g = createGraph(14);
-	destroyGraph(g);
+	g = createGraph(4);
+	int loaded =0;
+	char * tab = getSpotsFromFile("../../../../doc/config/size4.txt");
+	g = createBoardGraph (g, tab,&loaded);
+	
+	destroyGraphBis(g);
 	printf("Creation of the Graph with size = 14 done with success\n");
 	
 	g = createGraph(6);
-	destroyGraph(g);
+	destroyGraphBis(g);
 	printf("Creation of the Graph with size = 6 done with success\n");
 	
 	printf("Creation of the Graph is going to fail because the size is 15\n");	
 	g = createGraph(15);
-	destroyGraph(g);
+	destroyGraphBis(g);
 	
 }
 
@@ -33,23 +52,23 @@ void testInsertionOfTheVertexInGraph() {
 //		s = insertVertexGraph(g,0, BLACK);
 //		s = insertVertexGraph(g,g->sizeGraph, NULL);
 //		 printf("%d",s->groupLeader);
-//		destroyGraph(g);
-//	 	destroyGraph(g1);
+//		destroyGraphBis(g);
+//	 	destroyGraphBis(g1);
 }
 
 void testCreationOfTheBoardsGraph() {
 	 Graph g = NULL;
 	 Graph g1 = createGraph(4);
 	 int loaded =0;
-	 char * tab = getSpotsFromFile("../../../../config/size4.txt");
+	 char * tab = getSpotsFromFile("../../../../doc/config/size4.txt");
 	 g1 = createBoardGraph (g1, tab,&loaded);
 	 printf("The creation of the board is done with success\n");
 	 printf("The creation of the board has failed\n");
 	 g = createBoardGraph (g, tab,&loaded);
 	 
 	 
-	 destroyGraph(g);
-	 destroyGraph(g1);
+	 destroyGraphBis(g);
+	 destroyGraphBis(g1);
 }
 
 void testOfcalcAdjacentVertexesGraph() {
@@ -57,7 +76,7 @@ void testOfcalcAdjacentVertexesGraph() {
 	Graph g1 = NULL;
 	Graph g2 = createGraph(4);
 	int loaded =0;
-	char * tab = getSpotsFromFile("../../../../config/size5.txt");
+	char * tab = getSpotsFromFile("../../../../doc/config/size5.txt");
 	
 	g2 = createBoardGraph (g2, tab,&loaded);
 
@@ -69,9 +88,9 @@ void testOfcalcAdjacentVertexesGraph() {
 	calcAdjacentVertexesGraph(g1->v[0],g1);
 
 	
-	destroyGraph(g);
-	destroyGraph(g1);
-	destroyGraph(g2);
+	destroyGraphBis(g);
+	destroyGraphBis(g1);
+	destroyGraphBis(g2);
 	
 }
 
@@ -81,7 +100,7 @@ void testOfcalcAllAdjacentsGraph() {
 	
 	Graph g2 = createGraph(4);
 	int loaded =0;
-	char * tab = getSpotsFromFile("../../../../config/size4.txt");
+	char * tab = getSpotsFromFile("../../../../doc/config/size4.txt");
 	
 	g2 = createBoardGraph (g2, tab,&loaded);
 	calcAllAdjacentsGraph(g2);
@@ -91,16 +110,16 @@ void testOfcalcAllAdjacentsGraph() {
 	printf("the calculation has failed\n");
 	calcAllAdjacentsGraph(g);
 	
-	destroyGraph(g);
-	destroyGraph(g1);
-	destroyGraph(g2);
+	destroyGraphBis(g);
+	destroyGraphBis(g1);
+	destroyGraphBis(g2);
 }
 
 void testOfcalcSideAdjacentsGraph() {
 	Graph g1 = NULL;
 	Graph g2 = createGraph(4);
 	int loaded =0;
-	char * tab = getSpotsFromFile("../../../../config/size4.txt");
+	char * tab = getSpotsFromFile("../../../../doc/config/size4.txt");
 	
 	g2 = createBoardGraph (g2, tab,&loaded);
 	
@@ -111,15 +130,15 @@ void testOfcalcSideAdjacentsGraph() {
 	printf("the calculation has failed\n");
 	calcSideAdjacentsGraph(1,g1);
 	
-	destroyGraph(g1);
-	destroyGraph(g2);
+	destroyGraphBis(g1);
+	destroyGraphBis(g2);
 }
 
 void testReplaceVertexGraph() {
 	Graph g1 = NULL;
 	Graph g2 = createGraph(4);
 	int loaded =0;
-	char * tab = getSpotsFromFile("../../../../config/size4.txt");
+	char * tab = getSpotsFromFile("../../../../doc/config/size4.txt");
 	g2 = createBoardGraph (g2, tab,&loaded);
 	printf("ettetete\n");
 	replaceVertexGraph(g2,2,BLACK);
@@ -128,8 +147,8 @@ void testReplaceVertexGraph() {
 	replaceVertexGraph(g2,40,BLACK);
 	replaceVertexGraph(g1,2,BLACK);
 	
-	destroyGraph(g1);
-	destroyGraph(g2);
+	destroyGraphBis(g1);
+	destroyGraphBis(g2);
 }
 
 void testIsInGroup() {

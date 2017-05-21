@@ -1,5 +1,4 @@
-#include <stdio.h>
- #include "../../graphPlateau/ReducedGraph.h"
+#include "../../src/ReducedGraph.h"
 
 
 

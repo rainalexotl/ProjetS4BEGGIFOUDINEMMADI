@@ -1,4 +1,4 @@
-#include "../../graphPlateau/ReducedGraph.h"
+#include "../../src/ReducedGraph.h"
 
 
 int main(int argc, const char * argv[]) {

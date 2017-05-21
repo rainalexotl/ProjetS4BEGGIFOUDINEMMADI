@@ -1,5 +1,4 @@
-#include <stdio.h>
-#include "../../graphPlateau/ReducedGraph.h"
+#include "../../src/ReducedGraph.h"
 //
 //
 //typedef struct sGraph * Graph;
@@ -17,7 +16,7 @@ int main(int argc, const char * argv[]) {
 	 printf("this is a test for Creation fonctions\n");
 	 Graph g = createGraph(4);
 	 int loaded=0;
-     char * str = getSpotsFromFile("../../../../config/size4.txt");
+     char * str = getSpotsFromFile("../../../../doc/config/size4.txt");
      g = createBoardGraph(g, str, &loaded);
 	 printBoard(g);
      TabHash * tabHBlack = createTabHashRg(getNbVertexGraph(g));

@@ -1,4 +1,4 @@
-#include "../../graphPlateau/ReducedGraph.h"
+#include "../../src/ReducedGraph.h"
 
 int main(int argc, const char * argv[]) {
 	Graph g = createGraph(8);
@@ -10,7 +10,7 @@ int main(int argc, const char * argv[]) {
 	printf("*      Tests for the Graph      *\n");
 	printf("*********************************\n");
 	
-	char * str = getSpotsFromFile("../../../../config/size8.txt");
+	char * str = getSpotsFromFile("../../../../doc/config/size8.txt");
      g = createBoardGraph(g, str, &loaded);
      printf("This is a creation a graph size 8\n");
 	 printBoard(g);
