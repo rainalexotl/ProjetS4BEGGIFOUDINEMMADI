@@ -55,7 +55,6 @@ ReducedGraph * globRg;
 //     return object;
 // }
 
-//appel la methode play de java
 JNIEXPORT jchar JNICALL
 Java_InterfaceAvecC_nativeInitGame (JNIEnv * env, jclass cl, jstring spots, jobject obj) {
     const char * s = (*env)->GetStringUTFChars(env, spots, 0);
