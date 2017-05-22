@@ -411,7 +411,7 @@ public class JeuHex {
         Player p;
     	int i = 0;
         char event = 'c';
-        System.out.println(board.getNbHexes());
+        
     	while(i < board.getNbHexes() && (event == 'c')){
     		char color = Player.quiJoue(joueur);
 
