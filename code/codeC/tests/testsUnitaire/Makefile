@@ -4,18 +4,18 @@ CC=gcc
 CFLAGS= -g -Wall -std=c99
 LDFLAGS=-lm
 EXEC=test.out 
-OBJ=  ../../graphPlateau/Coordinates.o ../../graphPlateau/Graph.o   ../../accessFiles/FileProcessing.o ../../graphPlateau/ReducedGraph.o ../../graphPlateau/List.o ../../graphPlateau/HashTable.o  tests.o 
+OBJ=  ../../src/Coordinates.o ../../src/Graph.o   ../../src/FileProcessing.o ../../src/ReducedGraph.o ../../src/List.o ../../src/HashTable.o  tests.o 
  
 all:	$(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $(EXEC) $(LDFLAGS)
 
-../../graphPlateau/Coordinates.o : ../../graphPlateau/Coordinates.c
-../../graphPlateau/Graph.o : ../../graphPlateau/Graph.c ../../graphPlateau/Graph.h
-../../accessFiles/FileProcessing.o : ../../accessFiles/FileProcessing.c
-../../graphPlateau/List.o : ../../graphPlateau/List.c
-../../graphPlateau/HashTable.o : ../../graphPlateau/HashTable.c
-../../graphPlateau/ReducedGraph.o : ../../graphPlateau/ReducedGraph.c
-tests.o : tests.c ../../graphPlateau/ReducedGraph.h
+../../src/Coordinates.o : ../../src/Coordinates.c
+../../src/Graph.o : ../../src/Graph.c ../../src/Graph.h
+../../src/FileProcessing.o : ../../src/FileProcessing.c
+../../src/List.o : ../../src/List.c
+../../src/HashTable.o : ../../src/HashTable.c
+../../src/ReducedGraph.o : ../../src/ReducedGraph.c
+tests.o : tests.c ../../src/ReducedGraph.h
 
 
 clean:
