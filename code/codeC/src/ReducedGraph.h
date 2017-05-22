@@ -8,6 +8,9 @@
 //  All rights reserved.
 //
 
+#ifndef ReducedGraph_h
+#define ReducedGraph_h
+
 #include "HashTable.h"
 /*-----------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------*/
@@ -29,3 +32,5 @@ ReducedGraph * reloadGroups(Graph g, ReducedGraph *rG);
 tables*/
 void destroyReducedGraph(ReducedGraph * rG);
 /*-----------------------------------------------------------------------------*/
+
+#endif /* ReducedGraph */

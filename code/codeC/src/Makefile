@@ -4,7 +4,7 @@ CC=gcc
 CFLAGS= -g -Wall -std=c99
 LDFLAGS=-lm
 EXEC=Plateau.out
-OBJ= Piece.o Coordinates.o Graph.o  main.o FileProcessing.o ReducedGraph.o List.o HashTable.o
+OBJ= Piece.o Coordinates.o Graph.o  main.o FileProcessing.o ReducedGraph.o List.o HashTable.o TreeOfGameIA.o
 all:	$(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $(EXEC) $(LDFLAGS)
 
@@ -15,6 +15,7 @@ FileProcessing.o : FileProcessing.c
 List.o : List.c
 HashTable.o : HashTable.c
 ReducedGraph.o : ReducedGraph.c
+TreeOfGameIA.o : TreeOfGameIA.c
 main.o: main.c Graph.h
 
 clean:

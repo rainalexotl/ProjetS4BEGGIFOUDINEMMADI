@@ -91,8 +91,8 @@ Graph createGraph(int sizeGraph) {
 Vertex *insertVertexGraph(Graph g, int i, char color) {
 	assert(g != NULL);
 	assert(color == BLACK || color == WHITE || color == EMPTY);
-	
-    Vertex *v = malloc(sizeof(Vertex));
+
+    struct sVertex *v = malloc(sizeof(struct sVertex));
     v->color = color;
     v->coord = calculateCoordinates(i, getSizeGraph(g));
     v->isInGroup = 0;
@@ -102,7 +102,7 @@ Vertex *insertVertexGraph(Graph g, int i, char color) {
 
 Graph createBoardGraph (Graph g, const char *colorTab, int *loaded) {
 	assert(g != NULL);
-	
+
     *loaded = 0;
     for (int i = 0; i < getNbVertexGraph(g); i++) {
         if (colorTab[i] != EMPTY)
