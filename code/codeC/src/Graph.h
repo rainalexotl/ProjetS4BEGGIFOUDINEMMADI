@@ -53,6 +53,7 @@ Graph createGraph(int sizeGraph);
 //creates the game board from an array of characters passed through Java
 Graph createBoardGraph (Graph g, const char *colorTab, int *loaded);
 
+Vertex *insertVertexGraph(Graph g, int i, char color);
 /*-----------------------------------------------------------------------------*/
                             //Modification Functions
 /*-----------------------------------------------------------------------------*/

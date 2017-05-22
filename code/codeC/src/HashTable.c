@@ -81,7 +81,7 @@ List *groupUnion(List *gp1, List *gp2, Graph g) {
         assert(itr->next);
         itr = itr->next;
     }
-    destroyList(gp2); // gp2 no longer needed because it is part of gp1 now
+    //destroyList(gp2); // gp2 no longer needed because it is part of gp1 now
     return gp1;
 }
 

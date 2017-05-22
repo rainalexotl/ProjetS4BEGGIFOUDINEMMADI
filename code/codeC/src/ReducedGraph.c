@@ -38,6 +38,5 @@ ReducedGraph * reloadGroups(Graph g, ReducedGraph *rG) {
 void destroyReducedGraph(ReducedGraph * rG) {
     destroyTabHash(rG->whiteHashTab, getNbVertexGraph(rG->g));
     destroyTabHash(rG->blackHashTab, getNbVertexGraph(rG->g));
-    destroyGraph(rG->g);
     free(rG);
 }

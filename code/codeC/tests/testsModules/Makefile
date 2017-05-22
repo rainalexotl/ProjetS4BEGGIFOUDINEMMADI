@@ -8,7 +8,7 @@ OBJ= ../../src/Piece.o ../../src/Coordinates.o ../../src/Graph.o   ../../src/Fil
  
 all:	$(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $(EXEC) $(LDFLAGS)
-
+	./test.out
 ../../src/Piece.o : ../../src/Piece.c
 ../../src/Coordinates.o : ../../src/Coordinates.c
 ../../src/Graph.o : ../../src/Graph.c ../../src/Graph.h
