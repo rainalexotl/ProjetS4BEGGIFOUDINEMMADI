@@ -11,7 +11,7 @@
 #ifndef FileProcessing_h
 #define FileProcessing_h
 // si on n'en a pas besoin
-#define _POSIX_C_SOURCE 1
+//#define _POSIX_C_SOURCE 1
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>

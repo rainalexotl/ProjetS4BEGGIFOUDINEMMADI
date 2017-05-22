@@ -1,7 +1,7 @@
 public class InterfaceAvecC {
 
 	static {
-		System.load("/Users/Angelo/Desktop/ProjetHex/ProjetS4BEGGIFOUDINEMMADI/code/lib/libInterfaceAvecC.dylib");
+		System.load("/home/manzilane/Documents/ProjetS4/ProjetS4BEGGIFOUDINEMMADI/code/lib/libInterfaceAvecC.so");
 	}
 
 	//! calls the play method in Java

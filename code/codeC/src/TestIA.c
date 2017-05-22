@@ -2,8 +2,11 @@
 // main.c
 //
 //
-// Created by Mmadi.anzilane on 14/04/2017.
-// Copyright © 2017 Mmadi.anzilane. All rights reserved.
+//  Created by MMADI Anzilane, BEGG Rain-Alexandra and IFOUDINE Sara
+//  on 14/04/2017.
+//  Copyright © 2017 MMADI Anzilane, BEGG Rain-Alexandra and IFOUDINE Sara.
+//  All rights reserved.
+//
 
 
 #include <stdio.h>
@@ -18,7 +21,7 @@ int main(int argc, const char * argv[]) {
     int pos;
     int i = 0;
     Graph g = createGraph(4);
-    char * str = getSpotsFromFile("../../../doc/config/size4.txt");
+    char * str = getSpotsFromFile("../../doc/config/size4.txt");
     g = createBoardGraph(g, str, &i);
     ReducedGraph * rg = createReducedGraph(g);
     printBoard(g);
@@ -48,5 +51,8 @@ int main(int argc, const char * argv[]) {
     if (stop){
         printf("groupe gagnant trouvé\nvaleur de stop = %d\n", stop);
     }
+    free(str);
+    destroyReducedGraph(rg);
+    destroyGraph(g);
     return 0;
 }

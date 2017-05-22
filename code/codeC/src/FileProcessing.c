@@ -153,7 +153,6 @@ char * loadPlayer(char color, const char * fileNameOfLoadPlayer) {
             fscanf(file, "%s", buff);
             if (strcmp(buff, "\\blackPlayer") == 0) {
                 fscanf(file, "%s\n", buff);
-                printf("buf %s\n", buff);
                 size = atoi(buff);
                 char bChaine[size+2];
                 size_t i = 0;
@@ -161,7 +160,7 @@ char * loadPlayer(char color, const char * fileNameOfLoadPlayer) {
                     fscanf(file, "%c", &bChaine[i]);
                 }
                 bChaine[i] = '\0';
-                //this malloc must be freed after use this string
+                //this malloc must be freed after use of this string
                 chaine = malloc(sizeof(char)*(size+2));
                 strcpy(chaine, bChaine);
                 ok = 0;

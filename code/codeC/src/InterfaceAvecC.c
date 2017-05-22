@@ -14,7 +14,7 @@
 #include <assert.h>
 #include <string.h>
 #include <math.h>
-#include "../../codeJava/InterfaceAvecC.h"
+#include "InterfaceAvecC.h"
 #include "Graph.h"
 #include "ReducedGraph.h"
 
