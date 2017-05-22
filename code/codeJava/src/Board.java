@@ -1,12 +1,18 @@
-// package interfaceC;
-
+/**
+ * @class Board
+ * @brief Represents the board that the game will be played on
+ */
 public class Board {
-	public static final int defaultSize = 11;
-	private int boardSize; //board dimension
-	private Hex[] hex; //table of hexagons
+	public static final int defaultSize = 11; //! the default size of the board
+	private int boardSize; //! board dimension
+	private Hex[] hex; //! table of hexagons
 
-	//if not entered boardSize will be the defaultSize;
-	public Board(int boardSize, String spots){
+	/**
+	 * @brief sets the size and the "pieces" of the board
+	 * @param boardSize the size of the board, =defaultSize if not entered
+	 * @param spots a string that contains the colors of the board
+	 */
+	public Board(int boardSize, String spots) {
 		this.boardSize = boardSize;
 		this.hex = new Hex[getNbHexes()];
 		for (int i = 0; i < getNbHexes(); i++){
@@ -16,19 +22,39 @@ public class Board {
 		}
 	}
 
+	/**
+	 * @return the boardSize the size of the board
+	 */
 	public int getBoardSize(){
 		return boardSize;
 	}
 
-	//number of hexagons on board (boardSize * boardSize)
+	/**
+	 * @return the nbHexes the number of hexes on the board (boardSize * boardSize)
+	 */
 	public int getNbHexes(){
 		return boardSize * boardSize;
 	}
 
+	/**
+	 * @return the hex at the position i of the board
+	 */
 	public Hex getHex(int i){
 		return hex[i];
 	}
 
+	/**
+	 * @brief prints the board in ascii format
+	 * @par Layout
+	 * @parblock
+	 * W W W W W/B
+	 *  B . . . . B
+	 *   B . . . . B
+	 *    B . . . . B
+	 *     B . . . . B
+	 *      B/W W W W W
+	 * @endparblock
+	 */
 	public void  printBoard(){
 		int i, j;
 		System.out.print("W");
@@ -59,7 +85,9 @@ public class Board {
 		System.out.println("");
 	}
 
-	//returns a board in string form
+	/**
+	 * @return the board in string from
+	 */
 	public String convertBoardToString(){
 		String str = "";
 		int i;
