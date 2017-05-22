@@ -6,15 +6,15 @@ This project was assigned to the second year Computer Science students of Univer
 ![alt text](https://upload.wikimedia.org/wikipedia/commons/3/38/Hex-board-11x11-%282%29.jpg "Red and Blue Hex Game")
 
 Our implementation includes the following functionnalities:
-*Choose the board size
-*Choose the player who will play first
-*Blocks illegal moves
-*Manages each player's turn
-*Detects a winner
-*Allows the players to quit with or without saving their game
-*Manages the history of previously saved games
-*Undo a move
-*Save a game, restore a game, forfeit a game
+* Choose the board size
+* Choose the player who will play first
+* Blocks illegal moves
+* Manages each player's turn
+* Detects a winner
+* Allows the players to quit with or without saving their game
+* Manages the history of previously saved games
+* Undo a move
+* Save a game, restore a game, forfeit a game
 
 Compilation Instructions
 ------------------------
