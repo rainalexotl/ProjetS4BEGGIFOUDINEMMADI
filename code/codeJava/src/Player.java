@@ -24,8 +24,8 @@ public class Player {
 	private int[] movesTab;
 	private int movesItr; //! index to insert in movesTab
 	private boolean firstPlayer = false;
-	private boolean winner = false; 
-	private boolean quitter = false; 
+	private boolean winner = false;
+	private boolean quitter = false;
 
 	/**
 	 * @par Player constructor
@@ -178,7 +178,7 @@ public class Player {
 	public void printPlayerInfo() {
 		System.out.println("Turn #" + ((movesItr + 1) / 2));
 		if (movesItr > 1)
-		System.out.println("Last move: (" + movesTab[(movesItr - 2)] + "," 
+		System.out.println("Last move: (" + movesTab[(movesItr - 2)] + ","
 			+ movesTab[(movesItr - 1)] + ")");
 	}
 
@@ -269,7 +269,7 @@ public class Player {
 				board.getHex(pos).getPiece().setColor(colorBis);
 			}
 			board.printBoard();
-			
+
 			do {
 				choice = Menu.confirmOrQuitMenu();
 				if(choice == 1 || choice == 2 || choice == 3) {
@@ -299,7 +299,7 @@ public class Player {
 
 		board.printBoard();
 		modifMovesTab(pos);
-
+		
 		if (InterfaceAvecC.nativePlacePiece(pos, color) == 1) {
 			event = 'w'; //win
 		}
