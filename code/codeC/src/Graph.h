@@ -64,6 +64,9 @@ void calcSideAdjacentsGraph(int sidePos, Graph g);
 
 //replaces a vertex at a position pos with a vertex of the passed color
 void replaceVertexGraph(Graph g, int pos, char color);
+void calcAdjacentVertexesGraph(Vertex *v, Graph g);
+void calcAllAdjacentsGraph(Graph g);
+void calcSideAdjacentsGraph(int sidePos, Graph g);
 
 /*-----------------------------------------------------------------------------*/
                             //Observation Functions
@@ -76,6 +79,7 @@ bool areAdjacentVertexes(const Vertex *v1, const Vertex *v2);
 
 //tests if a vertex v1 and a vertex v2 are in the same group
 bool isInSameGroup(const Vertex *v1, const Vertex *v2);
+bool isTopLeftOrBottomRightVertexGraph(const Vertex *v, int sizeGraph);
 
 /*-----------------------------------------------------------------------------*/
                             //Get Functions
@@ -115,6 +119,7 @@ void printAdjSidesGraph(const Graph g);
 
 //prints the positions of the vertexes adjacent to the vertex at posV
 void printVertexAdjPositions(int posV, Graph g);
+void printBoard(Graph g);
 
 /*-----------------------------------------------------------------------------*/
                             //End
