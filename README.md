@@ -18,3 +18,17 @@ Our implementation includes the following functionnalities:
 
 Compilation Instructions
 ------------------------
+In the `InterfaceAvecC.java` file in the code/codeJava/ directory, the library path must be modified. Thus the library must be generated according to your operationg system.
+
+```javascript
+static {
+  System.load("absolute/library/path");
+}
+```
+
+* To test and/or execute you must be in the project root.
+* To test the modules type: `make TESTMODULE`
+* To test the units type: `make TESTUNITAIRE`
+* To test the Artificial Intelligence (game against the computer): `make TESTIA`
+__(attention: the AI mode does not test if a move is illegal or not)__
+* To play the game against a human: `make JAVA`
