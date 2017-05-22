@@ -1,3 +1,5 @@
+--Please see DataBase.java file for insert examples
+
 DROP TABLE Game;
 DROP TABLE Player;
 

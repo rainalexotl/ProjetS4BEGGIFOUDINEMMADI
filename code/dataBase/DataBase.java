@@ -1,10 +1,17 @@
+/**
+ * @class DataBAse
+ * @brief this class is an interpretation of how we would link the game with a DB
+ */
 public class DataBase {
 
 import java.sql.*;
 import java.sql.PreparedStatement;
 import javax.xml.stream.events.EndDocument;
 
-	public static Connection getConnection() throws Exception{
+	/**
+	 * @brief connects to the server
+	 */
+	public static Connection getConnection() throws Exception {
 		try {
 			String driver = "com.mysql.jdbc.Driver";
 			String url = "jdbc:mysql://24.196.52.166:3306/projetS4";
@@ -14,12 +21,17 @@ import javax.xml.stream.events.EndDocument;
 			Connection conn = DriverManager.getConnection(url,username,password);
 			System.out.println("Connected");
 			return conn;
-		} catch(Exception e){System.out.println(e);} return null;
+		} catch(Exception e) {
+			System.out.println(e);
+		} 
+		return null;
 	}
 
-	public static void createTables() throws Exception{
+	/**
+	 * @brief creates a table only if it doesn't already exist
+	 */
+	public static void createTables() throws Exception {
 		try {
-			//l‡ on est connectÈ ‡ notre base de donnÈes
 			Connection con = getConnection();
 			PreparedStatement create=con.prepareStatement("CREATE TABLE IF NOT EXISTS Player
             (alias VARCHAR2(30),
@@ -53,10 +65,13 @@ import javax.xml.stream.events.EndDocument;
 		}catch (Exception e){
             System.out.println(e);
         }finally {
-            System.out.println("function complete");
+            System.out.println("Tables created");
         }
 	}
 
+	/**
+	 * @brief adds a player only if he is not already in the dataBase
+	 */
 	public static void addPlayer(String alias, Date dateOfBirth, String email) throws Exception {
 		try {
 			Connection con = getConnection();
@@ -65,7 +80,7 @@ import javax.xml.stream.events.EndDocument;
                 IF NOT EXISTS (SELECT * FROM Player WHERE alias = " + alias + "
                 BEGIN
                     INSERT INTO Player VALUES (" + alias + "," +
-                    dateOfBirth.toStringDate() + "," + email ", 0, 0)
+                      dateOfBirth.toStringDate() + "," + email ", 0, 0)
                 END
             END");
 		    pst.executeUpdate();
@@ -73,10 +88,13 @@ import javax.xml.stream.events.EndDocument;
 		}catch(Exception e) {
             System.out.println(e);
         }finally {
-			System.out.println("Insert Completed");
+			System.out.println("New player added");
 		}
 	}
 
+	/**
+	 * @brief adds new game information
+	 */
     public static void addGame(int id, String nameGame, Date startDate, int startMove, String bp, String wp) throws Exception {
         try {
             Connection con = getConnection();
@@ -91,6 +109,13 @@ import javax.xml.stream.events.EndDocument;
         }
     }
 
+    /**
+     * @par updatePlayerStats
+     * @parblock
+     * if a player's information is already in the DB, this function updates 
+     * either their number of wins or their number of forfeits
+     * @endparblock
+     */
     public static void updatePlayerStats(Player bp, Player wp, char event) throws Exception {
         try {
             Connection con = getConnection();
