@@ -105,7 +105,7 @@ int endGame(const Graph g, int *IA, int *ADV , int *bestGroup) {
     int black = hasList(blackHashTab,side1B,side2B,sizeTab);
     int white = hasList(whiteHashTab,side1W,side2W,sizeTab);
 
-    if (black == white == 0 || black == white ){
+    if (black == 0 || white == 0 || black == white ){
         *bestGroup = 0;
     }else if (black > white ) {
         *bestGroup = 1;

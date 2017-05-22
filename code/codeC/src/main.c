@@ -18,7 +18,7 @@ int main(int argc, const char * argv[]) {
     int pos;
     int i = 0;
     Graph g = createGraph(4);
-    char * str = getSpotsFromFile("/Users/Angelo/Desktop/ProjetHex/ProjetS4BEGGIFOUDINEMMADI/doc/config/size4.txt");
+    char * str = getSpotsFromFile("../../../doc/config/size4.txt");
     g = createBoardGraph(g, str, &i);
     ReducedGraph * rg = createReducedGraph(g);
     printBoard(g);
