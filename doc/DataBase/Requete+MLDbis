@@ -1,9 +1,4 @@
 #------------------------------------------------------------
-#        Script MySQL.
-#------------------------------------------------------------
-
-
-#------------------------------------------------------------
 # Table: Player
 #------------------------------------------------------------
 
@@ -13,7 +8,8 @@ CREATE TABLE Player(
         dateOfBirth Date ,
         nbWins      Int ,
         nbForfeits  Int ,
-        CONSTRAINT pk_alias PRIMARY KEY (alias )
+        CONSTRAINT pk_alias PRIMARY KEY (alias),
+	   CONSTRAINT ck_
 );
 
 
@@ -46,4 +42,3 @@ Game(_idGame_,nameGame,blackPlayer,WhilePlayer,#alias);
 Play(_#alias_,_#idGame_,_#startDate_,startMove);
 win(_#alias_,_#idGame_);
 meet(_#alias_);
-

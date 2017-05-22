@@ -22,24 +22,31 @@ import javax.xml.stream.events.EndDocument;
 			//l‡ on est connectÈ ‡ notre base de donnÈes
 			Connection con = getConnection();
 			PreparedStatement create=con.prepareStatement("CREATE TABLE IF NOT EXISTS Player
-            (alias VARCHAR2,
-            email VARCHAR2,
+            (alias VARCHAR2(30),
+            email VARCHAR2(30),
             dateOfBirth DATE,
             nbWins NUMBER,
             nbForfeits NUMBER,
-            CONSTRAINT pk_idPlayer PRIMARY KEY (alias)");
+            CONSTRAINT pk_alias PRIMARY KEY (alias),
+            CONSTRAINT ck_alias CHECK (alias IS NOT NULL),
+            CONSTRAINT ck_email CHECK (email IS NOT NULL),
+            CONSTRAINT ck_dob CHECK (dateOfBirth IS NOT NULL),
+            CONSTRAINT ck_nbW CHECK (nbWins >= 0),
+            CONSTRAINT ck_nbF CHECK (nbForfeits >= 0);");
 			create.executeUpdate();
+
             create = con.prepareStatement("CREATE TABLE IF NOT EXISTS Game
             (idGame NUMBER,
-            nameGame VARCHAR2,
+            nameGame VARCHAR2(30),
             startDate DATE,
             startMove NUMBER,
-            blackPlayer VARCHAR2,
-            whitePlayer VARCHAR2,
-            CONSTRAINT pk_idGame PRIMARY KEY (idGame),
+            blackPlayer VARCHAR2(30),
+            whitePlayer VARCHAR2(30),
+            CONSTRAINT pk_game PRIMARY KEY (idGame),
             CONSTRAINT fk_game_bp FOREIGN KEY (blackPlayer) REFERENCES Player (alias),
-            CONSTRAINT fk_game_wp FOREIGN KEY (whitePlayer) REFERENCES Player (alias)");
-			//creation de la table
+            CONSTRAINT fk_game_wp FOREIGN KEY (whitePlayer) REFERENCES Player (alias),
+            CONSTRAINT ck_startMv CHECK (startMove >= 0),
+            CONSTRAINT ck_startDt CHECK (startDate IS NOT NULL);");
 			create.executeUpdate();
             con.close();
 
@@ -91,20 +98,16 @@ import javax.xml.stream.events.EndDocument;
                 PreparedStatement pst = con.prepareStatement(
                 "UPDATE Player SET nbWins = nbWins + 1 WHERE alias = ?");
                 if (bp.isWinner()) {
-                    // pst.setInt(1, nbWins + 1);
                     pst.setString(1, bp.getAlias());
                 }else {
-                    // pst.setInt(1, nbWins + 1);
                     pst.setString(1, wp.getAlias());
                 }
             }else {
                 PreparedStatement pst = con.prepareStatement(
-                "UPDATE Player SET nbForfeits = ? WHERE alias = ?");
+                "UPDATE Player SET nbForfeits = nbForfeits + 1 WHERE alias = ?");
                 if (bp.isQuitter()) {
-                    // pst.setInt(1, nbForfeits + 1);
                     pst.setString(1, bp.getAlias());
                 }else {
-                    // pst.setInt(1, nbForfeits + 1);
                     pst.setString(1, wp.getAlias());
                 }
             }
