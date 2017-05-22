@@ -110,8 +110,10 @@ Java_InterfaceAvecC_nativePlacePiece (JNIEnv * env, jclass cl, jint pos, jchar c
     replaceVertexGraph(globGraph, pos, color);
     if (color == BLACK) {
         win = searchGroup(globRg->blackHashTab, globGraph, pos, BLACK);
+        printf("black win %d\n", win);
     }else {
         win = searchGroup(globRg->whiteHashTab, globGraph, pos, WHITE);
+        printf("black win %d\n", win);
     }
     return win;
 }
