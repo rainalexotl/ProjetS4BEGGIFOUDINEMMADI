@@ -2,9 +2,12 @@
 //  List.h
 //  List
 //
-//  Created by Mmadi.anzilane on 14/04/2017.
-//  Copyright © 2017 Mmadi.anzilane. All rights reserved.
+//  Created by MMADI Anzilane, BEGG Rain-Alexandra and IFOUDINE Sara
+//  on 14/04/2017.
+//  Copyright © 2017 MMADI Anzilane, BEGG Rain-Alexandra and IFOUDINE Sara.
+//  All rights reserved.
 //
+
 #ifndef List_h
 #define List_h
 #include <stdio.h>
@@ -41,11 +44,12 @@ void destroyList(List *l);
 /*-----------------------------------------------------------------------------*/
                             //Print Functions
 /*-----------------------------------------------------------------------------*/
+
 /*
-prints the list l with n elements in the format
+prints the list l with n elements in the following format:
 elem 0 #
+elem 1 #
 elem 2 #
-elem 3 #
 ....
 elem n #
 */

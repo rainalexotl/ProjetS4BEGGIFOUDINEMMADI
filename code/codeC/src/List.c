@@ -1,3 +1,12 @@
+//  List.c
+//  List
+//
+//  Created by MMADI Anzilane, BEGG Rain-Alexandra and IFOUDINE Sara
+//  on 14/04/2017.
+//  Copyright © 2017 MMADI Anzilane, BEGG Rain-Alexandra and IFOUDINE Sara.
+//  All rights reserved.
+//
+
 #include "List.h"
 #include <mm_malloc.h>
 #include <stdlib.h>

@@ -1,10 +1,12 @@
 //
-//  Graph.h
-//  graphes
+//  ReducedGraph.h
+//  reducedgraph
 //
-//  Created by Mmadi.anzilane on 14/04/2017.
-//  Copyright © 2017 Mmadi.anzilane. All rights reserved.
-//
+//  Created by MMADI Anzilane, BEGG Rain-Alexandra and IFOUDINE Sara
+//  on 14/04/2017.
+//  Copyright © 2017 MMADI Anzilane, BEGG Rain-Alexandra and IFOUDINE Sara.
+//  All rights reserved.
+
 #include "ReducedGraph.h"
 
 /*-----------------------------------------------------------------------------*/
@@ -13,28 +15,29 @@
                         //implement ADT ReducedGraph
 /*-----------------------------------------------------------------------------*/
 ReducedGraph * createReducedGraph(Graph g) {
-    ReducedGraph * _rG = malloc(sizeof(ReducedGraph));
-    _rG->rG = g;
-    _rG->whiteHashTab = createTabHashRg(getNbVertexGraph(g));
-    _rG->blackHashTab = createTabHashRg(getNbVertexGraph(g));
-    return _rG;
+    ReducedGraph * rG = malloc(sizeof(ReducedGraph));
+    rG->g = g;
+    rG->whiteHashTab = createTabHashRg(getNbVertexGraph(g));
+    rG->blackHashTab = createTabHashRg(getNbVertexGraph(g));
+    return rG;
 }
 
-ReducedGraph * reloadGroups(Graph g, ReducedGraph *_rG) {
+ReducedGraph * reloadGroups(Graph g, ReducedGraph *rG) {
     for (int i = 0; i < getNbVertexGraph(g); i++) {
         if (g->v[i]->color != EMPTY) {
             if (g->v[i]->color == BLACK) {
-                searchGroup((*_rG).blackHashTab, g, i, BLACK);
+                searchGroup((*rG).blackHashTab, g, i, BLACK);
             }else {
-                searchGroup((*_rG).whiteHashTab, g, i, WHITE);
+                searchGroup((*rG).whiteHashTab, g, i, WHITE);
             }
         }
     }
-    return _rG;
+    return rG;
 }
 
-void destroyReducedGraph(ReducedGraph * _rG) {
-    destroyTabHash(_rG->whiteHashTab, getNbVertexGraph(_rG->rG));
-    destroyTabHash(_rG->blackHashTab, getNbVertexGraph(_rG->rG));
-    free(_rG);
+void destroyReducedGraph(ReducedGraph * rG) {
+    destroyTabHash(rG->whiteHashTab, getNbVertexGraph(rG->g));
+    destroyTabHash(rG->blackHashTab, getNbVertexGraph(rG->g));
+    destroyGraph(rG->g);
+    free(rG);
 }

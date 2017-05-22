@@ -1,3 +1,12 @@
+//  InterfaceAvecC.c
+//  InterfaceAvecC
+//
+//  Created by MMADI Anzilane, BEGG Rain-Alexandra and IFOUDINE Sara
+//  on 14/04/2017.
+//  Copyright © 2017 MMADI Anzilane, BEGG Rain-Alexandra and IFOUDINE Sara.
+//  All rights reserved.
+//
+
 #include <jni.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -8,6 +17,10 @@
 #include "../../codeJava/InterfaceAvecC.h"
 #include "Graph.h"
 #include "ReducedGraph.h"
+
+#define ERR_CLASS_ACCESS 1
+#define ERR_METHOD_ACCESS 2
+
 /*-----------------------------------------------------------------------------*/
 //Global Value
 Graph globGraph;
@@ -15,51 +28,11 @@ ReducedGraph * globRg;
 /* -*************************************************************************- */
 
 /*-------------------------IMPLEMENTATION InterfaceAvecC-----------------------*/
-// JNIEXPORT jobject JNICALL
-// Java_InterfaceAvecC_nativeInitPiece (JNIEnv * env, jclass cl, jchar color) {
-//     jclass piece = (*env)->FindClass(env, "Piece");
-//     if (/* condition */) {
-//         /* code */
-//     }
-//     jmethodID mid = (*env)->GetMethodID(env, piece, "<init>", "(C)V");
-//     jobject object = (*env)->NewObject(env, piece, mid, color);
-//     return object;
-// }
-
-
-// JNIEXPORT jobject JNICALL
-// Java_InterfaceAvecC_nativeInitHex (JNIEnv * env, jclass cl, jint x, jint y, jchar color) {
-//     jclass hex = (*env)->FindClass(env, "Hex");
-//     jmethodID mid = (*env)->GetMethodID(env, hex, "<init>", "(IIC)V");
-//     jobject object = (*env)->NewObject(env, hex, mid, x, y, color);
-//     return object;
-// }
-
-// JNIEXPORT jobject JNICALL
-// Java_InterfaceAvecC_nativeInitBoard (JNIEnv * env, jclass cl, jint sizeBoard, jstring spots) {
-//     printf("je passe par initBoard\n");
-//     jclass board = (*env)->FindClass(env, "Board");
-//     if (board == NULL) {
-//         fprintf(stderr, "error : class not found !\n");
-//         exit(-1);
-//     }
-//     printf("je passe par initBoard\n");
-//     jmethodID mid = (*env)->GetMethodID(env, board, "<init>", "(ILjava/lang/String;)V");
-//     if (mid == NULL) {
-//         fprintf(stderr, "error : method not found !\n");
-//         exit(-1);
-//     }
-//     printf("je passe par initBoard\n");
-//     jobject object = (*env)->NewObject(env, board, mid, sizeBoard, spots);
-//     printf("je passe par initBoard\n");
-//     return object;
-// }
-
 JNIEXPORT jchar JNICALL
 Java_InterfaceAvecC_nativeInitGame (JNIEnv * env, jclass cl, jstring spots, jobject obj) {
     const char * s = (*env)->GetStringUTFChars(env, spots, 0);
-    int nbSpots= strlen(s); printf("nbSpots = %d\n", nbSpots);
-    int sizeBoard = sqrt(nbSpots); printf("sizeBoard = %d\n", sizeBoard);
+    int nbSpots= strlen(s);
+    int sizeBoard = sqrt(nbSpots);
     int loaded = 0;
     globGraph = createGraph(sizeBoard);
     globGraph = createBoardGraph(globGraph, s, &loaded);
@@ -71,13 +44,13 @@ Java_InterfaceAvecC_nativeInitGame (JNIEnv * env, jclass cl, jstring spots, jobj
     jclass jeuHex = (*env)->GetObjectClass(env, obj);
     if (jeuHex == NULL) {
         fprintf(stderr, "Error : class not found !\n");
-        exit(-1);
+        exit(ERR_CLASS_ACCESS);
     }
 
     jmethodID play = (*env)->GetMethodID(env, jeuHex, "play", "()C");
     if (play == NULL) {
         fprintf(stderr, "Error : method not found !\n");
-        exit(-1);
+        exit(ERR_METHOD_ACCESS);
     }
     jchar event = (*env)->CallIntMethod(env, obj, play, sizeBoard, s);
     (*env)->ReleaseStringUTFChars(env, spots, s);
@@ -123,7 +96,7 @@ Java_InterfaceAvecC_nativeGetSpots (JNIEnv * env, jclass cl, jstring fileName) {
 
     jstring str = (*env)->NewStringUTF(env, spots);
     (*env)->ReleaseStringUTFChars(env, fileName, s);
-    free(spots); // je libère le spots
+    free(spots);
     return str;
 }
 
@@ -184,7 +157,7 @@ Java_InterfaceAvecC_nativeStringToLoadPlayer (JNIEnv * env, jclass cl, jchar col
     char *s = loadPlayer(color, fileName);
     jstring loadFile = (*env)->NewStringUTF(env, s);
     (*env)->ReleaseStringUTFChars(env, loadFileName, fileName);
-    free(s); //je libere le chaine
+    free(s);
     return loadFile;
 }
 
