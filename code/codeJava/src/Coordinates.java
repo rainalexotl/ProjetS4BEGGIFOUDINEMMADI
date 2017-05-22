@@ -36,7 +36,6 @@ public class Coordinates {
 	 * @return an x coordinate from an index i and the boardSize
 	 */
 	public static int calcXCoord(int i, int boardSize) {
-		// return i / boardSize;
 		return InterfaceAvecC.nativeCalcXCoord(i, boardSize);
 	}
 
@@ -46,7 +45,6 @@ public class Coordinates {
 	 * @return an y coordinate from an index i and the boardSize
 	 */
 	public static int calcYCoord(int i, int boardSize) {
-		// return i % boardSize;
 		return InterfaceAvecC.nativeCalcYCoord(i, boardSize);
 	}
 
@@ -57,7 +55,6 @@ public class Coordinates {
 	 * @return the i index calculated from an x and y coordinate and the size
 	 */
 	public int calcPosition(int x, int y, int boardSize) {
-		// return boardSize * x + y;
 		return InterfaceAvecC.nativeCalcPosition(x, y, boardSize);
 	}
 }

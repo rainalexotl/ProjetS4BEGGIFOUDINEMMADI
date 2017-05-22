@@ -242,7 +242,6 @@ public class JeuHex {
     	email = input.nextLine();
 
     	p = new Player(color, alias, dateOfBirth, email, this.board);
-        dateOfBirth.toStringDate();
     	joueur = !joueur;
     	return p;
     }
@@ -282,7 +281,7 @@ public class JeuHex {
         Date dateOfBirth = new Date(0, 0, 0);
         int i = 0;
         int j = 0;
-        System.out.println(loadFile);
+        
         while (i < size - 1) {
             if (tab[i] == color) {
                 i++;

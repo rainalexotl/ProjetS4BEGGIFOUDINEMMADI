@@ -1,11 +1,14 @@
 /**
  * @class Board
  * @brief Represents the board that the game will be played on
+ * @var defaultSize the default size of the hex board is 11 if not specified
+ * @var boardSize the size of the board
+ * @var hex a table of hexagons
  */
 public class Board {
-	public static final int defaultSize = 11; //! the default size of the board
-	private int boardSize; //! board dimension
-	private Hex[] hex; //! table of hexagons
+	public static final int defaultSize = 11;
+	private int boardSize;
+	private Hex[] hex;
 
 	/**
 	 * @brief sets the size and the "pieces" of the board
@@ -57,7 +60,7 @@ public class Board {
 	 */
 	public void  printBoard(){
 		int i, j;
-		System.out.print("W");
+		System.out.print("\nW");
 		for (i = 0; i < boardSize; i++)
 			System.out.print(" W");
 		System.out.println("/B");

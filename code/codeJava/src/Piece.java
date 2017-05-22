@@ -1,13 +1,16 @@
 /**
  * @class Piece
  * @brief represents a piece on to be put on a hex
+ * @var BLACK representative constant of a black piece (*)
+ * @var WHIITE representative constant of  a black piece (o)
+ * @var EMPTY representative constant of an empty piece (.)
  */
 public class Piece {
 
 
-	public static final char BLACK = '*'; //! a black piece on the board
-	public static final char WHITE = 'o'; //! a white piece on the board
-	public static final char EMPTY = '.'; //! an empty piece on the board
+	public static final char BLACK = '*';
+	public static final char WHITE = 'o';
+	public static final char EMPTY = '.';
 
 	private char color;
 	
