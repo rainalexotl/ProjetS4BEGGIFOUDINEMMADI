@@ -1,10 +1,13 @@
 //
 //  Graph.h
-//  graphes
+//  graphs
 //
-//  Created by Mmadi.anzilane on 14/04/2017.
-//  Copyright © 2017 Mmadi.anzilane. All rights reserved.
+//  Created by MMADI Anzilane, BEGG Rain-Alexandra and IFOUDINE Sara
+//  on 14/04/2017.
+//  Copyright © 2017 MMADI Anzilane, BEGG Rain-Alexandra and IFOUDINE Sara.
+//  All rights reserved.
 //
+
 #ifndef Graph_h
 #define Graph_h
 
@@ -19,25 +22,25 @@
                             //implement ADT Graph
 /*-----------------------------------------------------------------------------*/
 
-#define MAXVOISIN 6
+#define MAXADJ 6
 #define BLACK '*'
 #define WHITE 'o'
 #define EMPTY '.'
 
 typedef struct sVertex {
-    char color; //color du noeud reprenté par un caractere
-    Coordinates coord; //positionement du Vertex
-    bool isInGroup; //inform is this vertex is in group
-    int groupLeader; //infom the leader of group
-    struct sVertex **Adjacents;
+    char color; // vertex color represented by a constant (BLACK, WHITE OR EMPTY)
+    Coordinates coord;
+    bool isInGroup; // true if the vertex is in a group
+    int groupLeader; // the leader of the group
+    struct sVertex **Adjacents; // table of adjacent vertexes
 }Vertex;
 
 struct sGraph {
-    int sizeGraph; // la largeur ou la heuteur du graph
-    Vertex **v;
+    int sizeGraph; // the graph dimension
+    Vertex **v; // a table of vertexes
 };
 
-typedef struct sGraph *Graph;
+typedef struct sGraph * Graph;
 
 enum {UP = 0, RIGHT = 1, DOWN = 2, LEFT = 3, UP_RIGHT = 4, DOWN_LEFT = 5};
 
@@ -65,8 +68,6 @@ void calcSideAdjacentsGraph(int sidePos, Graph g);
 //replaces a vertex at a position pos with a vertex of the passed color
 void replaceVertexGraph(Graph g, int pos, char color);
 void calcAdjacentVertexesGraph(Vertex *v, Graph g);
-void calcAllAdjacentsGraph(Graph g);
-void calcSideAdjacentsGraph(int sidePos, Graph g);
 
 /*-----------------------------------------------------------------------------*/
                             //Observation Functions

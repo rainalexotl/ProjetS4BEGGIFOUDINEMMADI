@@ -1,11 +1,14 @@
 /**
  * @class Date
  * @brief represents a date in DD/MM/YY format
+ * @var day the day
+ * @var month the month
+ * @var year the year
  */
 public class Date {
-	private int day; //! the day
-	private int month; //!the month
-	private int year; //! the year
+	private int day;
+	private int month;
+	private int year;
 
 	public Date (int day, int month, int year) {
 		this.day = day;

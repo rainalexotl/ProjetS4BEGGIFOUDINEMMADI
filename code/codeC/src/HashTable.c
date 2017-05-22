@@ -2,9 +2,12 @@
 //  HashTable.h
 //  HashTable
 //
-//  Created by Mmadi.anzilane on 14/04/2017.
-//  Copyright © 2017 Mmadi.anzilane. All rights reserved.
+//  Created by MMADI Anzilane, BEGG Rain-Alexandra and IFOUDINE Sara
+//  on 14/04/2017.
+//  Copyright © 2017 MMADI Anzilane, BEGG Rain-Alexandra and IFOUDINE Sara.
+//  All rights reserved.
 //
+
 #include "HashTable.h"
 /*-----------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------*/
@@ -20,8 +23,8 @@ TabHash * createTabHashRg(int sizeTab) {
     TabHash *tabH = malloc(sizeof(TabHash));
     tabH->nbGroups = 0;
     tabH->groupList = malloc(sizeof(List*)*sizeTab);
-    for (int i = 0; i < sizeTab; ++i) { //a voir s'il faut initialiser ou pas
-        tabH->groupList[i] = NULL; //createList();
+    for (int i = 0; i < sizeTab; ++i) {
+        tabH->groupList[i] = NULL;
     }
     return tabH;
 }
@@ -52,7 +55,6 @@ void destroyTabHash(TabHash * tabH, int sizeTab) {
             destroyList(tabH->groupList[i]);
         }
     }
-    //tabH = NULL;
     free(tabH->groupList);
     assert(tabH);
     free(tabH);
@@ -64,8 +66,8 @@ void destroyTabHash(TabHash * tabH, int sizeTab) {
 void modifyVertexLeader(Graph g, int pos, int newLeader) {
     assert(g->v[pos] && g);
     g->v[pos]->groupLeader = newLeader;
-    if (!isInGroup(g->v[pos])) { //wasn't previously in group
-        g->v[pos]->isInGroup = 1;
+    if (!isInGroup(g->v[pos])) { //if the vertex at pos wasn't previously in group
+        g->v[pos]->isInGroup = true;
     }
 }
 
@@ -80,7 +82,6 @@ List *groupUnion(List *gp1, List *gp2, Graph g) {
         itr = itr->next;
     }
     destroyList(gp2); // gp2 no longer needed because it is part of gp1 now
-    // printList(gp1);
     return gp1;
 }
 
@@ -118,7 +119,7 @@ bool searchGroup(TabHash *tabH, Graph g, int pos, char color) {
     assert(g->v[pos]);
     v = g->v[pos]; //we create alias
     bool winningGroup = false;
-    for (int i = 0; i < MAXVOISIN; i++) {
+    for (int i = 0; i < MAXADJ; i++) {
         vAdj = v->Adjacents[i];
         if (vAdj != NULL) {
             vList = tabH->groupList[(v->groupLeader)];
@@ -155,8 +156,6 @@ bool searchGroup(TabHash *tabH, Graph g, int pos, char color) {
             }
         }
     }
-    // if (newGroup != NULL)
-    //     printList(newGroup);
     if (isAWinningGroup(newGroup, side1, side2)) {
         winningGroup = true;
     }
@@ -166,11 +165,10 @@ bool searchGroup(TabHash *tabH, Graph g, int pos, char color) {
                             //Observation Functions
 /*-----------------------------------------------------------------------------*/
 bool largerGroup(const TabHash *tabH, int leader1, int leader2) {
-    if (tabH->groupList[leader1]->sizeList >= tabH->groupList[leader2]->sizeList){
+    if (tabH->groupList[leader1]->sizeList >= tabH->groupList[leader2]->sizeList)
         return true;
-    }else
+    else
         return false;
-
 }
 
 bool isAWinningGroup(List * gp, int side1, int side2) {

@@ -1,10 +1,13 @@
 //
-//  Graph.h
-//  graphes
+//  HashTable.h
+//  HashTable
 //
-//  Created by Mmadi.anzilane on 14/04/2017.
-//  Copyright © 2017 Mmadi.anzilane. All rights reserved.
+//  Created by MMADI Anzilane, BEGG Rain-Alexandra and IFOUDINE Sara
+//  on 14/04/2017.
+//  Copyright © 2017 MMADI Anzilane, BEGG Rain-Alexandra and IFOUDINE Sara.
+//  All rights reserved.
 //
+
 #ifndef HashTable_h
 #define HashTable_h
 
@@ -44,8 +47,8 @@ void modifyVertexLeader(Graph g, int pos, int newLeader);
 //unites the group gp1 and gp2
 List *groupUnion(List *gp1, List *gp2, Graph g);
 
-//v1 and v2 are the positions of vertexes
-//v1 is the leader of the new group
+/*v1 and v2 are the positions of vertexes
+  v1 will be the leader of the new group */
 List *createNewGroup(Graph g, int v1, int v2);
 
 //adds a vertex at a position v to a group gp

@@ -1,10 +1,13 @@
 //
-//  Graph.h
-//  graphes
+//  ReducedGraph.h
+//  reducedgraph
 //
-//  Created by Mmadi.anzilane on 14/04/2017.
-//  Copyright © 2017 Mmadi.anzilane. All rights reserved.
+//  Created by MMADI Anzilane, BEGG Rain-Alexandra and IFOUDINE Sara
+//  on 14/04/2017.
+//  Copyright © 2017 MMADI Anzilane, BEGG Rain-Alexandra and IFOUDINE Sara.
+//  All rights reserved.
 //
+
 #include "HashTable.h"
 /*-----------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------*/
@@ -13,14 +16,16 @@
 typedef struct s_ReducedGraph {
     TabHash * whiteHashTab;
     TabHash * blackHashTab;
-    Graph rG;
+    Graph g;
 } ReducedGraph;
 
 //allocates memory for the reduced graph and its two hash tables
 ReducedGraph * createReducedGraph(Graph g);
 
 //reloads all the groups of a graph g, essential if the game has been loaded
-ReducedGraph * reloadGroups(Graph g, ReducedGraph *_rG);
+ReducedGraph * reloadGroups(Graph g, ReducedGraph *rG);
 
-void destroyReducedGraph(ReducedGraph * _rG);
+/*frees the memory allocated for the reduced graph, its graph and its two hash
+tables*/
+void destroyReducedGraph(ReducedGraph * rG);
 /*-----------------------------------------------------------------------------*/

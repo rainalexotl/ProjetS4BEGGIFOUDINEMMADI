@@ -1,9 +1,11 @@
 //
 //  Piece.c
-//  graphes
+//  piece
 //
-//  Created by Mmadi.anzilane on 21/04/2017.
-//  Copyright © 2017 Mmadi.anzilane. All rights reserved.
+//  Created by MMADI Anzilane, BEGG Rain-Alexandra and IFOUDINE Sara
+//  on 14/04/2017.
+//  Copyright © 2017 MMADI Anzilane, BEGG Rain-Alexandra and IFOUDINE Sara.
+//  All rights reserved.
 //
 
 #include "Piece.h"

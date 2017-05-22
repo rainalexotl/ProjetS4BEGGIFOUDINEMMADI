@@ -1,11 +1,14 @@
 /**
  * @class Hex
  * @brief represents a hex on the board
+ * @var coord coordinates of the hex
+ * @var full boolean that shows if the hex has a piece or not
+ * @var the piece that is on the hex
  */
 public class Hex {
-	private Coordinates coord; //! coordinates of the hex
-	private boolean full; //! boolean that shows if the hex has a piece or not
-	private Piece piece; //! the piece that is on the hex
+	private Coordinates coord; 
+	private boolean full;
+	private Piece piece; 
 
 	/**
 	 * @brief sets the coordinates of a hex and sets its full boolean at false

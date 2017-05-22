@@ -2,18 +2,21 @@
 //  FileProcessing.c
 //  FileProcessing
 //
-//  Created by name on 14/04/2017.
-//  Copyright © 2017 Mmadi.anzilane. All rights reserved.
+//  Created by MMADI Anzilane, BEGG Rain-Alexandra and IFOUDINE Sara
+//  on 14/04/2017.
+//  Copyright © 2017 MMADI Anzilane, BEGG Rain-Alexandra and IFOUDINE Sara.
+//  All rights reserved.
 //
-//
+
 #include "FileProcessing.h"
 
-#define LONG_MAX_NOM 200
-#define LONG_MAX_REP 50
-#define OK 0
+#define LONG_MAX_NAME 200
+#define LONG_MAX_DIR 50
 #define ERR_NB_PARAM 1
-#define ERR_ACCES_FICHIER 2
-#define ERR_CREATION_FIC 3
+#define ERR_FILE_ACCESS 2
+#define ERR_FILE_CREATION 3
+#define ERR_DIR_ACCESS 4
+#define ERR_STAT 5
 
 char * getSpotsFromFile(const char * fileName){
  	FILE *file = NULL;
@@ -47,7 +50,7 @@ char * getSpotsFromFile(const char * fileName){
 
 	}else {
 	  fprintf(stderr,"Error : %s not found!",fileName);
-      exit(-1);
+      exit(ERR_FILE_ACCESS);
 	}
 	fclose(file);
     return tab;
@@ -55,7 +58,6 @@ char * getSpotsFromFile(const char * fileName){
 
 
 void afficheTab(int tab[]) {
-    printf("taille = %d\n", tab[0]);
     for (size_t i = 1; i < tab[0]+1; i++) {
         printf("%d ", tab[i]);
     }
@@ -66,7 +68,7 @@ void saveBoardFile(const char * fileName, const char *spots, int bTabGame[], int
     FILE *file = NULL;
     if ((file = fopen(fileName, "w")) == NULL) {
         fprintf(stderr, "Error : %s not created!\n", fileName);
-        exit(-1);
+        exit(ERR_FILE_CREATION);
     }
     int i = 0;
     char buff[5];
@@ -75,7 +77,6 @@ void saveBoardFile(const char * fileName, const char *spots, int bTabGame[], int
         i++;
     } while(spots[i] != '#');
     int dim = atoi(buff);
-    printf("dim %d\n", dim);
     i = i+1;
     fprintf(file, "\\Hex\n");
     fprintf(file, "\\dim %d\n", dim);
@@ -126,7 +127,7 @@ void savePlayer(const char * fileNameOfSavePlayer, const char * bPlayer, const c
     FILE *file = NULL;
     if ((file = fopen(fileNameOfSavePlayer, "w")) == NULL) {
         fprintf(stderr, "Error : %s not created!\n", fileNameOfSavePlayer);
-        exit(-1);
+        exit(ERR_FILE_CREATION);
     }
     int bSize = (int)strlen(bPlayer) + 1;
     int wSize = (int)strlen(wPlayer) + 1;
@@ -141,7 +142,7 @@ char * loadPlayer(char color, const char * fileNameOfLoadPlayer) {
     FILE * file = NULL;
     if ((file = fopen(fileNameOfLoadPlayer,"r")) == NULL) {
         fprintf(stderr, "Error : %s not found!\n", fileNameOfLoadPlayer);
-        exit(-1);
+        exit(ERR_FILE_ACCESS);
     }
     int ok = 1;
     char buff[50] = {0};
@@ -150,7 +151,6 @@ char * loadPlayer(char color, const char * fileNameOfLoadPlayer) {
     if (color == '*') {
         do {
             fscanf(file, "%s", buff);
-            printf("buf %s\n", buff);
             if (strcmp(buff, "\\blackPlayer") == 0) {
                 fscanf(file, "%s\n", buff);
                 printf("buf %s\n", buff);
@@ -161,7 +161,7 @@ char * loadPlayer(char color, const char * fileNameOfLoadPlayer) {
                     fscanf(file, "%c", &bChaine[i]);
                 }
                 bChaine[i] = '\0';
-                //we must be free this malloc after use this String
+                //this malloc must be freed after use this string
                 chaine = malloc(sizeof(char)*(size+2));
                 strcpy(chaine, bChaine);
                 ok = 0;
@@ -190,12 +190,10 @@ char * loadPlayer(char color, const char * fileNameOfLoadPlayer) {
     return chaine;
 }
 /*-------------------------------------------------------------------------------------------------*/
-//this fonction return the name of save
 char ** getSaveFiles(const char * dirName, int * nbFiles) {
-    printf("director name = %s\n", dirName);
-    char ** saveFile = malloc(sizeof(char*)*LONG_MAX_REP);  //
-    for (size_t j = 0; j < LONG_MAX_REP; j++) {
-        saveFile[j] = malloc(sizeof(char)*LONG_MAX_NOM);
+    char ** saveFile = malloc(sizeof(char*)*LONG_MAX_DIR);  //
+    for (size_t j = 0; j < LONG_MAX_DIR; j++) {
+        saveFile[j] = malloc(sizeof(char)*LONG_MAX_NAME);
     }
     char newDirPath[300];
     struct stat infos;
@@ -203,21 +201,20 @@ char ** getSaveFiles(const char * dirName, int * nbFiles) {
     struct dirent * fileOrDir = NULL;
     if ((srcDir = opendir(dirName)) == NULL) {
         perror("Error opening the directory\n");
-        exit(1);
+        exit(ERR_DIR_ACCESS);
     }else{
         while ((fileOrDir = readdir(srcDir)) != NULL) {
             if ((strcmp (fileOrDir->d_name, ".") != 0) && (strcmp (fileOrDir->d_name, "..") != 0)
                 && (strcmp (fileOrDir->d_name, ".DS_Store") != 0)) {
-                //creation du chemin du prochain de mon fileOrDir
+                //savefile path creation
                 strcpy(newDirPath, dirName);
                 strcat(newDirPath, "/");
                 strcat(newDirPath, fileOrDir->d_name);
                 if (stat(newDirPath, &infos) == -1) {
-                    perror("Stat error");
-                    exit(2);
+                    perror("stat error");
+                    exit(ERR_STAT);
                 }
-                //test si l'on travail avec un repertoire ou un fichier
-                //le comportement est different l'appel recursif se fait dans le cas ou c'est un dossier
+                //tests if we're working with a directory or a file
                 if (!S_ISDIR(infos.st_mode)) {
                     strcpy(saveFile[(*nbFiles)++], fileOrDir->d_name);
                 }
@@ -227,9 +224,10 @@ char ** getSaveFiles(const char * dirName, int * nbFiles) {
     closedir(srcDir);
     return saveFile;
 }
-//We use this foncton to free the saveFile
+
+//this function is used to free the saveFile
 void destroySaveFiles(char ** saveFiles) {
-    for (size_t i = 0; i < LONG_MAX_REP; i++) {
+    for (size_t i = 0; i < LONG_MAX_DIR; i++) {
         free (saveFiles[i]);
     }
     free(saveFiles);

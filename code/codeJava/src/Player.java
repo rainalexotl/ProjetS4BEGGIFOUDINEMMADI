@@ -176,7 +176,6 @@ public class Player {
 	 * @endparblock
 	 */
 	public void printPlayerInfo() {
-		// System.out.println(getColorName() + "PLAYER");
 		System.out.println("Turn #" + ((movesItr + 1) / 2));
 		if (movesItr > 1)
 		System.out.println("Last move: (" + movesTab[(movesItr - 2)] + ","
@@ -262,7 +261,7 @@ public class Player {
 			if (! board.getHex(pos).isFull()){
 				board.getHex(pos).getPiece().setColor(colorBis);
 			}else{
-				System.out.println("That spot already has a piece on it");
+				System.out.println("That hex spot already has a piece on it");
 				while(board.getHex(pos).isFull()){
 					coord = enterCoordinates();
 					pos = coord.calcPosition(coord.getXCoord(), coord.getYCoord(), board.getBoardSize());
@@ -297,8 +296,10 @@ public class Player {
 				break;
 			}
 		}while (ok);
+
 		board.printBoard();
 		modifMovesTab(pos);
+		
 		if (InterfaceAvecC.nativePlacePiece(pos, color) == 1) {
 			event = 'w'; //win
 		}
@@ -311,36 +312,4 @@ public class Player {
 	public static char quiJoue(boolean joueur) {
 		return joueur ? Piece.BLACK : Piece.WHITE;
 	}
-
-	// public static void main(String[] args) {
-	// 	Board board = new Board(4);
-	// 	Date kaneDay = new Date(12, 01, 99);
-	// 	Date romaDay = new Date(29, 06, 06);
-	// 	Player b = new Player(Piece.BLACK, "kold", kaneDay, "kane@gmail.com", board);
-	// 	Player w = new Player(Piece.WHITE, "rotem", romaDay, "roma@gmail.com", board);
-	// 	int i = 0;
-	// 	Player p;
-	// 	boolean joueur = true;
-	// 	char event = 'c';
-	// 	while(i < board.getNbHexes() && (event == 'c')){
- //    		char color = Player.quiJoue(joueur);
-
- //    		if (color == Piece.BLACK)
- //    			p = b;
- //    		else
- //    			p = w;
-
- //    		event = p.placePiece();
-
- //            p.printMovesTab();
- //    		joueur = !joueur;
- //            i++;
- //            if (event == 'w') {
- //                p.setWinner(true);
- //                event = 'w';
- //            }else if (event == 'q'){
- //                event = 'q';
- //            }
- //    	}
-	// }
 }
