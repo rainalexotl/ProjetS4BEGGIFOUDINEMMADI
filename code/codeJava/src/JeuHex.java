@@ -1,33 +1,57 @@
 import java.util.*;
 import java.io.*;
 
+/**
+ * @class JeuHex
+ * @brief the game turns around this class
+ * @var board the board of the game
+ * @var joueur toggles after every turn true = black, false = white
+ * @var b black player
+ * @var w white player
+ * @var size the boardSize entered by the players
+ * @var spots the hexes of the board
+ */
 public class JeuHex {
-    private Board board; //board of the game
-    private boolean joueur; //true = black, false = white
+    private Board board;
+    private boolean joueur;
     private Scanner input = new Scanner(System.in);
     private Player b, w;
-    private int size; //size entered by the players
+    private int size;
     private String spots;
     private String configPath = "../../../doc/config/size";
     private String saveFilesPath = "../../../doc/SaveFiles/";
 
+    /**
+     * @return the size of the board entered by the player
+     */
     public int getSize(){
         return size;
     }
 
+    /**
+     * @return the board of the game
+     */
     public Board getBoard(){
         return board;
     }
 
+    /**
+     * @return the string representation of the hexes on the board
+     */
     public String getSpots(){
         return spots;
     }
 
+    /**
+     * @return the black player of the game
+     */
     public Player getBlackPlayer() {
         return b;
     }
 
-    //makes the save file directory if it does not already exist
+    /**
+     * @brief makes a directory named SaveFiles that holds all the saved games
+     */
     public void makeSaveDirectory(){
     	File dir = new File(saveFilesPath);
     	boolean successful = dir.mkdir();
@@ -35,11 +59,15 @@ public class JeuHex {
     		System.out.println("SaveFiles directory created successfully.");
     }
 
+    /**
+     * @brief the game is configured in this function
+     * @return true if the player decides to play the game once its been started
+     */
     public boolean gameSetup(){
         char letterAnswer;
         char finalChoice;
         boolean start = true; // see following do while loop
-        boolean letsPlay = true; // equals false once the player quits the game
+        boolean letsPlay = true; //! equals false once the player quits the game
 
     	do {
             letterAnswer = Menu.newLoadQuitMenu();
@@ -78,6 +106,10 @@ public class JeuHex {
         return letsPlay;
     }
 
+    /**
+     * @brief loads player information and saved game configuration
+     * @param loadFileName the name of the file where this information is saved
+     */
     public void loadPlayersAndGame(String loadFileName) {
         spots = loadGame(loadFileName);
         size = (int)Math.sqrt(spots.length());
@@ -87,12 +119,19 @@ public class JeuHex {
         loadPlayerMovesTab(spots);
     }
 
+    /**
+     * @return the string of board spots
+     * @param loadFileName the name of the file where the spots are saved
+     */
     public String loadGame(String loadFileName) {
         loadFileName = saveFilesPath + loadFileName;
         return InterfaceAvecC.nativeGetSpots(loadFileName);
     }
 
-    // create the file to save
+    /**
+     * @brief creates the file to be saved
+     * @return the configured string to be put in a file
+     */
     public String createStringToSaveOnFile() {
         String str = "";
 
@@ -104,14 +143,20 @@ public class JeuHex {
         return str;
     }
 
-    //save game and player
+    /**
+     * @brief saves the game and the player information into the SaveFiles direvtory
+     * @param nameOfSaveFile the name of the file where the information is to be saved
+     */
     public void saveGameAndPlayer(String nameOfSaveGame) {
-        String newNameOfSaveGame = saveFilesPath + nameOfSaveGame; //explain the root
+        String newNameOfSaveGame = saveFilesPath + nameOfSaveGame;
         String stringToSave = createStringToSaveOnFile();
         InterfaceAvecC.nativeSaveGame(newNameOfSaveGame, stringToSave, b.getMovesTab(), w.getMovesTab());
         savePlayer(nameOfSaveGame);
     }
 
+    /**
+     * @brief prompts the players to enter the board size
+     */
     public void enterBoardSize(){
         char letterAnswer;
     	do {
@@ -128,12 +173,20 @@ public class JeuHex {
 	   	}
     }
 
+    /**
+     * @brief initializes the board
+     * @param size the size that the board will be
+     * @param spots a string representing the pieces of the board
+     * @return the board that has been initialized
+     */
     public Board initBoard(int size, String spots){
         board = new Board(size, spots);
     	return board;
     }
 
-    //
+    /**
+     * @brief sets the first player of the current game
+     */
     public void whoPlaysFirst(){
         char letterAnswer;
     	do {
@@ -149,7 +202,10 @@ public class JeuHex {
     	}
     }
 
-    //create a new player
+    /**
+     * @brief prompts player information that will be saved into a file
+     * @return the player the newly created player
+     */
     public Player addPlayer(){
     	Player p;
     	String alias = "";
@@ -168,8 +224,7 @@ public class JeuHex {
     	System.out.print("Alias? ");
     	alias = input.nextLine();
 
-        // input.nextLine(); // on vide le cash avant le prochain nextLine
-    	System.out.println("Date of birth (DD/MM/YY)? ");
+        System.out.println("Date of birth (DD/MM/YY)? ");
         do {
             System.out.print("Day? "); day = input.nextInt();
         } while (day > 31 || day < 1);
@@ -185,7 +240,6 @@ public class JeuHex {
         input.nextLine(); // on vide le cash avant le prochain nextLine
     	System.out.print("Email? ");
     	email = input.nextLine();
-        //input.nextLine(); // on vide le cash avant le prochain nextLine
 
     	p = new Player(color, alias, dateOfBirth, email, this.board);
         dateOfBirth.toStringDate();
@@ -193,7 +247,10 @@ public class JeuHex {
     	return p;
     }
 
-    //save the iformation of player
+    /**
+     * @brief saves the players into a file
+     * @param nameOfSavePlayer the name of the file the players will be saved into
+     */
     public void savePlayer(String nameOfSavePlayer){
         nameOfSavePlayer = saveFilesPath + "savePlayer/player" + nameOfSavePlayer;
         char bC = '0';
@@ -207,20 +264,21 @@ public class JeuHex {
         InterfaceAvecC.nativeSavePlayer(nameOfSavePlayer, bPlayer, wPlayer);
     }
 
-    //loads player from save file in SaveFiles/savePlayer directory
+    /**
+     * @brief loads a player from a save file in SaveFiles/savePlayer/ directory
+     * @param loadfileName the name of the file where the player information is
+     * @param color the color of the player to be loaded
+     */
     public void loadPlayerFromString(String loadFileName, char color) {
         loadFileName = saveFilesPath + "savePlayer/player" + loadFileName;
         String loadFile = InterfaceAvecC.nativeStringToLoadPlayer(color, loadFileName);
-        // System.out.println(loadFile);
         int size = loadFile.length();
-        // System.out.println(size);
         char[] tab = new char[size];
         for (int j = 0; j < size; j++) {
             tab[j] = loadFile.charAt(j);
         }
 
         String alias = "", dobString = "", email = "", whosTurnIsIt = "";
-        String dayString = "", monthString = "", yearString = "";
         Date dateOfBirth = new Date(0, 0, 0);
         int i = 0;
         int j = 0;
@@ -260,7 +318,6 @@ public class JeuHex {
                 i++;
             }
         }
-        System.out.println(dateOfBirth.toStringDate());
 
         if (color == Piece.BLACK) {
             b = new Player(color, alias, dateOfBirth, email, this.board);
@@ -275,6 +332,10 @@ public class JeuHex {
         }
     }
 
+    /**
+     * @brief loads the moves played be a certain player in a previous game
+     * @param spots a string that will contain the position of the moves played
+     */
     public void loadPlayerMovesTab(String spots) {
         for (int i = 0; i < spots.length(); i++) {
             if (spots.charAt(i) == Piece.BLACK) {
@@ -284,8 +345,7 @@ public class JeuHex {
             }
         }
 
-        //who is turn
-        if (b.isFirst()) {
+        if (b.isFirst()) { //! who was first
             if (b.getNbOfMoves() == w.getNbOfMoves()) {
                 joueur = true;
             }else {
@@ -293,19 +353,21 @@ public class JeuHex {
             }
         }else {
             if (b.getNbOfMoves() == w.getNbOfMoves()) {
-                joueur = false; //while turn
+                joueur = false;
             }else {
                 joueur = true;
             }
         }
     }
 
+    /**
+     * @brief allows the players to end the game with or without saving
+     */
     public void quitGame() {
         int choice = 0;
         boolean ok = true;
         boolean ko = true;
         String nameOfSaveGame = "";
-        // String nameOfSavePlayer = "";
         char finalChoice;
         do {
             do {
@@ -321,7 +383,7 @@ public class JeuHex {
             } while (ko);
             if (choice == 1) {
                 input.nextLine();
-                System.out.print("enter the name of saveGame   : ");
+                System.out.print("enter the name of saveGame : ");
                 nameOfSaveGame = input.nextLine();
                 saveGameAndPlayer(nameOfSaveGame);
                 ok = false;
@@ -336,8 +398,16 @@ public class JeuHex {
         } while (ok);
     }
 
+    /**
+     * @par Play Function
+     * @parblock
+     * The games runs on this function, it contains a while loop that loops
+     * as long as an index i is less than the number of hexes on the board, 
+     * neither player has won the game and neither player has quit the game
+     * @endparblock
+     * @return event a character equal to q (quit), w (win) or c (continue)
+     */
     public char play() {
-        System.out.println("je passe la en java");
         board.printBoard();
         Player p;
     	int i = 0;
@@ -351,6 +421,7 @@ public class JeuHex {
     		else
     			p = w;
 
+            p.printPlayerInfo();
     		event = p.placePiece();
 
             p.printMovesTab();
@@ -366,10 +437,13 @@ public class JeuHex {
         return event;
     }
 
+    /**
+     * @brief prompts the name of the file to be loaded
+     * @return the choice the name of the file that was entered by the players
+     */
     public String chooseLoadFile() {
         String  choice = "";
         boolean ok = true;
-        // boolean ko = true;
         String []saveFile = InterfaceAvecC.nativeGetSaveFile();
 
         System.out.println("Which file do you want to load?");
