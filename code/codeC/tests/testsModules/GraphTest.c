@@ -25,7 +25,7 @@ int main(int argc, const char * argv[]) {
      printBoard(g);
      
      printf("We can calculate a vertex neighbors\n");
-     printf("For example choose a position board  : 3*3\n");
+     printf("For example choose a position board  : 8*8\n");
      scanf("%d",&pos);
      calcAdjacentVertexesGraph(g->v[pos],g);
      printf("The neignbors of this vertex pos = %d are \n",pos);

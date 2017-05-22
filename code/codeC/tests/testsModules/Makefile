@@ -4,7 +4,7 @@ CC=gcc
 CFLAGS= -g -Wall -std=c99
 LDFLAGS=-lm
 EXEC=test.out 
-OBJ= ../../src/Piece.o ../../src/Coordinates.o ../../src/Graph.o   ../../src/FileProcessing.o ../../src/ReducedGraph.o ../../src/List.o ../../src/HashTable.o GameTest.o
+OBJ= ../../src/Piece.o ../../src/Coordinates.o ../../src/Graph.o   ../../src/FileProcessing.o ../../src/ReducedGraph.o ../../src/List.o ../../src/HashTable.o GraphTest.o
  
 all:	$(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $(EXEC) $(LDFLAGS)
@@ -16,7 +16,7 @@ all:	$(OBJ)
 ../../src/List.o : ../../src/List.c
 ../../src/HashTable.o : ../../src/HashTable.c
 ../../src/ReducedGraph.o : ../../src/ReducedGraph.c
-GameTest.o : GameTest.c ../../src/Graph.h
+GraphTest.o : GraphTest.c ../../src/Graph.h
 
 
 clean:
