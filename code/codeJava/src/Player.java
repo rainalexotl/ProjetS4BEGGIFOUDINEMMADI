@@ -296,9 +296,13 @@ public class Player {
 				break;
 			}
 		}while (ok);
+
 		board.printBoard();
 		modifMovesTab(pos);
-		
+
+		if (InterfaceAvecC.nativePlacePiece(pos, color) == 1) {
+			event = 'w'; //win
+		}
 		return event;
 	}
 
