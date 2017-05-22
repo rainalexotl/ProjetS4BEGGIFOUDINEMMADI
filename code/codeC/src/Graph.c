@@ -1,17 +1,19 @@
 //
 //  Graph.c
-//  graphes
+//  graphs
 //
-//  Created by Mmadi.anzilane on 14/04/2017.
-//  Copyright © 2017 Mmadi.anzilane. All rights reserved.
+//  Created by MMADI Anzilane, BEGG Rain-Alexandra and IFOUDINE Sara
+//  on 14/04/2017.
+//  Copyright © 2017 MMADI Anzilane, BEGG Rain-Alexandra and IFOUDINE Sara.
+//  All rights reserved.
 //
-//
+
 #include "Graph.h"
 #include <stdbool.h>
 #include <mm_malloc.h>
 #include <assert.h>
 #include <string.h>
-#define MAXVERTEX 14
+#define MAXBOARDSIZE 14
 
 /*-----------------------------------------------------------------------------*/
                             //Prototype Of Private Functions
@@ -67,7 +69,7 @@ void calcSideAdjacentsGraph(int sidePos, Graph g);
                             //Creation Functions
 /*-----------------------------------------------------------------------------*/
 Graph createGraph(int sizeGraph) {
-	assert(sizeGraph <= MAXVERTEX );
+	assert(sizeGraph <= MAXBOARDSIZE );
     Graph g = malloc(sizeof(struct sGraph));
     g->sizeGraph = sizeGraph;
 
@@ -87,8 +89,8 @@ Graph createGraph(int sizeGraph) {
 }
 
 Vertex *insertVertexGraph(Graph g, int i, char color) {
-	assert(g!=NULL);
-	assert(color != BLACK || color != WHITE || color != EMPTY);
+	assert(g != NULL);
+	assert(color == BLACK || color == WHITE || color == EMPTY);
 	
     Vertex *v = malloc(sizeof(Vertex));
     v->color = color;
@@ -117,8 +119,8 @@ Graph createBoardGraph (Graph g, const char *colorTab, int *loaded) {
 void calcAdjacentVertexesGraph(Vertex *v, Graph g) {
 	assert(g != NULL);
 	assert(v != NULL);
-    v->Adjacents = malloc(sizeof(Vertex*)*MAXVOISIN);
-    for (int i  = 0; i < MAXVOISIN; i++){
+    v->Adjacents = malloc(sizeof(Vertex*)*MAXADJ);
+    for (int i  = 0; i < MAXADJ; i++){
         v->Adjacents[i] = NULL;
     }
     v->Adjacents[UP] = g->v[topAdjVertexGraph(v, getSizeGraph(g))];
@@ -178,7 +180,7 @@ void calcSideAdjacentsGraph(int sidePos, Graph g) {
 void replaceVertexGraph(Graph g, int pos, char color) {
 	assert(g != NULL);
     assert(pos < getNbVertexGraph(g) );
-    assert(color != BLACK || color != WHITE );
+    assert(color == BLACK || color == WHITE );
     g->v[pos]->color = color;
 }
 
@@ -212,27 +214,27 @@ bool isInSameGroup(const Vertex *v1, const Vertex *v2) {
 
 bool isTopLeftOrBottomRightVertexGraph(const Vertex *v, int sizeGraph) {
 	assert(v);
-	assert(sizeGraph <= MAXVERTEX );
+	assert(sizeGraph <= MAXBOARDSIZE );
     return ((v->coord.x == 0 && v->coord.y == 0)
             ||(v->coord.x == sizeGraph-1 && v->coord.y == sizeGraph-1));
 }
 
 bool isTopRightOrBottomLeftVertexGraph(const Vertex *v, int sizeGraph) {
 	assert(v);
-	assert(sizeGraph <= MAXVERTEX );
+	assert(sizeGraph <= MAXBOARDSIZE );
     return ((v->coord.x == 0 && v->coord.y == sizeGraph-1)
             || (v->coord.x == sizeGraph-1 && v->coord.y == 0));
 }
 
 bool isTopRightVertexGraph(const Vertex *v, int sizeGraph) {
 	assert(v);
-	assert(sizeGraph <= MAXVERTEX );
+	assert(sizeGraph <= MAXBOARDSIZE );
     return (v->coord.x == 0 && v->coord.y == sizeGraph-1);
 }
 
 bool isBottomLeftVertexGraph(const Vertex *v, int sizeGraph) {
 	assert(v);
-	assert(sizeGraph <= MAXVERTEX );
+	assert(sizeGraph <= MAXBOARDSIZE );
     return (v->coord.x == sizeGraph-1 && v->coord.y == 0);
 }
 /*-----------------------------------------------------------------------------*/
@@ -249,28 +251,28 @@ int getNbVertexGraph(const Graph g) {
 }
 
 int getW1Graph(int sizeGraph) {
-	assert(sizeGraph <= MAXVERTEX );
+	assert(sizeGraph <= MAXBOARDSIZE );
     return sizeGraph*sizeGraph;
 }
 
 int getW2Graph(int sizeGraph) {
-	assert(sizeGraph <= MAXVERTEX );
+	assert(sizeGraph <= MAXBOARDSIZE );
     return sizeGraph*sizeGraph+1;
 }
 
 int getB1Graph(int sizeGraph) {
-	assert(sizeGraph <= MAXVERTEX );
+	assert(sizeGraph <= MAXBOARDSIZE );
     return sizeGraph*sizeGraph+2;
 }
 
 int getB2Graph(int sizeGraph) {
-	assert(sizeGraph <= MAXVERTEX );
+	assert(sizeGraph <= MAXBOARDSIZE );
     return sizeGraph*sizeGraph+3;
 }
 
 int topAdjVertexGraph(const Vertex *s, int sizeGraph) {
 	assert(s);
-	assert(sizeGraph <= MAXVERTEX );
+	assert(sizeGraph <= MAXBOARDSIZE );
     if (s->coord.x-1 < 0) {
         return getW1Graph(sizeGraph);
     }
@@ -280,7 +282,7 @@ int topAdjVertexGraph(const Vertex *s, int sizeGraph) {
 //calcule du voisin du bas
 int bottomAdjVertexGraph(const Vertex *s, int sizeGraph) {
 	assert(s);
-	assert(sizeGraph <= MAXVERTEX );
+	assert(sizeGraph <= MAXBOARDSIZE );
     if (s->coord.x+1 > sizeGraph-1) {
         return getW2Graph(sizeGraph);
     }
@@ -290,7 +292,7 @@ int bottomAdjVertexGraph(const Vertex *s, int sizeGraph) {
 //voisin de gauche
 int leftAdjVertexGraph(const Vertex *s, int sizeGraph) {
 	assert(s);
-	assert(sizeGraph <= MAXVERTEX );
+	assert(sizeGraph <= MAXBOARDSIZE );
     if (s->coord.y-1 < 0) {
         return getB1Graph(sizeGraph);
     }
@@ -300,7 +302,7 @@ int leftAdjVertexGraph(const Vertex *s, int sizeGraph) {
 //voisin droite
 int rightAdjVertexGraph(const Vertex *s, int sizeGraph) {
 	assert(s);
-	assert(sizeGraph <= MAXVERTEX );
+	assert(sizeGraph <= MAXBOARDSIZE );
     if (s->coord.y+1 > sizeGraph-1) {
         return getB2Graph(sizeGraph);
     }
@@ -309,7 +311,7 @@ int rightAdjVertexGraph(const Vertex *s, int sizeGraph) {
 
 int topRightAdjVertexGraph(const Vertex *s, int sizeGraph) {
 	assert(s);
-	assert(sizeGraph <= MAXVERTEX );
+	assert(sizeGraph <= MAXBOARDSIZE );
     if (s->coord.x == 0 && s->coord.y != 0) {
         return getW1Graph(sizeGraph);
     }else if (s->coord.x != 0 && s->coord.y == sizeGraph-1){
@@ -320,7 +322,7 @@ int topRightAdjVertexGraph(const Vertex *s, int sizeGraph) {
 
 int bottomLeftAdjVertexGraph(const Vertex *s, int sizeGraph) {
 	assert(s);
-	assert(sizeGraph <= MAXVERTEX );
+	assert(sizeGraph <= MAXBOARDSIZE );
     if (s->coord.x == sizeGraph-1 && s->coord.y != 0) {
         return getW2Graph(sizeGraph);
     }else if (s->coord.x != 0 && s->coord.y == 0) {
@@ -348,7 +350,7 @@ void printBoard(Graph g) {
 	assert(g);
     for (int i = 0; i < getNbVertexGraph(g); i++) {
 
-        if (i%getSizeGraph(g) == 0/*&& i != 0*/) {
+        if (i % getSizeGraph(g) == 0) {
             printf("\n");
             for (int j = 0; j < i/getSizeGraph(g); j++) {
                 printf(" ");
@@ -369,7 +371,7 @@ void printAdjVertex(const Vertex *v) {
 void printVertexAdjPositions(int posV, Graph g) {
 	assert(g);
     int pos = -1;
-    for (int i = 0; i < MAXVOISIN; ++i) {
+    for (int i = 0; i < MAXADJ; ++i) {
         if (g->v[posV]->Adjacents[i]) {
             pos = calculateHexCoordinates(g->v[posV]->Adjacents[i]->coord.x,  g->v[posV]->Adjacents[i]->coord.y, getSizeGraph(g));
             printf("(%c %d )\n", g->v[posV]->Adjacents[i]->color, pos);
