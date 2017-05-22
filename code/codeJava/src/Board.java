@@ -74,7 +74,7 @@ public class Board {
 			if (i%boardSize == 0){
 				System.out.print(i / boardSize);
 				for (j = 0; j <= i/boardSize; j++){
-					System.out.print("-");
+					System.out.print(".");
 				}
 				System.out.print("B");
 			}
