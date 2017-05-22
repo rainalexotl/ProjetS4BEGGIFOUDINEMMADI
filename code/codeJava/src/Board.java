@@ -60,15 +60,21 @@ public class Board {
 	 */
 	public void  printBoard(){
 		int i, j;
-		System.out.print("\nW");
+
+		System.out.print("   ");
+		for (i = 0; i < boardSize; i++)
+			System.out.print(i + " ");
+
+		System.out.print("\n W");
 		for (i = 0; i < boardSize; i++)
 			System.out.print(" W");
 		System.out.println("/B");
 
 		for (i = 0; i < getNbHexes(); i++){
 			if (i%boardSize == 0){
+				System.out.print(i / boardSize);
 				for (j = 0; j <= i/boardSize; j++){
-					System.out.print(" ");
+					System.out.print("-");
 				}
 				System.out.print("B");
 			}
@@ -81,7 +87,7 @@ public class Board {
 		for (j = 0; j <= i/boardSize; j++)
 			System.out.print(" ");
 
-		System.out.print("B/");
+		System.out.print(" B/");
 		for (i = 0; i <= boardSize; i++)
 			System.out.print("W ");
 
