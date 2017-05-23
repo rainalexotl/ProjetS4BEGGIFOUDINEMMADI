@@ -1,5 +1,6 @@
 import java.util.*;
 import java.io.*;
+import java.text.*;
 
 /**
  * @class JeuHex
@@ -22,6 +23,8 @@ public class JeuHex {
     private String configPath = "../../../doc/config/size";
     private String saveFilesPath = "../../../doc/SaveFiles/";
     private boolean hVSh;
+
+    public SimpleDateFormat ft = new SimpleDateFormat("dd/MM/yy");
 
     /**
      * @return the size of the board entered by the player
@@ -237,13 +240,21 @@ public class JeuHex {
     }
 
     /**
+     * @brief printd the player's birthday in the following format dd/MM/yy
+     */ 
+    public String toStringDOB(int day, int month, int year) {
+        return String.format("%02d", day) + "/" + String.format("%02d", month) +
+            "/" + String.format("%02d", year);
+    }
+
+    /**
      * @brief prompts player information that will be saved into a file
      * @return the player the newly created player
      */
     public Player addPlayer(char AI){
     	Player p;
     	String alias = "";
-		Date dateOfBirth;
+		Date dateOfBirth = null;
 		String email = "";
 		char color;
         int day; int month; int year;
@@ -273,7 +284,11 @@ public class JeuHex {
                 System.out.print("Year? "); year = input.nextInt();
             } while (year < 0 || year > 99);
 
-        	dateOfBirth = new Date(day, month, year);
+        	try {
+                dateOfBirth = ft.parse(toStringDOB(day, month, year));
+            }catch (ParseException e) {
+                System.err.println(e);
+            }
 
             input.nextLine(); // on vide le cash avant le prochain nextLine
         	System.out.print("Email? ");
@@ -322,7 +337,8 @@ public class JeuHex {
         }
 
         String alias = "", dobString = "", email = "", whosTurnIsIt = "", isAI = "";
-        Date dateOfBirth = new Date(0, 0, 0);
+        int day = 0, month = 0, year = 0;
+        Date dateOfBirth = null;
         int i = 0;
         int j = 0;
 
@@ -338,16 +354,25 @@ public class JeuHex {
                     if (tab[i] != '/') {
                         dobString += tab[i];
                         if (j == 1) {
-                            dateOfBirth.setDay(Integer.parseInt(dobString));
+                            // dateOfBirth.setDay(Integer.parseInt(dobString));
+                            day = Integer.parseInt(dobString);
                         }else if (j == 3) {
-                            dateOfBirth.setMonth(Integer.parseInt(dobString));
+                            // dateOfBirth.setMonth(Integer.parseInt(dobString));
+                            month = Integer.parseInt(dobString);
                         }else if (j == 5) {
-                            dateOfBirth.setYear(Integer.parseInt(dobString));
+                            // dateOfBirth.setYear(Integer.parseInt(dobString));
+                            year = Integer.parseInt(dobString);
                         }
                         dobString = "";
                         j++;
                     }
                     i++;
+
+                    try {
+                        dateOfBirth = ft.parse(toStringDOB(day, month, year));
+                    }catch (ParseException e) {
+                        System.err.println(e);
+                    }
                 }
             }else if (tab[i] == '@') {
                 i++;

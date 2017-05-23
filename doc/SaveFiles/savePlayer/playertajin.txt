@@ -1,4 +1,4 @@
-\blackPlayer 32
+\blackPlayer 33
 *anzi#02/01/08@ANZI@hotmail.fr$11
-\whitePlayer 45
+\whitePlayer 46
 osaramaket#08/06/05@SARAMAKET@maroco.tajine$01

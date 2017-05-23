@@ -1,4 +1,4 @@
 \blackPlayer 38
 *IA#23/05/17@angelodelagx@gmail.com$11
-\whitePlayer 31
-oalex#06/11/97@2014@gmail.mc$01
+\whitePlayer 16
+oa#02/02/02@z$01

@@ -1,4 +1,5 @@
-import java.util.Scanner;
+import java.util.*;
+import java.text.*;
 
 /**
  * @class Player
@@ -26,6 +27,8 @@ public class Player {
 	private boolean firstPlayer = false;
 	private boolean winner = false;
 	private boolean quitter = false;
+
+    public SimpleDateFormat ft = new SimpleDateFormat("dd/MM/yy");
 
 	/**
 	 * @par Player constructor
@@ -166,7 +169,7 @@ public class Player {
 	 * @return the player info in format : ALIAS#DD/MM/YY@PLAYER@EMAIL.COM
 	 */
 	public String toStringPlayer() {
-		return alias + '#' + dateOfBirth.toStringDate() + '@' + email;
+		return alias + '#' + ft.format(dateOfBirth) + '@' + email;
 	}
 
 	/**

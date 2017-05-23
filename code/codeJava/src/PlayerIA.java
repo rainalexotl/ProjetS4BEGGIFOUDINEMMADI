@@ -1,10 +1,13 @@
+import java.util.*;
+import java.text.*;
 
 
 public class PlayerIA extends Player {
 
+    public SimpleDateFormat ft = new SimpleDateFormat("dd/MM/yy");
+    
     public PlayerIA(Board board) {
-        // Date date = new Date();
-        super(Piece.BLACK, "IA", new Date(23, 5, 17), "angelodelagx@gmail.com", board);
+        super(Piece.BLACK, "IA", new Date(), "angelodelagx@gmail.com", board);
     }
 
     public char placePiece() {
