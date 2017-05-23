@@ -18,7 +18,39 @@ Our implementation includes the following functionnalities:
 
 Compilation Instructions
 ------------------------
-In the `InterfaceAvecC.java` file in the code/codeJava/ directory, the library path must be modified. Thus the library must be generated according to your operationg system.
+In the `InterfaceAvecC.java` file in the ProjetS4BEGGIFOUDINEMMADI/code/codeJava/ directory, the library path must be modified. Thus the library must be generated according to your operationg system.
+
+To generate the library change your working directory to ProjetS4BEGGIFOUDINEMMADI/lib/ and execute the following commands
+
+#### For Linux:
+```
+$ gcc -I/usr/java/jdk1.5.0_01/include/
+      -I/usr/java/jdk1.5.0_01/include/linux -c -fPIC InterfaceAvecC.c
+$ gcc -shared -o libInterfaceAvecC.so InterfaceAvecC.o
+```
+
+#### For Mac:
+```
+$ gcc -I/Library/Java/Home/include/
+      -I/Library/Java/Home/include/darwin -c InterfaceAvecC.c
+$ gcc -shared -o libInterfaceAvecC.dylib InterfaceAvecC.o
+```
+
+#### For Windows
+```
+$ gcc -c -I"C:\j2sdk1.4.2_02\include"
+         -I"C:\j2sdk1.4.2_02\include\win32"
+         -o InterfaceAvecC.o TestJNI2.c
+$ gcc -shared -o InterfaceAvecC.dll InterfaceAvecC.c InterfaceAvecC.c InterfaceAvecC.def
+```
+
+#### For solaris
+```
+$ cc -G -I/opt/JAVA/jdk1.5.0_01/include -I/opt/JAVA/jdk1.5.0_01/include/solaris InterfaceAvecC.c
+     -o libInterfaceAvecC.so
+```
+     
+__!__ of course the java paths will vary depending on your installation
 
 ```javascript
 static {
