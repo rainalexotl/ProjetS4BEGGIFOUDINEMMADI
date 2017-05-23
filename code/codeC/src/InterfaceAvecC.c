@@ -17,6 +17,7 @@
 #include "InterfaceAvecC.h"
 #include "Graph.h"
 #include "ReducedGraph.h"
+#include "TreeOfGameIA.h"
 
 #define ERR_CLASS_ACCESS 1
 #define ERR_METHOD_ACCESS 2
@@ -175,6 +176,11 @@ Java_InterfaceAvecC_nativeGetSaveFile (JNIEnv * env, jclass cl) {
     }
     destroySaveFiles(saveFile); //libere le tableau de chaine de caractere
     return tabString;
+}
+
+JNIEXPORT jint JNICALL
+Java_InterfaceAvecC_nativeMiniMax (JNIEnv * env, jclass cl) {
+    return minimax(globGraph, 2); //2 is the depth of TreeOfGameIA
 }
 /*-----------------------------------------------------------------------------*/
 /* -*************************************************************************- */

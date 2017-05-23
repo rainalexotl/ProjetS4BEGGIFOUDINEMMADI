@@ -87,6 +87,14 @@ JNIEXPORT jstring JNICALL Java_InterfaceAvecC_nativeStringToLoadPlayer
 JNIEXPORT jobjectArray JNICALL Java_InterfaceAvecC_nativeGetSaveFile
   (JNIEnv *, jclass);
 
+/*
+ * Class:     InterfaceAvecC
+ * Method:    nativeMiniMax
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_InterfaceAvecC_nativeMiniMax
+  (JNIEnv *, jclass);
+
 #ifdef __cplusplus
 }
 #endif

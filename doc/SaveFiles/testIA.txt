@@ -1,0 +1,16 @@
+\Hex
+\dim 4
+\board
+o . . . 
+o . . . 
+o . . . 
+. * * . 
+\endboard
+\game
+\play o 0 0
+\play * 3 2
+\play o 1 0
+\play * 3 1
+\play o 2 0
+\endgame
+\endhex

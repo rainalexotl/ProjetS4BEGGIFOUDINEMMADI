@@ -1,7 +1,7 @@
 public class InterfaceAvecC {
 
 	static {
-		System.load("/home/21608272/Documents/21608272/ProjetS4BEGGIFOUDINEMMADI/code/lib/libInterfaceAvecC.so");
+		System.load("/Users/Angelo/Desktop/ProjetHex/ProjetS4BEGGIFOUDINEMMADI/code/lib/libInterfaceAvecC.dylib");
 	}
 
 	//! calls the play method in Java
@@ -33,4 +33,6 @@ public class InterfaceAvecC {
 
 	//! calls the c function getSaveFiles() and gets all the names of the previously saved files
 	public static native String [] nativeGetSaveFile();
+
+	public static native int nativeMiniMax();
 }
