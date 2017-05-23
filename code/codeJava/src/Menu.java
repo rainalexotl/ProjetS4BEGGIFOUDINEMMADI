@@ -6,7 +6,7 @@ import java.util.Scanner;
  * @var answer the answer to the questions asked in the menus
  */
 public class Menu {
-    private static String answer; 
+    private static String answer;
     private static Scanner input = new Scanner(System.in);
 
     /**
@@ -41,6 +41,23 @@ public class Menu {
         answer = input.nextLine();
         finalChoice = answer.toUpperCase().charAt(0);
         return finalChoice;
+    }
+
+    /**
+     * @brief asks the player if the game is multiplayer or not
+     * @return letterAnswer equal to Y (yes) or N (no)
+     */
+    public static char aiOrHuman() {
+        char letterAnswer;
+        System.out.println("\n*-----------------------------------------*");
+        System.out.println("* Game mode?                              *");
+        System.out.println("* AI vs Human     -> please type A        *");
+        System.out.println("* Human vs Human  -> please type H        *");
+        System.out.println("*-----------------------------------------*");
+        System.out.print("choice : ");
+        answer = input.nextLine();
+        letterAnswer = answer.toUpperCase().charAt(0);
+        return letterAnswer;
     }
 
     /**

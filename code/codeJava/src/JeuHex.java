@@ -10,6 +10,7 @@ import java.io.*;
  * @var w white player
  * @var size the boardSize entered by the players
  * @var spots the hexes of the board
+ * @var hVSh true if the game is played by two humans
  */
 public class JeuHex {
     private Board board;
@@ -20,6 +21,7 @@ public class JeuHex {
     private String spots;
     private String configPath = "../../../doc/config/size";
     private String saveFilesPath = "../../../doc/SaveFiles/";
+    private boolean hVSh;
 
     /**
      * @return the size of the board entered by the player
@@ -47,6 +49,13 @@ public class JeuHex {
      */
     public Player getBlackPlayer() {
         return b;
+    }
+
+    /**
+     * @return true if the game is played by two humans
+     */
+    public boolean isHVSh() {
+        return hVSh;
     }
 
     /**
@@ -86,13 +95,38 @@ public class JeuHex {
             String newFileName = configPath + Integer.toString(size) + ".txt";
             spots = InterfaceAvecC.nativeGetSpots(newFileName);
     		board = initBoard(size, spots);
+            do {
+                letterAnswer = Menu.aiOrHuman();
+                if (letterAnswer == 'A' || letterAnswer == 'H') {
+                    do {
+                        finalChoice = Menu.finalChoice();
+                    } while (finalChoice != 'N' && finalChoice != 'Y');
+                }
+            } while (letterAnswer != 'A' && letterAnswer != 'H');
+            if (letterAnswer == 'A') {
+                hVSh = false;
+                System.out.println("AI is BLACK (*)");
+            }
+
     	    whoPlaysFirst();
+
     	    if (joueur) {
-    			b = addPlayer(); b.setFirstPlayer(true);
-                w = addPlayer();
+                if (letterAnswer == 'A') {
+                    b = addPlayer(letterAnswer);
+                }else {
+        			b = addPlayer('H');
+                }
+                w = addPlayer('H');
+                b.setFirstPlayer(true);
     		}else {
-    			w = addPlayer(); w.setFirstPlayer(true);
-                b = addPlayer();
+                if (letterAnswer == 'A') {
+                    w = addPlayer('H');
+                    b = addPlayer(letterAnswer);
+                }else {
+        			w = addPlayer('H');
+                    b = addPlayer('H');
+                }
+                w.setFirstPlayer(true);
     		}
     	}else if (letterAnswer == 'L') {
             String loadFileName = chooseLoadFile();
@@ -151,7 +185,7 @@ public class JeuHex {
         String newNameOfSaveGame = saveFilesPath + nameOfSaveGame;
         String stringToSave = createStringToSaveOnFile();
         InterfaceAvecC.nativeSaveGame(newNameOfSaveGame, stringToSave, b.getMovesTab(), w.getMovesTab());
-        savePlayer(nameOfSaveGame);
+        savePlayer(nameOfSaveGame, hVSh);
     }
 
     /**
@@ -206,7 +240,7 @@ public class JeuHex {
      * @brief prompts player information that will be saved into a file
      * @return the player the newly created player
      */
-    public Player addPlayer(){
+    public Player addPlayer(char AI){
     	Player p;
     	String alias = "";
 		Date dateOfBirth;
@@ -214,34 +248,39 @@ public class JeuHex {
 		char color;
         int day; int month; int year;
 
-    	if (joueur){
-    		System.out.println("BLACK player...");
-    		color = Piece.BLACK;
-    	}else{
-    		System.out.println("WHITE player...");
-    		color = Piece.WHITE;
-    	}
-    	System.out.print("Alias? ");
-    	alias = input.nextLine();
+        if (AI == 'A') {
+            p = new PlayerIA(this.board);
+        }else {
 
-        System.out.println("Date of birth (DD/MM/YY)? ");
-        do {
-            System.out.print("Day? "); day = input.nextInt();
-        } while (day > 31 || day < 1);
-        do {
-            System.out.print("Month? "); month = input.nextInt();
-        } while (month > 12 || month < 1);
-        do {
-            System.out.print("Year? "); year = input.nextInt();
-        } while (year < 0 || year > 99);
+        	if (joueur){
+        		System.out.println("BLACK player...");
+        		color = Piece.BLACK;
+        	}else{
+        		System.out.println("WHITE player...");
+        		color = Piece.WHITE;
+        	}
+        	System.out.print("Alias? ");
+        	alias = input.nextLine();
 
-    	dateOfBirth = new Date(day, month, year);
+            System.out.println("Date of birth (DD/MM/YY)? ");
+            do {
+                System.out.print("Day? "); day = input.nextInt();
+            } while (day > 31 || day < 1);
+            do {
+                System.out.print("Month? "); month = input.nextInt();
+            } while (month > 12 || month < 1);
+            do {
+                System.out.print("Year? "); year = input.nextInt();
+            } while (year < 0 || year > 99);
 
-        input.nextLine(); // on vide le cash avant le prochain nextLine
-    	System.out.print("Email? ");
-    	email = input.nextLine();
+        	dateOfBirth = new Date(day, month, year);
 
-    	p = new Player(color, alias, dateOfBirth, email, this.board);
+            input.nextLine(); // on vide le cash avant le prochain nextLine
+        	System.out.print("Email? ");
+        	email = input.nextLine();
+
+        	p = new Player(color, alias, dateOfBirth, email, this.board);
+        }
     	joueur = !joueur;
     	return p;
     }
@@ -249,17 +288,22 @@ public class JeuHex {
     /**
      * @brief saves the players into a file
      * @param nameOfSavePlayer the name of the file the players will be saved into
+     * @param hVSh true if the game is played between two humans
      */
-    public void savePlayer(String nameOfSavePlayer){
+    public void savePlayer(String nameOfSavePlayer, boolean hVSh){
         nameOfSavePlayer = saveFilesPath + "savePlayer/player" + nameOfSavePlayer;
         char bC = '0';
         char wC = '1';
+        char ai = '0';
         if (b.isFirst()) {
             bC = '1';
             wC = '0';
         }
-        String wPlayer = w.toStringPlayer()+'$'+wC; //on rajoute le prochain joueur
-        String bPlayer = b.toStringPlayer()+'$'+bC;
+        if (!hVSh) {
+            ai = '1';
+        }
+        String wPlayer = w.toStringPlayer()+'$'+wC+ai; //on rajoute le prochain joueur
+        String bPlayer = b.toStringPlayer()+'$'+bC+ai;
         InterfaceAvecC.nativeSavePlayer(nameOfSavePlayer, bPlayer, wPlayer);
     }
 
@@ -277,11 +321,11 @@ public class JeuHex {
             tab[j] = loadFile.charAt(j);
         }
 
-        String alias = "", dobString = "", email = "", whosTurnIsIt = "";
+        String alias = "", dobString = "", email = "", whosTurnIsIt = "", isAI = "";
         Date dateOfBirth = new Date(0, 0, 0);
         int i = 0;
         int j = 0;
-        
+
         while (i < size - 1) {
             if (tab[i] == color) {
                 i++;
@@ -313,13 +357,19 @@ public class JeuHex {
             }else if (tab[i] == '$') {
                 i++;
                 whosTurnIsIt += tab[i++];
+                isAI += tab[i++];
             }else {
                 i++;
             }
         }
 
         if (color == Piece.BLACK) {
-            b = new Player(color, alias, dateOfBirth, email, this.board);
+            if (Integer.parseInt(isAI) == 1) {
+                b = new PlayerIA(this.board);
+                hVSh = false;
+            }else {
+                b = new Player(color, alias, dateOfBirth, email, this.board);
+            }
             if (Integer.parseInt(whosTurnIsIt) == 1) {
                 b.setFirstPlayer(true);
             }
@@ -401,7 +451,7 @@ public class JeuHex {
      * @par Play Function
      * @parblock
      * The games runs on this function, it contains a while loop that loops
-     * as long as an index i is less than the number of hexes on the board, 
+     * as long as an index i is less than the number of hexes on the board,
      * neither player has won the game and neither player has quit the game
      * @endparblock
      * @return event a character equal to q (quit), w (win) or c (continue)
@@ -411,7 +461,7 @@ public class JeuHex {
         Player p;
     	int i = 0;
         char event = 'c';
-        
+
     	while(i < board.getNbHexes() && (event == 'c')){
     		char color = Player.quiJoue(joueur);
 
