@@ -90,7 +90,8 @@ void saveBoardFile(const char * fileName, const char *spots, int bTabGame[], int
             fprintf(file, "%c ", spots[i++]);
         }
     }
-
+    fprintf(file, "\n\\endboard\n");
+    fprintf(file, "\\game\n");
     int quiACommencer = spots[i]-48;
     int bSize = 0;
     int wSize = 0;

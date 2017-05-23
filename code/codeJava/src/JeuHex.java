@@ -423,7 +423,7 @@ public class JeuHex {
             p.printPlayerInfo();
     		event = p.placePiece();
 
-            p.printMovesTab();
+
     		joueur = !joueur;
             i++;
             if (event == 'w') {
