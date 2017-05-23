@@ -60,6 +60,8 @@ public class Board {
 	 */
 	public void  printBoard(){
 		int i, j;
+		
+		System.out.println("");
 
 		System.out.print("   ");
 		for (i = 0; i < boardSize; i++)

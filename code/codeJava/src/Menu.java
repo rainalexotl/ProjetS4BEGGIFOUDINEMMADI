@@ -106,6 +106,7 @@ public class Menu {
         System.out.println("* 2 : To confirm your position.            *");
         System.out.println("* 3 : If you want to quit.                 *");
         System.out.println("*------------------------------------------*");
+        System.out.print("choice : ");
         choice = input.nextInt();
         input.nextLine();
         return choice;
